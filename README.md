@@ -3,10 +3,6 @@ Bulls-Eye
 
 Bull's Eye is a Dart-IO Web-Server (like Node JS / Express). It should bring the speed of Dart to the server-side. To have an single language to program server and client.
 
-Why not using an available implementation?
-I know there are some idetical projects out there which doing the same. But I want to build a server which fits more my needs and implements so features I missed on other implementations.
-Another reason is to learn and study DART. It like an case study to profe if it fits my requirements better than other languages (PHP, JS, Phython, Ruby, ...).
-
 Lib
 =========
 The Lib is devided into 3 parts:
@@ -39,3 +35,10 @@ Roadmap
 * Feature
 * Feature
 * ...
+
+FAQ
+=========
+*Why not using an available implementation?*
+
+I know there are some idetical projects out there which doing the same. But I want to build a server which fits more my needs and implements so features I missed on other implementations.
+Another reason is to learn and study DART. It like an case study to profe if it fits my requirements better than other languages (PHP, JS, Phython, Ruby, ...).
