@@ -1,0 +1,8 @@
+name: BullsEye
+version: 0.0.1
+author: SoftHai
+description: Bulls Eye Playground
+homepage: https://github.com/SoftHai/Bulls-Eye
+documentation: https://github.com/SoftHai/Bulls-Eye
+dev_dependencies:
+  unittest: '>=0.9.0 <2.0.0'
