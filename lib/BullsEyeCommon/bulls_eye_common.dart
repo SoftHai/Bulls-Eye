@@ -1,7 +1,7 @@
 library softhai.bulls_eye.Common;
 
-part 'RouteDefenition/RouteDef.dart';
-part 'RouteDefenition/RoutePart.dart';
-part 'RouteDefenition/RouteDefConfig.dart';
-part 'RouteDefenition/DefExceptions.dart';
-part 'RouteDefenition/UriMatcher.dart';
+part 'src/RouteDefenition/RouteDef.dart';
+part 'src/RouteDefenition/RoutePart.dart';
+part 'src/RouteDefenition/RouteDefConfig.dart';
+part 'src/RouteDefenition/DefExceptions.dart';
+part 'src/RouteDefenition/UriMatcher.dart';
