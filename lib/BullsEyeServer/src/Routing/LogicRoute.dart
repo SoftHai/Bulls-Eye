@@ -1,6 +1,6 @@
 part of softhai.bulls_eye.Server;
 
-typedef bool LogicCall(HttpRequest request, common.MatchResult variables);
+typedef bool LogicCall(RouteContext context);
 
 class LogicRoute extends Route {
   
@@ -10,8 +10,8 @@ class LogicRoute extends Route {
     
   }
   
-  bool _internalExecute(HttpRequest request, common.MatchResult variables) 
+  bool _internalExecute(RouteContext context) 
   {
-    return this._logicCall(request, variables);
+    return this._logicCall(context);
   }
 }

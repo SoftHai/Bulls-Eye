@@ -8,30 +8,6 @@ abstract class Route {
   
   Route(this._routeDefenition, [this._methods, this._contentTypes]);
   
-  RegExp _buildRegExp()
-  {
-    String regExpStr = "^";
-    var config = new common.RouteDefConfig.Current();
-    
-    this._routeDefenition.routeParts.forEach((part) 
-        {
-          regExpStr += "\\" + config.RoutePartSeperator;
-          if(part is common.Static)
-          {
-            regExpStr += (part as common.Static).partName;
-          }
-          else if(part is common.Variable) // includes also the Version-Variable
-          {
-            regExpStr += "([^\/]*)";
-          }
-          else if(part is common.WildCard)
-          {
-            regExpStr += ".*";
-          }
-          
-        });
-  }
-  
   // Route match the path
   bool match(HttpRequest request) {
 
@@ -65,8 +41,21 @@ abstract class Route {
   bool execute(HttpRequest request) 
   {
     var variables = this._routeDefenition.matcher.getMatches(request.uri.path);
-    this._internalExecute(request, variables);
+    var context = new RouteContext(request, this._routeDefenition, variables);
+    this._internalExecute(context);
   }
   
-  bool _internalExecute(HttpRequest request, common.MatchResult variables);
+  bool _internalExecute(RouteContext context);
+}
+
+class RouteContext {
+
+  HttpRequest request;
+  common.RouteDef currentRoute;
+  common.MatchResult routeVariables;
+  Map<String, Object> contextData;
+
+  RouteContext(this.request, this.currentRoute, this.routeVariables) {
+    this.contextData = new Map<String,Object>();
+  }
 }
