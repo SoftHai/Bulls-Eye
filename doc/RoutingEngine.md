@@ -28,10 +28,10 @@ It depends on which features of the routing engine you want to use. <br/>
 ###Supported URL-Part
 
 A URL-Part is all between two '/'. The following parts are supported:
-* **Static**: This is an static string part of an URL (e.g. /_==ToDo==_/:ID)
-* **Variable**: This in an part of the URL which is variable (e.g. an ID of an entity -> /ToDo/_==:ID==_).
- * **Version**: Version ins an special build-in variable which is used for API URLs which has an Version-Part in it (e.g. "_==v1==_/ToDo/:ID"). It will be used in feature for vaidating different versions.
-* **Wildcard**: A Wildcard means that the rest of the URL be be what ever. Thats interesting if you have an folder with Lib-Files like \*.js or \*.css files which you want to handle all over the same logic (e.g. "/lib/JS/_==\*==_")
+* **Static**: This is an static string part of an URL (e.g. /**ToDo**/:ID)
+* **Variable**: This in an part of the URL which is variable (e.g. an ID of an entity -> /ToDo/**:ID**).
+ * **Version**: Version ins an special build-in variable which is used for API URLs which has an Version-Part in it (e.g. "**v1**/ToDo/:ID"). It will be used in feature for vaidating different versions.
+* **Wildcard**: A Wildcard means that the rest of the URL be be what ever. Thats interesting if you have an folder with Lib-Files like \*.js or \*.css files which you want to handle all over the same logic (e.g. "/lib/JS/**\***")
 
 ###Object-Style
 
