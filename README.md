@@ -18,13 +18,7 @@ The Lib is devided into 3 parts:
  * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Router.md)
 * Client: Here are the client side specific impelmentations
 
-State
-=========
-Very early alpha.
-Implemented Features:
-* Routing (Basics)
-
-To get an idea of the state, take a look at the example and/or the tests.
+To get an idea of the state, take a look at the example, doc and/or the tests.
 
 Targets
 =========
@@ -35,34 +29,41 @@ Targets
 
 Roadmap
 =========
-* Routing Common (progress)
- * Add Query-Parameters
-* Routing Server Side (progress)
+Legend: [ ] Planned, [/] Progress, [X] Finished
+
+
+- [/] Routing Common
+ - [ ] Add Query-Parameters
+- [/] Routing Server Side
+ - [/] Routing to Logic
+ - [/] Routing to Files (e.g. pictures, css, js, html, ...)
 
 **Milestone 1** (Jan 2014)
 
-* Routing Client Side
+- [ ] Routing Client Side
+- [ ] Routing Server Side
+ - [ ] Routing to Template Files (using JS-Tamplate engines with Dart-JS-Bridge)
 
 **Milestone 2** (feb 2014)
 
-* Add Middleware Engine
- * Add Vaidation
+- [ ] Add Middleware Engine
+ - [ ] Add Vaidation
 
-** Milestone 3**
+**Milestone 3**
 
-* Middleware
- * Add Auth
+- [ ] Middleware
+ - [ ] Add Auth
 
-** Milestone 4**
+**Milestone 4**
 
-* Feature
-* Feature
-* Feature
-* ...
+- [ ] Feature
+- [ ] Feature
+- [ ] Feature
+- [ ] ...
 
 FAQ
 =========
 *Why not using an available implementation?*
 
 I know there are some projects out there which doing the same. But I want to build a server which fits more my needs and implements some features I missed on other implementations. <br/>
-Another reason is to learn and study DART. It's like an case study to profe if it fits my requirements better than other languages (PHP, JS, Phython, Ruby, ...).
+Another reason is to learn and study DART. It's like an case study to prove if it fits my requirements better than other languages (PHP, JS, Phython, Ruby, ...).
