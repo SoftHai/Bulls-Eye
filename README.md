@@ -13,9 +13,9 @@ Lib
 =========
 The Lib is devided into 3 parts:
 * Common: Here are functions which are required on client and server side (e.g. route defenitions, ...)
- * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RoutingEngine.md)
+ * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RouteDefenition.md)
 * Server: Here are the server side specific implementations
- * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RoutingEngine.md)
+ * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Router.md)
 * Client: Here are the client side specific impelmentations
 
 State
