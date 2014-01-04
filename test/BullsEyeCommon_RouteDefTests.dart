@@ -30,7 +30,7 @@ RouteDef _Build_RouteDefenition_FromObjects1() {
 
 RouteDef _Build_RouteDefenition_FromStrings1() {
   
-  return new RouteDef.fromStrings(["Part1", 
+  return new RouteDef.fromMixed(["Part1", 
                                            ":Version", 
                                            ":Var1", 
                                            "Part2",
@@ -63,7 +63,7 @@ main()  {
                                                    expectedUrl));
 
       test("Test - FromStrings2 - MultipleVersionException", () => 
-          expect(() => new RouteDef.fromStrings([":Version", ":Version"]),
+          expect(() => new RouteDef.fromMixed([":Version", ":Version"]),
                  throwsA(new isInstanceOf<MultipleVersionException>())));
       
       test("Test - FromString1", () =>
@@ -141,12 +141,24 @@ main()  {
         
         expect(routeDef.matcher.match("/Part1/Part2/12345/Part3/bla"), isTrue);
       });
-      
-      test("Test - Customized Route Def Config", () {
-        var custConfig = new RouteDefConfig.Costumize("|", "{", "}", "!", "", "%");
-        Version.RegisterParseFunc();
+     
+      test("Test - UriMatcher - Replace", () {
+        var routeDef = new RouteDef("Part1/:Var/Part2/(:OptVar)/Part3/*");
         
-        var routeStr = "Part1|{Version}|Part2|{var}|!{OptVariable}|Part3|%";
+        expect(routeDef.matcher.replace({ "Var" : 123, "OptVar" : 456}), "Part1/123/Part2/456/Part3/");
+        
+        expect(routeDef.matcher.replace({ "Var" : 123}), "Part1/123/Part2/Part3/");
+      });
+      
+    });
+    
+    // Has to be the last test, because all other working with the default
+    group("Customize RouteDefenition -", () {
+      test("Test - Customized Route Def Config", () {
+        var custConfig = new RouteDefConfig.Costumize("{", "}", "!", "", "%");
+        Version.RegisterParseFunc(); // Register Version before can be used (Only required if the String-Style is used) 
+        
+        var routeStr = "Part1/{Version}/Part2/{var}/!{OptVariable}/Part3/%";
         var routeDef = new RouteDef(routeStr);
         
         expect(routeDef.toString(), equals(routeStr));

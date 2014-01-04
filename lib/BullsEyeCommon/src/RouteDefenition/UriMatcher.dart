@@ -38,14 +38,14 @@ class UriMatcher {
                   
                   if(vpart == v)
                   {
-                    regExpStr += r"([^\/]*)";
+                    regExpStr += r"([^\/]*)" + (v.isOptional ? "?" : "");
                   }
                   else
                   {
                     regExpStr += r"[^\/]*";
                   }
                   
-                  regExpStr += v.isOptional ? "?" : "";
+                  //regExpStr += v.isOptional ? "?" : "";
                 }
                 else if(part is WildCard)
                 {
@@ -132,15 +132,28 @@ class UriMatcher {
     return null;
   }
   
-  String replace(List<Object> values)
+  String replace(Map<String,Object> values)
   {
     String path = this.routeDef.toString();
     
-    for(num i = 0; i < this._vars.length; i++)
+    for(int i = 0; i < values.length; i++)
     {
-      var v = this._vars[i];
-      path.replaceFirst(v.toString(), values[i]);
+      var variableName = values.keys.elementAt(i);
+      var varMang = this._vars.firstWhere((v) => v.variable.varName == variableName);
+      
+      if(varMang != null)
+      {
+        path = path.replaceFirst(varMang.variable.toString(), values[variableName].toString());
+      }
     }
+    
+    // Remove all Left Optional Variable-Placeholder
+    this._vars.where((v) => v.variable.isOptional).forEach((vm) => path = path.replaceAll(this.routeDef.config.RoutePartSeperator + vm.variable.toString(), ""));
+    
+    // Remove the WildCard sign
+    path = path.replaceAll(this.routeDef.config.RoutePartWildCard, "");
+
+    return path;
   }
 }
 

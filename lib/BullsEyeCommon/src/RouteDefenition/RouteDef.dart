@@ -36,7 +36,7 @@ class RouteDef {
     this.matcher = new UriMatcher(this);
   }
   
-  RouteDef.fromStrings(List<String> parts, [String name]) {
+  RouteDef.fromMixed(List<String> parts, [String name]) {
     this.name = name == null ? parts.join(this.config.RoutePartSeperator) : name;
     this._initFromStrings(parts);
   }

@@ -4,7 +4,7 @@ typedef Variable TryParseSpecialVariable(String partStr, RouteDefConfig currentC
 
 class RouteDefConfig {
 
-  final String RoutePartSeperator;
+  final String RoutePartSeperator = "/";
   final String RoutePartVariableOptionalStart;
   final String RoutePartVariableOptionalEnd;
   final String RoutePartVariableStart;
@@ -15,15 +15,22 @@ class RouteDefConfig {
   
   static RouteDefConfig _config = null;
 
-  RouteDefConfig.Costumize(this.RoutePartSeperator, this.RoutePartVariableStart, this.RoutePartVariableEnd, this.RoutePartVariableOptionalStart, this.RoutePartVariableOptionalEnd, this.RoutePartWildCard) {
+  RouteDefConfig.Costumize(this.RoutePartVariableStart, this.RoutePartVariableEnd, this.RoutePartVariableOptionalStart, this.RoutePartVariableOptionalEnd, this.RoutePartWildCard) {
     _config = this;
   }
+  
+  factory RouteDefConfig.SetToDefault() 
+  {
+    _config = new RouteDefConfig.Costumize(":", "", "(", ")", "*"); // Default Config
+    
+    return _config;
+  }  
   
   factory RouteDefConfig.Current() 
   {
     if(_config == null)
     {
-      _config = new RouteDefConfig.Costumize("/", ":", "", "(", ")", "*"); // Default Config
+      _config = new RouteDefConfig.SetToDefault();
     }
     
     return _config;

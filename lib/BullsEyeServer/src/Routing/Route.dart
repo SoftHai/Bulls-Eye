@@ -42,7 +42,7 @@ abstract class Route {
   {
     var variables = this._routeDefenition.matcher.getMatches(request.uri.path);
     var context = new RouteContext(request, this._routeDefenition, variables);
-    this._internalExecute(context);
+    return this._internalExecute(context);
   }
   
   bool _internalExecute(RouteContext context);
