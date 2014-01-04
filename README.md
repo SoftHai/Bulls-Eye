@@ -22,6 +22,31 @@ The Lib is devided into 3 parts:
 
 To get an idea of the state, take a look at the example, doc and/or the tests.
 
+Example
+=========
+```dart
+
+// Route defenition
+var jsPath = new RouteDef("js/*");
+var cssPath = new RouteDef("css/*");
+var home = new RouteDef("");
+var ToDoListItemRoute = new RouteDef("ToDo/:ListID/(:ItemID)");
+
+// Create Server
+var server = new Server();
+
+// Define Routes
+server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
+      ..RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]))
+      ..RegisterRoute(new FileRoute.fromPath(home, "html/home.html", methods: ["GET"]))
+      ..RegisterRoute(new LogicRoute(ToDoListItemRoute, (context) {
+        //Logic to execute here
+      }, methods: ["GET"]));
+
+// Start Server
+server.start();
+```
+
 Targets
 =========
 * be extendable (e.g. via plugins)
