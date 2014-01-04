@@ -37,6 +37,11 @@ class Variable extends RoutePart {
     this.isOptional = isOptinal;
   }
   
+  void CheckUsage(RouteDef currentRoute) 
+  {
+    
+  }
+  
   String toString() 
   {
     var config = new RouteDefConfig.Current();
@@ -49,9 +54,4 @@ class Variable extends RoutePart {
     
     return partStr;
   }
-}
-
-class Version extends Variable {
-
-  Version() : super(new RouteDefConfig.Current().RoutePartVariableVersion, false);
 }

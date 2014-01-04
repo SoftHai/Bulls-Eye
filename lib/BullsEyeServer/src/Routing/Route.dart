@@ -52,7 +52,7 @@ class RouteContext {
 
   HttpRequest request;
   common.RouteDef currentRoute;
-  common.MatchResult routeVariables;
+  common.UriMatcherResult routeVariables;
   Map<String, Object> contextData;
 
   RouteContext(this.request, this.currentRoute, this.routeVariables) {

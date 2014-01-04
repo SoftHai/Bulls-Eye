@@ -8,6 +8,12 @@ class RouteDef {
   List<RoutePart> routeParts = new List<RoutePart>();
   
   RouteDef(String routeString, [String name]) {
+    var x = 10;
+    if(routeString.contains("{"))
+    {
+      x += 10;
+    }
+    
     this.name = name == null ? routeString : name;
     var parts = routeString.split(this.config.RoutePartSeperator);
     this._initFromStrings(parts);
@@ -18,17 +24,12 @@ class RouteDef {
     this.name = name == null ? this.routeParts.join(this.config.RoutePartSeperator) : name;
     
     // Check if multiple Version-Elements are defined
-    bool versionAvailable = false; 
     this.routeParts.forEach((part) 
         { 
-          if(part is Version || (part is Variable && (part as Variable).varName == this.config.RoutePartVariableVersion)) 
+          if(part is Variable) 
           {
-            if(versionAvailable)
-            {
-              throw new MultipleVersionException(this);
-            }
-            
-            versionAvailable = true;
+            var variable = part as Variable;
+            variable.CheckUsage(this);
           }
         });
     
@@ -42,8 +43,6 @@ class RouteDef {
   
   void _initFromStrings(List<String> parts)
   {
-    bool versionAdded = false; 
-    
     parts.forEach((part) 
         {
           if(part == this.config.RoutePartWildCard)
@@ -53,24 +52,22 @@ class RouteDef {
           else if((part.startsWith(this.config.RoutePartVariableOptionalStart) && part.endsWith(this.config.RoutePartVariableOptionalEnd))||
                   (part.startsWith(this.config.RoutePartVariableStart) && part.endsWith(this.config.RoutePartVariableEnd)))
           {
-            // Variable
-            if(part == this.config.RoutePartVariableStart + this.config.RoutePartVariableVersion + this.config.RoutePartVariableEnd)
+            // Check if special variable
+            bool isSpecialVar = false;
+            for(var parseFunc in this.config.specialVariableParsers)
             {
-              // Version Variable
-              if(!versionAdded) {
-                // First Version
-                this.routeParts.add(new Version());
-                versionAdded = true;
-              }
-              else
+              var value = parseFunc(part, this.config, this);
+              if(value != null)
               {
-                // Multible versions defined, not allowed
-                throw new MultipleVersionException(this);
+                this.routeParts.add(value);
+                isSpecialVar = true;
+                break;
               }
             }
-            else
+            
+            // Variable
+            if(!isSpecialVar)
             {
-              // Custom Variable
               bool isOptinal = false;
               var clean = part;
               

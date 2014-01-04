@@ -141,6 +141,26 @@ main()  {
         
         expect(routeDef.matcher.match("/Part1/Part2/12345/Part3/bla"), isTrue);
       });
+      
+      test("Test - Customized Route Def Config", () {
+        var custConfig = new RouteDefConfig.Costumize("|", "{", "}", "!", "", "%");
+        Version.RegisterParseFunc();
+        
+        var routeStr = "Part1|{Version}|Part2|{var}|!{OptVariable}|Part3|%";
+        var routeDef = new RouteDef(routeStr);
+        
+        expect(routeDef.toString(), equals(routeStr));
+        expect(routeDef.routeParts, hasLength(7));
+        expect(routeDef.routeParts[0],new isInstanceOf<Static>());
+        expect(routeDef.routeParts[1],new isInstanceOf<Version>());
+        expect(routeDef.routeParts[2],new isInstanceOf<Static>());
+        expect(routeDef.routeParts[3],new isInstanceOf<Variable>());
+        expect(routeDef.routeParts[4],new isInstanceOf<Variable>());
+        expect((routeDef.routeParts[4] as Variable).isOptional, isTrue);
+        expect(routeDef.routeParts[5],new isInstanceOf<Static>());
+        expect(routeDef.routeParts[6],new isInstanceOf<WildCard>());
+        
+      });
     });
     
   });

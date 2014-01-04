@@ -95,7 +95,7 @@ class UriMatcher {
     return this._regex.hasMatch(path);
   }
   
-  MatchResult getMatches(String path)
+  UriMatcherResult getMatches(String path)
   {
     Map<Variable,String> result = new Map<Variable,String>();
     
@@ -113,7 +113,7 @@ class UriMatcher {
               result[vm.variable] = null;
             }
           });
-      return new MatchResult(result);
+      return new UriMatcherResult(result);
     }
     else 
     {
@@ -125,7 +125,7 @@ class UriMatcher {
         {
           result[this._vars[i].variable] = match[i+1];
         }
-        return new MatchResult(result);
+        return new UriMatcherResult(result);
       }
     }
     
@@ -151,11 +151,11 @@ class _VariableManager {
   const _VariableManager(this.regEx, this.variable);
 }
 
-class MatchResult {
+class UriMatcherResult {
   
   final Map<Variable,String> result;
   
-  const MatchResult(this.result);
+  const UriMatcherResult(this.result);
   
   String operator [](String varName) {
     return this.result[this.result.keys.firstWhere((v) => v.varName == varName)];
