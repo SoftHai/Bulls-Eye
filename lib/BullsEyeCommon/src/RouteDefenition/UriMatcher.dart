@@ -18,7 +18,7 @@ class UriMatcher {
   void _initUriMatcher()
   {
     this._vars = new List<_VariableManager>();
-    var vars = this.routeDef.routeParts.where((part) => part is Variable).toList();
+    var vars = this.routeDef.routeParts.where((part) => part is Variable || part is WildCard).toList();
   
     if(this.hasOptionalVariables)
     {
@@ -49,7 +49,15 @@ class UriMatcher {
                 }
                 else if(part is WildCard)
                 {
-                  regExpStr += r".*";
+                  if(vpart == part)
+                  {
+                    vpart = new Variable("*", true);
+                    regExpStr += r"(.*)";
+                  }
+                  else
+                  {
+                    regExpStr += r".*";
+                  }
                 }
                 regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
               });
@@ -61,7 +69,7 @@ class UriMatcher {
     else
     {
       // No induvidual regex required
-      vars.forEach((vpart) { _vars.add(new _VariableManager(null, vpart)); });
+      vars.forEach((vpart) { _vars.add(new _VariableManager(null, (vpart is Variable ? vpart : new Variable("*", true)))); });
     }
     
     // Build a single regex for the whole path
@@ -80,7 +88,7 @@ class UriMatcher {
           }
           else if(part is WildCard)
           {
-            regExpStr += r".*";
+            regExpStr += r"(.*)";
           }
           
           regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
@@ -171,10 +179,10 @@ class UriMatcherResult {
   const UriMatcherResult(this.result);
   
   String operator [](String varName) {
-    return this.result[this.result.keys.firstWhere((v) => v.varName == varName)];
+    return this.result[this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null)];
   }
   
   Variable getVariable(String varName) {
-    return this.result.keys.firstWhere((v) => v.varName == varName);
+    return this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null);
   }
 }

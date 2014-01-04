@@ -34,11 +34,11 @@ Roadmap
 Legend: [ ] Planned, [/] Progress, [X] Finished
 
 
-- [/] Routing Common
+- [X] Routing Common
  - [ ] Add Query-Parameters
-- [/] Routing Server Side
- - [/] Routing to Logic
- - [/] Routing to Files (e.g. pictures, css, js, html, ...)
+- [X] Routing Server Side
+ - [X] Routing to Logic
+ - [X] Routing to Files (e.g. pictures, css, js, html, ...)
 
 **Milestone 1** (Jan 2014)
 

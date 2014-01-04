@@ -85,25 +85,39 @@ main()  {
         expect(routeDef.matcher.match("/Part1/v1/12345/Part2/6789/Part3/More/More.js"), isTrue);
         
         var variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/6789/Part3/More/More.js");
-        expect(variables.result, hasLength(3));
+        expect(variables.result, hasLength(4));
         expect(variables.getVariable("Version"), new isInstanceOf<Version>());
         expect(variables["Version"], "v1");
         expect(variables.getVariable("Var1"), new isInstanceOf<Variable>());
         expect(variables["Var1"], "12345");       
         expect(variables.getVariable("OptVar2"), new isInstanceOf<Variable>());
         expect(variables["OptVar2"], "6789");
+        expect(variables.getVariable("*"), new isInstanceOf<Variable>());
+        expect(variables["*"], "More/More.js");
         
         // Without optional variable part
         expect(routeDef.matcher.match("/Part1/v1/12345/Part2/Part3/"), isTrue);
         
         variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/Part3/");
-        expect(variables.result, hasLength(3));
+        expect(variables.result, hasLength(4));
         expect(variables.getVariable("Version"), new isInstanceOf<Version>());
         expect(variables["Version"], "v1");
         expect(variables.getVariable("Var1"), new isInstanceOf<Variable>());
         expect(variables["Var1"], "12345");       
         expect(variables.getVariable("OptVar2"), new isInstanceOf<Variable>());
-        expect(variables["OptVar2"], null);   
+        expect(variables["OptVar2"], isNull);
+        expect(variables.getVariable("*"), new isInstanceOf<Variable>());
+        expect(variables["*"], isNull);
+      });
+      
+      test("Test - UriMatcher Match - Not available variable", () {
+        var routeDef = new RouteDef("Part1/Part2");
+
+        var variables = routeDef.matcher.getMatches("/Part1/Part2");
+        
+        expect(variables["abc"], isNull);
+        expect(variables.getVariable("abc"), isNull);
+
       });
       
       test("Test - UriMatcher Match Successful - leading /", () {

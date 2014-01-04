@@ -36,8 +36,8 @@ main()  {
   // Make sure the Mock works as expected
   test("Test HttpRequestMock", () { TestHttpRequestMock(); });
   
-  var routeDef = new RouteDef("/Part1/:var1/Part2/(:var2)");
-  var route = new LogicRoute(routeDef, (context) { return true; }, ["GET"], ["application/html"]);
+  var routeDef = new RouteDef("/Part1/:var1/Part2/(:var2)", "Demo Route");
+  var route = new LogicRoute(routeDef, (context) { return true; }, methods: ["GET"], contentTypes: ["application/html"]);
   
   group("BullsEye Server -", () {
     
@@ -54,7 +54,11 @@ main()  {
         
         // Test without optional var
         httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html"]);
-        expect(route.match(httpRequest), isTrue);        
+        expect(route.match(httpRequest), isTrue);     
+        
+        // Test with multible allowed contents
+        httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html,*/*"]);
+        expect(route.match(httpRequest), isTrue);     
       });  
       
       test("Test - Route Matching Not Successful", () {
@@ -78,6 +82,9 @@ main()  {
         httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/json"]);
         expect(route.match(httpRequest), isFalse);        
       }); 
+    });
+    
+    group("LogicRoute -", () {
       
       test("Test - Route execute", () {
         var routeExecute = new LogicRoute(routeDef, (RouteContext context) { 
@@ -96,7 +103,7 @@ main()  {
           }
           
           return true;
-          }, ["GET"], ["application/html"]);
+          }, methods: ["GET"], contentTypes: ["application/html"]);
         
         var httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html"]);
         expect(route.execute(httpRequest), isTrue);
@@ -104,6 +111,27 @@ main()  {
         httpRequest = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["application/html"]);
         expect(route.execute(httpRequest), isTrue);
        
+      });
+      
+      skip_test("Test - Route Exception", () {
+        bool exceptionRaised = false;
+        var routeExecute = new LogicRoute(routeDef, (RouteContext context) { 
+          throw new Exception("Test Exception");
+          }, methods: ["GET"], contentTypes: ["application/html"]);
+        
+        var httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html"]);
+        
+        routeExecute.registerExceptionHandler((Route route, request, ex) {
+          
+          expect(route, routeExecute);
+          expect(request, httpRequest);
+          expect(ex.toString(), "Test Exception");
+          exceptionRaised = true;
+        });
+
+        expect(route.execute(httpRequest), isTrue);
+        
+        expect(exceptionRaised, isTrue);
       });
     }); 
   });

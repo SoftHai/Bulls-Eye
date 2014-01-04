@@ -6,6 +6,8 @@ class Server {
   
   void RegisterRoute(Route route){
     this._routes.add(route);
+    
+    route.registerExceptionHandler(this._handleException);
   }
   
   void start() {
@@ -18,6 +20,7 @@ class Server {
           if(route.match(request))
           {
             route.execute(request);
+            
             return;
           }
         }
@@ -32,7 +35,7 @@ class Server {
         print("Call in - Method:" + request.method + 
             " | Path:" + request.uri.path);
         print("----------Header-Data---------");
-        request.headers.forEach((a,b) { print(a + ": " + b.join(" , "));});
+        request.headers.forEach((a,b) { print(a + ": " + b.join(" | "));});
         print("------------------------------");
         request.response.write('Hello, world');
         request.response.close();
@@ -40,6 +43,17 @@ class Server {
         */
       });
     });
+  }
+  
+  void _handleException(Route route, HttpRequest request, Exception ex)
+  {
+    if(ex is NotFoundException)
+    {
+      print(ex.toString());
+      
+      request.response.statusCode = HttpStatus.NOT_FOUND;
+      request.response.close();
+    }
   }
   
 }

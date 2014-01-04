@@ -6,12 +6,19 @@ class LogicRoute extends Route {
   
   LogicCall _logicCall;
   
-  LogicRoute(common.RouteDef routeDefenition, this._logicCall, [List<String> methods, List<String> contentTypes]) : super(routeDefenition, methods, contentTypes) {
+  LogicRoute(common.RouteDef routeDefenition, this._logicCall, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes) {
     
   }
   
   bool _internalExecute(RouteContext context) 
   {
-    return this._logicCall(context);
+    try
+    {
+      return this._logicCall(context);
+    }
+    catch(e)
+    {
+      this._handleException(e, context.request);
+    }
   }
 }

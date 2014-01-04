@@ -4,12 +4,39 @@ class FileRoute extends Route {
   
   String _filePath;
   
-  FileRoute(common.RouteDef routeDefenition, [this._filePath, List<String> methods, List<String> contentTypes]) : super(routeDefenition, methods, contentTypes) {
+  FileRoute.fromUri(common.RouteDef routeDefenition, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
     
-  }
+  FileRoute.fromPath(common.RouteDef routeDefenition, this._filePath, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
   
   bool _internalExecute(RouteContext context) 
   {
-    return false;
+    var filePath = this._filePath; 
+    
+    if(filePath == null)
+    {
+      // Try to find a wildcard variable
+      filePath = context.routeVariables["*"];
+    }
+    
+    if(filePath == null)
+    {
+      return false;
+    }
+    else
+    {
+      final File file = new File(filePath);
+      var f = file.exists().then((bool found) {
+        if (found) 
+        {
+          file.openRead().pipe(context.request.response);
+        } 
+        else 
+        {
+          this._handleException(new NotFoundException(this, filePath), context.request);
+        }
+      });
+    }
+    
+    return true;
   }
 }

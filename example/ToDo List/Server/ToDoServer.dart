@@ -8,8 +8,10 @@ void main() {
   var logic = new ServerLogic();
   
   var server = new Server();
-  server..RegisterRoute(new LogicRoute(home, logic.homeRouteLogic, ["GET"]))
-        ..RegisterRoute(new LogicRoute(about, logic.aboutRouteLogic, ["GET"]));
+  server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
+        ..RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]))
+        ..RegisterRoute(new FileRoute.fromPath(home, "html/home.html", methods: ["GET"]))
+        ..RegisterRoute(new LogicRoute(about, logic.aboutRouteLogic, methods: ["GET"]));
   
   server.start();
   
