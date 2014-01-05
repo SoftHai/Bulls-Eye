@@ -16,10 +16,11 @@ Example
 ```dart
 
 // Route defenition
-var jsPath = new RouteDef("js/*");
+var jsPath = new RouteDef("js/*"); // Add a wildcard '*' to match all routes they start with the defined route
 var cssPath = new RouteDef("css/*");
 var home = new RouteDef("");
-var ToDoListItemRoute = new RouteDef("ToDo/:ListID/(:ItemID)");
+var toDoListItemRoute = new RouteDef("ToDo/:ListID/(:ItemID)"); // Define route variables 'ListID' and optional route variables 'ItemID'
+var searchRoute = new RouteDef("search?q&(ResultCount)"); // Define query variables 'q' and optional query variables 'ResultCount'
 
 // Create Server
 var server = new Server();
@@ -28,10 +29,12 @@ var server = new Server();
 server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
       ..RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]))
       ..RegisterRoute(new FileRoute.fromPath(home, "html/home.html", methods: ["GET"]))
-      ..RegisterRoute(new LogicRoute(ToDoListItemRoute, (context) {
+      ..RegisterRoute(new LogicRoute(toDoListItemRoute, (context) {
         //Logic to execute here
       }, methods: ["GET"]));
-
+	 ..RegisterRoute(new LogicRoute(searchRoute, (context) {
+        // Search logic to execute here
+      }, methods: ["GET"]));
 // Start Server
 server.start();
 ```
@@ -42,7 +45,7 @@ The Lib is devided into 3 parts:
 * Common: Here are functions which are required on client and server side (e.g. route defenitions, ...)
  * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RouteDefenition.md)
 * Server: Here are the server side specific implementations
- * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Router.md)
+ * WebServer
 * Client: Here are the client side specific impelmentations
 
 To get an idea of the state, take a look at the example, doc and/or the tests.

@@ -3,38 +3,49 @@ part of softhai.bulls_eye.Common;
 class UriMatcher {
   
   RegExp _regex;
-  List<_VariableManager> _vars;
+  List<_VariableManager<Variable>> _routeVars;
+  List<_VariableManager<QVariable>> _queryVars;
   RouteDef routeDef; 
   
   bool hasOptionalVariables = false;
   
   UriMatcher(this.routeDef)
   {
-    this.hasOptionalVariables = this.routeDef.routeParts.where((part) => part is Variable && (part as Variable).isOptional).length > 0; 
+    this.hasOptionalVariables = this.routeDef.routeParts.where((part) => part is Variable && (part as Variable).isOptional).length > 0 ||
+                                this.routeDef.queryParts.where((part) => part is QVariable && (part as QVariable).isOptional).length > 0; 
     
     this._initUriMatcher();
   }
   
   void _initUriMatcher()
   {
-    this._vars = new List<_VariableManager>();
-    var vars = this.routeDef.routeParts.where((part) => part is Variable || part is WildCard).toList();
+    this._routeVars = new List<_VariableManager<Variable>>();
+    this._queryVars = new List<_VariableManager<QVariable>>();
+    var routeVars = this.routeDef.routeParts.where((part) => part is Variable || part is WildCard).toList();
   
     if(this.hasOptionalVariables)
     {
       // Build a individual regex for each variable (reqiured if optional part are available)
-      vars.forEach((vpart) {
+      routeVars.forEach((vpart) {
           String regExpStr = this._buildRegExp(vpart);
           
           vpart = vpart is WildCard ? new Variable("*", true) : vpart;
           
-          this._vars.add(new _VariableManager(new RegExp(regExpStr), vpart));
+          this._routeVars.add(new _VariableManager<Variable>(new RegExp(regExpStr), vpart));
         });
+      
+      this.routeDef.queryParts.forEach((vpart) {
+        String regExpStr = this._buildRegExp(vpart);
+        
+        this._queryVars.add(new _VariableManager<QVariable>(new RegExp(regExpStr), vpart));
+      });
     }
     else
     {
       // No induvidual regex required
-      vars.forEach((vpart) { _vars.add(new _VariableManager(null, (vpart is Variable ? vpart : new Variable("*", true)))); });
+      routeVars.forEach((vpart) { _routeVars.add(new _VariableManager<Variable>(null, (vpart is Variable ? vpart : new Variable("*", true)))); });
+      
+      this.routeDef.queryParts.forEach((vpart) { _queryVars.add(new _VariableManager<QVariable>(null, vpart)); });
     }
     
     // Build a single regex for the whole path
@@ -49,36 +60,62 @@ class UriMatcher {
   }
   
   UriMatcherResult getMatches(String path)
-  {
-    Map<Variable,String> result = new Map<Variable,String>();
+  {   
+    Map<Variable,String> routeResult = new Map<Variable,String>();
+    Map<QVariable,String> queryResult = new Map<QVariable,String>();
     
     if(this.hasOptionalVariables)
     {
-      this._vars.forEach((vm) {
+      // Route Variables
+      this._routeVars.forEach((vm) {
             var m = vm.regEx.allMatches(path);
             var match = m.elementAt(0);
             if(match.groupCount == 1 && match[1].isNotEmpty)
             {
-              result[vm.variable] = match[1];
+              routeResult[vm.variable] = match[1];
             }
             else if(vm.variable.isOptional)
             {
-              result[vm.variable] = null;
+              routeResult[vm.variable] = null;
             }
           });
-      return new UriMatcherResult(result);
+      
+      // Query Variables
+      this._queryVars.forEach((vm) {
+        var m = vm.regEx.allMatches(path);
+        var match = m.elementAt(0);
+        if(match.groupCount == 1 && match[1] != null && match[1].isNotEmpty)
+        {
+          queryResult[vm.variable] = match[1];
+        }
+        else if(vm.variable.isOptional)
+        {
+          queryResult[vm.variable] = null;
+        }
+      });
+      return new UriMatcherResult(routeResult, queryResult);
     }
     else 
     {
       var m = this._regex.allMatches(path);
       var match = m.elementAt(0);
-      if(match.groupCount == this._vars.length)
+      if(match.groupCount == this._routeVars.length)
       {
-        for(int i = 0; i < this._vars.length; i++)
+        int globalI = 0;
+        // Route Variables
+        for(int i = 0; i < this._routeVars.length; i++)
         {
-          result[this._vars[i].variable] = match[i+1];
+          routeResult[this._routeVars[i].variable] = match[i+1];
+          globalI = i;
         }
-        return new UriMatcherResult(result);
+        
+        // Query Variable
+        for(int i = 0; i < this._queryVars.length; i++)
+        {
+          queryResult[this._queryVars[i].variable] = match[globalI+i+1];
+        }
+        
+        return new UriMatcherResult(routeResult, queryResult);
       }
     }
     
@@ -92,28 +129,42 @@ class UriMatcher {
     for(int i = 0; i < values.length; i++)
     {
       var variableName = values.keys.elementAt(i);
-      var varMang = this._vars.firstWhere((v) => v.variable.varName == variableName);
-      
-      if(varMang != null)
+      if(variableName == this.routeDef.config.RoutePartWildCard)
       {
-        path = path.replaceFirst(varMang.variable.toString(), values[variableName].toString());
+        // Wildcard
+        path = path.replaceFirst(this.routeDef.config.RoutePartWildCard, values[variableName].toString());
+      }
+      else
+      {
+        var routeVarMang = this._routeVars.firstWhere((v) => v.variable.varName == variableName, orElse: () => null);
+        var queryVarMang = this._queryVars.firstWhere((v) => v.variable.varName == variableName, orElse: () => null);
+        
+        if(routeVarMang != null)
+        {
+          path = path.replaceFirst(routeVarMang.variable.toString(), values[variableName].toString());
+        }
+        else if (queryVarMang != null)
+        {
+          var varName = queryVarMang.variable.varName;
+          var varValue = values[variableName];
+          path = path.replaceFirst(queryVarMang.variable.toString(), "$varName=$varValue");
+        }
       }
     }
-    
     // Remove all Left Optional Variable-Placeholder
-    this._vars.where((v) => v.variable.isOptional).forEach((vm) => path = path.replaceAll(this.routeDef.config.RoutePartSeperator + vm.variable.toString(), ""));
-    
-    // Remove the WildCard sign
+    this._routeVars.where((v) => v.variable.isOptional).forEach((vm) => path = path.replaceAll(this.routeDef.config.RoutePartSeperator + vm.variable.toString(), ""));
+    this._queryVars.where((v) => v.variable.isOptional).forEach((vm) => path = path.replaceAll(this.routeDef.config.RoutePartQuerySeperator + vm.variable.toString(), ""));
+
+    // Remove the WildCard sign, if not replaced before
     path = path.replaceAll(this.routeDef.config.RoutePartWildCard, "");
 
     return path;
   }
 
-  String _buildRegExp([RoutePart currentVar])
+  String _buildRegExp([Object currentVar])
   {
     String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
-    this.routeDef.routeParts.forEach((part) 
-        {
+    this.routeDef.routeParts.forEach((part) {
       var vpart = currentVar == null ? part : currentVar;
       
       if(part is Static)
@@ -148,24 +199,32 @@ class UriMatcher {
         }
       }
       regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
-        });
+    });
     regExpStr += r"?";
     
     if(this.routeDef.queryParts.length > 0) // Query Parts
     {
       regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
       
-      this.routeDef.queryParts.forEach((part) 
-          {
+      this.routeDef.queryParts.forEach((part) {
+        var qpart = currentVar == null ? part : currentVar;
+        
         if(part is QVariable)
         {
           var v = part as QVariable;
           regExpStr += v.isOptional ? "?" : "";
-          regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
+          if(qpart == v)
+          {
+            regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=([^\&]*)" + (v.isOptional ? ")?" : "");
+          }
+          else
+          {
+            regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
+          }
         }
         
         regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
-          });
+      });
       
       regExpStr += r"?";
     }
@@ -177,24 +236,35 @@ class UriMatcher {
   
 }
 
-class _VariableManager {
+class _VariableManager<VarType> {
   final RegExp regEx;
-  final Variable variable;
+  final VarType variable;
   
   const _VariableManager(this.regEx, this.variable);
 }
 
 class UriMatcherResult {
   
-  final Map<Variable,String> result;
+  UriVariableResult<Variable> routeVariables;
+  UriVariableResult<QVariable> queryVariables;
   
-  const UriMatcherResult(this.result);
+  UriMatcherResult(Map<Variable,String> routeResult, Map<QVariable,String> queryResult) {
+    this.routeVariables = new UriVariableResult<Variable>(routeResult); 
+    this.queryVariables = new UriVariableResult<QVariable>(queryResult); 
+  }
+}
+
+class UriVariableResult<VarType> {
+  
+  final Map<VarType,String> result;
+  
+  const UriVariableResult(this.result);
   
   String operator [](String varName) {
     return this.result[this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null)];
   }
   
-  Variable getVariable(String varName) {
+  VarType getVariable(String varName) {
     return this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null);
   }
 }

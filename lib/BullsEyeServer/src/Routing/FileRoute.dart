@@ -15,7 +15,7 @@ class FileRoute extends Route {
     if(filePath == null)
     {
       // Try to find a wildcard variable
-      filePath = context.routeVariables["*"];
+      filePath = context.variables.routeVariables["*"];
     }
     
     if(filePath == null)

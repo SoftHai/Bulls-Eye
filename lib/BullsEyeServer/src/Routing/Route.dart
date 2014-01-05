@@ -72,10 +72,10 @@ class RouteContext {
 
   HttpRequest request;
   common.RouteDef currentRoute;
-  common.UriMatcherResult routeVariables;
+  common.UriMatcherResult variables;
   Map<String, Object> contextData;
 
-  RouteContext(this.request, this.currentRoute, this.routeVariables) {
+  RouteContext(this.request, this.currentRoute, this.variables) {
     this.contextData = new Map<String,Object>();
   }
 }
