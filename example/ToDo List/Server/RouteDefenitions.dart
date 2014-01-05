@@ -18,12 +18,12 @@ var cssPath = new RouteDef("css/*", "CSS File access");
 // Pages
 var jshome = new RouteDef("", "Home JavaScript");
 var darthome = new RouteDef("darthome", "Home Dart");
-var about = new RouteDef.fromObjects([new Static("about")], "Aboute Route");
-var todoLists = new RouteDef.fromObjects([toDo], "ToDo Lists Route");
-var todoList = new RouteDef.fromObjects([toDo, listID], "ToDo List Route");
-var todoItem = new RouteDef.fromObjects([toDo, listID, itemID], "ToDo Item Route");
+var about = new RouteDef.fromObjects([new Static("about")], name: "Aboute Route");
+var todoLists = new RouteDef.fromObjects([toDo], name: "ToDo Lists Route");
+var todoList = new RouteDef.fromObjects([toDo, listID], name: "ToDo List Route");
+var todoItem = new RouteDef.fromObjects([toDo, listID, itemID], name: "ToDo Item Route");
 
 // ----------Route Defenition - API----------
-var api_todoLists = new RouteDef.fromObjects([version, toDo], "API: ToDo Lists Route");
-var api_todoList = new RouteDef.fromObjects([version, toDo, listID], "API: ToDo List Route");
-var api_todoItem = new RouteDef.fromObjects([version, toDo, listID, itemID], "API: ToDo Item Route");
+var api_todoLists = new RouteDef.fromObjects([version, toDo], name: "API: ToDo Lists Route");
+var api_todoList = new RouteDef.fromObjects([version, toDo, listID], name: "API: ToDo List Route");
+var api_todoItem = new RouteDef.fromObjects([version, toDo, listID, itemID], name: "API: ToDo Item Route");

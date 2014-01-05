@@ -6,16 +6,30 @@ void _BullsEyeCommonTest_RouteDefenition_Test(RouteDef routeDef, String expected
   
   expect(routeDef.name, equals(expectedName));
   expect(routeDef.toString(), equals(expectedPath));
+  
   expect(routeDef.routeParts, hasLength(6));
   expect(routeDef.routeParts[0],new isInstanceOf<Static>());
+  expect((routeDef.routeParts[0] as Static).partName, "Part1");
   expect(routeDef.routeParts[1],new isInstanceOf<Version>());
+  expect((routeDef.routeParts[1] as Variable).varName, "Version");
   expect((routeDef.routeParts[1] as Variable).isOptional, isFalse);
   expect(routeDef.routeParts[2],new isInstanceOf<Variable>());
+  expect((routeDef.routeParts[2] as Variable).varName, "Var1");
   expect((routeDef.routeParts[2] as Variable).isOptional, isFalse);
   expect(routeDef.routeParts[3],new isInstanceOf<Static>());
+  expect((routeDef.routeParts[3] as Static).partName, "Part2");
   expect(routeDef.routeParts[4],new isInstanceOf<Variable>());
+  expect((routeDef.routeParts[4] as Variable).varName, "OptVar2");
   expect((routeDef.routeParts[4] as Variable).isOptional, isTrue);
   expect(routeDef.routeParts[5],new isInstanceOf<WildCard>());
+  
+  expect(routeDef.queryParts, hasLength(2));
+  expect(routeDef.queryParts[0],new isInstanceOf<QVariable>());
+  expect((routeDef.queryParts[0] as QVariable).varName, "QVar1");
+  expect((routeDef.queryParts[0] as QVariable).isOptional, isFalse);
+  expect(routeDef.queryParts[1],new isInstanceOf<QVariable>());
+  expect((routeDef.queryParts[1] as QVariable).varName, "QVar2");
+  expect((routeDef.queryParts[1] as QVariable).isOptional, isTrue);
 }
 
 RouteDef _Build_RouteDefenition_FromObjects1() {
@@ -25,22 +39,24 @@ RouteDef _Build_RouteDefenition_FromObjects1() {
                                    new Variable("Var1"), 
                                    new Static("Part2"),
                                    new Variable("OptVar2", true),
-                                   new WildCard()]);
+                                   new WildCard()], 
+                                   queryParts: [new QVariable("QVar1"),
+                                                new QVariable("QVar2", true)]);
 }
 
-RouteDef _Build_RouteDefenition_FromStrings1() {
+RouteDef _Build_RouteDefenition_FromMixed1() {
   
-  return new RouteDef.fromMixed(["Part1", 
-                                           ":Version", 
-                                           ":Var1", 
-                                           "Part2",
-                                           "(:OptVar2)",
-                                           "*"]);
+  return new RouteDef.fromMixed(["Part1/:Version", 
+                                 new Variable("Var1"), 
+                                 "Part2",
+                                 new Variable("OptVar2", true),
+                                 "*?QVar1",
+                                 new QVariable("QVar2", true)]);
 }
 
 RouteDef _Build_RouteDefenition_FromString1() {
   
-  return new RouteDef("Part1/:Version/:Var1/Part2/(:OptVar2)/*");
+  return new RouteDef("Part1/:Version/:Var1/Part2/(:OptVar2)/*?QVar1&(QVar2)");
 }
 
 main()  {
@@ -48,7 +64,7 @@ main()  {
     
     group("Route Defenition -", () {
       
-      var expectedUrl = "Part1/:Version/:Var1/Part2/(:OptVar2)/*";
+      var expectedUrl = "Part1/:Version/:Var1/Part2/(:OptVar2)/*?QVar1&(QVar2)";
       
       test("Test - FromObjects1", () =>
            _BullsEyeCommonTest_RouteDefenition_Test(_Build_RouteDefenition_FromObjects1(), 
@@ -58,11 +74,11 @@ main()  {
           expect(() => new RouteDef.fromObjects([new Version(), new Version()]),
                  throwsA(new isInstanceOf<MultipleVersionException>())));
       
-      test("Test - FromStrings1", () =>
-          _BullsEyeCommonTest_RouteDefenition_Test(_Build_RouteDefenition_FromStrings1(), 
+      test("Test - FromMixed1", () =>
+          _BullsEyeCommonTest_RouteDefenition_Test(_Build_RouteDefenition_FromMixed1(), 
                                                    expectedUrl));
 
-      test("Test - FromStrings2 - MultipleVersionException", () => 
+      test("Test - FromMixed2 - MultipleVersionException", () => 
           expect(() => new RouteDef.fromMixed([":Version", ":Version"]),
                  throwsA(new isInstanceOf<MultipleVersionException>())));
       
@@ -79,12 +95,12 @@ main()  {
     group("UriMatcher -", () {
       
       test("Test - UriMatcher Match Successful - Complex", () {
-        var routeDef = new RouteDef("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*");
+        var routeDef = new RouteDef("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)");
                 
         // With optional variable part
-        expect(routeDef.matcher.match("/Part1/v1/12345/Part2/6789/Part3/More/More.js"), isTrue);
+        expect(routeDef.matcher.match("/Part1/v1/12345/Part2/6789/Part3/More/More.js?QVar1=abc&QVar2=def"), isTrue);
         
-        var variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/6789/Part3/More/More.js");
+        var variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/6789/Part3/More/More.js?QVar1=abc&QVar2=def");
         expect(variables.result, hasLength(4));
         expect(variables.getVariable("Version"), new isInstanceOf<Version>());
         expect(variables["Version"], "v1");
@@ -96,9 +112,9 @@ main()  {
         expect(variables["*"], "More/More.js");
         
         // Without optional variable part
-        expect(routeDef.matcher.match("/Part1/v1/12345/Part2/Part3/"), isTrue);
+        expect(routeDef.matcher.match("/Part1/v1/12345/Part2/Part3?QVar1=abc"), isTrue);
         
-        variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/Part3/");
+        variables = routeDef.matcher.getMatches("/Part1/v1/12345/Part2/Part3?QVar1=abc");
         expect(variables.result, hasLength(4));
         expect(variables.getVariable("Version"), new isInstanceOf<Version>());
         expect(variables["Version"], "v1");

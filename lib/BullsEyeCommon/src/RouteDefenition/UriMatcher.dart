@@ -52,16 +52,37 @@ class UriMatcher {
                   if(vpart == part)
                   {
                     vpart = new Variable("*", true);
-                    regExpStr += r"(.*)";
+                    regExpStr += r"?(.*)";
                   }
                   else
                   {
-                    regExpStr += r".*";
+                    regExpStr += r"?.*";
                   }
                 }
                 regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
               });
-          regExpStr += r"?$";
+          regExpStr += r"?";
+          
+          if(this.routeDef.queryParts.length > 0) // Query Parts
+          {
+            regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
+            
+            this.routeDef.queryParts.forEach((part) 
+                {
+              if(part is QVariable)
+              {
+                var v = part as QVariable;
+                regExpStr += v.isOptional ? "?" : "";
+                regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
+              }
+              
+              regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
+                });
+            
+            regExpStr += r"?";
+          }
+          
+          regExpStr += r"$";
           
           this._vars.add(new _VariableManager(new RegExp(regExpStr), vpart));
         });
@@ -74,7 +95,7 @@ class UriMatcher {
     
     // Build a single regex for the whole path
     String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
-    this.routeDef.routeParts.forEach((part) 
+    this.routeDef.routeParts.forEach((part)  // Route Parts
         {
           if(part is Static)
           {
@@ -88,13 +109,33 @@ class UriMatcher {
           }
           else if(part is WildCard)
           {
-            regExpStr += r"(.*)";
+            regExpStr += r"?(.*)";
           }
           
           regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
         });
-    regExpStr += r"?$";
+    regExpStr += r"?";
     
+    if(this.routeDef.queryParts.length > 0) // Query Parts
+    {
+      regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
+      
+      this.routeDef.queryParts.forEach((part) 
+          {
+            if(part is QVariable)
+            {
+              var v = part as QVariable;
+              regExpStr += v.isOptional ? "?" : "";
+              regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=([^\&]*)" + (v.isOptional ? ")?" : "");
+            }
+            
+            regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
+          });
+      
+      regExpStr += r"?";
+    }
+    
+    regExpStr += r"$";
     this._regex = new RegExp(regExpStr);
   }
   

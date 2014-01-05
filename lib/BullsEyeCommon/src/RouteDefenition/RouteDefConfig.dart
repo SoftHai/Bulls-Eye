@@ -1,10 +1,13 @@
 part of softhai.bulls_eye.Common;
 
-typedef Variable TryParseSpecialVariable(String partStr, RouteDefConfig currentConfig, RouteDef currentRoute);
+typedef Variable TryParseSpecialVariable(String rawStr, String cleanStr, bool isOptional, RouteDefConfig currentConfig, RouteDef currentRoute);
 
 class RouteDefConfig {
 
   final String RoutePartSeperator = "/";
+  final String RoutePartQueryStart = "?";
+  final String RoutePartQuerySeperator = "&";
+  
   final String RoutePartVariableOptionalStart;
   final String RoutePartVariableOptionalEnd;
   final String RoutePartVariableStart;

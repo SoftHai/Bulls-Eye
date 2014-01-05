@@ -14,9 +14,9 @@ class Version extends Variable {
     if(currentRoute.routeParts.where((part) => part is Version).length > 1) throw new MultipleVersionException(currentRoute);
   }
   
-  static Variable _TryParse(String partStr, RouteDefConfig currentConfig, RouteDef currentRoute) {
+  static Variable _TryParse(String rawStr, String cleanStr, bool isOptional, RouteDefConfig currentConfig, RouteDef currentRoute) {
     
-    if(partStr == currentConfig.RoutePartVariableStart + routePartVariableVersion + currentConfig.RoutePartVariableEnd)
+    if(cleanStr == routePartVariableVersion && !isOptional)
     {
       if(currentRoute.routeParts.where((part) => part is Version).length > 0) throw new MultipleVersionException(currentRoute);
 
