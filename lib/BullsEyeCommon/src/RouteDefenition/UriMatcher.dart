@@ -24,65 +24,9 @@ class UriMatcher {
     {
       // Build a individual regex for each variable (reqiured if optional part are available)
       vars.forEach((vpart) {
-          String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
-          this.routeDef.routeParts.forEach((part) 
-              {
-                if(part is Static)
-                {
-                  regExpStr += (part as Static).partName;
-                }
-                else if(part is Variable) // includes also the Version-Variable
-                {
-                  var v = part as Variable;
-                  regExpStr += v.isOptional ? "?" : "";
-                  
-                  if(vpart == v)
-                  {
-                    regExpStr += r"([^\/]*)" + (v.isOptional ? "?" : "");
-                  }
-                  else
-                  {
-                    regExpStr += r"[^\/]*";
-                  }
-                  
-                  //regExpStr += v.isOptional ? "?" : "";
-                }
-                else if(part is WildCard)
-                {
-                  if(vpart == part)
-                  {
-                    vpart = new Variable("*", true);
-                    regExpStr += r"?(.*)";
-                  }
-                  else
-                  {
-                    regExpStr += r"?.*";
-                  }
-                }
-                regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
-              });
-          regExpStr += r"?";
+          String regExpStr = this._buildRegExp(vpart);
           
-          if(this.routeDef.queryParts.length > 0) // Query Parts
-          {
-            regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
-            
-            this.routeDef.queryParts.forEach((part) 
-                {
-              if(part is QVariable)
-              {
-                var v = part as QVariable;
-                regExpStr += v.isOptional ? "?" : "";
-                regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
-              }
-              
-              regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
-                });
-            
-            regExpStr += r"?";
-          }
-          
-          regExpStr += r"$";
+          vpart = vpart is WildCard ? new Variable("*", true) : vpart;
           
           this._vars.add(new _VariableManager(new RegExp(regExpStr), vpart));
         });
@@ -94,48 +38,8 @@ class UriMatcher {
     }
     
     // Build a single regex for the whole path
-    String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
-    this.routeDef.routeParts.forEach((part)  // Route Parts
-        {
-          if(part is Static)
-          {
-            regExpStr += (part as Static).partName;
-          }
-          else if(part is Variable) // includes also the Version-Variable
-          {
-            var v = part as Variable;
-            regExpStr += v.isOptional ? "?" : "";
-            regExpStr += r"([^\/]*)" + (v.isOptional ? "?" : "");
-          }
-          else if(part is WildCard)
-          {
-            regExpStr += r"?(.*)";
-          }
-          
-          regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
-        });
-    regExpStr += r"?";
+    String regExpStr = this._buildRegExp();
     
-    if(this.routeDef.queryParts.length > 0) // Query Parts
-    {
-      regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
-      
-      this.routeDef.queryParts.forEach((part) 
-          {
-            if(part is QVariable)
-            {
-              var v = part as QVariable;
-              regExpStr += v.isOptional ? "?" : "";
-              regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=([^\&]*)" + (v.isOptional ? ")?" : "");
-            }
-            
-            regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
-          });
-      
-      regExpStr += r"?";
-    }
-    
-    regExpStr += r"$";
     this._regex = new RegExp(regExpStr);
   }
   
@@ -204,6 +108,73 @@ class UriMatcher {
 
     return path;
   }
+
+  String _buildRegExp([RoutePart currentVar])
+  {
+    String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
+    this.routeDef.routeParts.forEach((part) 
+        {
+      var vpart = currentVar == null ? part : currentVar;
+      
+      if(part is Static)
+      {
+        regExpStr += (part as Static).partName;
+      }
+      else if(part is Variable) // includes also the Version-Variable
+      {
+        var v = part as Variable;
+        regExpStr += v.isOptional ? "?" : "";
+        
+        if(vpart == v)
+        {
+          regExpStr += r"([^\/]*)" + (v.isOptional ? "?" : "");
+        }
+        else
+        {
+          regExpStr += r"[^\/]*";
+        }
+        
+        //regExpStr += v.isOptional ? "?" : "";
+      }
+      else if(part is WildCard)
+      {
+        if(vpart == part)
+        {
+          regExpStr += r"?(.*)";
+        }
+        else
+        {
+          regExpStr += r"?.*";
+        }
+      }
+      regExpStr += r"\" + this.routeDef.config.RoutePartSeperator;
+        });
+    regExpStr += r"?";
+    
+    if(this.routeDef.queryParts.length > 0) // Query Parts
+    {
+      regExpStr += r"\" + this.routeDef.config.RoutePartQueryStart;
+      
+      this.routeDef.queryParts.forEach((part) 
+          {
+        if(part is QVariable)
+        {
+          var v = part as QVariable;
+          regExpStr += v.isOptional ? "?" : "";
+          regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
+        }
+        
+        regExpStr += r"\" + this.routeDef.config.RoutePartQuerySeperator;
+          });
+      
+      regExpStr += r"?";
+    }
+    
+    regExpStr += r"$";
+    
+    return regExpStr;
+  }
+  
 }
 
 class _VariableManager {
