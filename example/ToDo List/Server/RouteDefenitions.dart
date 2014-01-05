@@ -7,7 +7,7 @@ var toDo = new Static("ToDo");
 var version = new Version();
 var listID = new Variable("ListID");
 var itemID = new Variable("ItemID");
-
+var searchQuery = new QVariable("q");
 // ----------Route Defenition - Page----------
 
 // Gobal Pathes
@@ -22,6 +22,7 @@ var about = new RouteDef.fromObjects([new Static("about")], name: "Aboute Route"
 var todoLists = new RouteDef.fromObjects([toDo], name: "ToDo Lists Route");
 var todoList = new RouteDef.fromObjects([toDo, listID], name: "ToDo List Route");
 var todoItem = new RouteDef.fromObjects([toDo, listID, itemID], name: "ToDo Item Route");
+var search = new RouteDef.fromObjects([new Static("search")], queryParts: [searchQuery], name: "ToDo Item Route");
 
 // ----------Route Defenition - API----------
 var api_todoLists = new RouteDef.fromObjects([version, toDo], name: "API: ToDo Lists Route");
