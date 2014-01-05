@@ -32,11 +32,11 @@ class FileRoute extends Route {
         } 
         else 
         {
-          this._handleException(new NotFoundException(this, filePath), context.request);
+          this._handleException(new FileNotFoundException(context.request, filePath, this));
         }
       });
     }
     
-    return true;
+    return null;
   }
 }

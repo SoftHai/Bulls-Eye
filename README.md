@@ -11,17 +11,6 @@ Install
 Currently you have to use the source code from github.
 In near future there will be a dartlang-pub-deployment for this. I will start with this when I reached my first Milestone (see road map below).
 
-Lib
-=========
-The Lib is devided into 3 parts:
-* Common: Here are functions which are required on client and server side (e.g. route defenitions, ...)
- * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RouteDefenition.md)
-* Server: Here are the server side specific implementations
- * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Router.md)
-* Client: Here are the client side specific impelmentations
-
-To get an idea of the state, take a look at the example, doc and/or the tests.
-
 Example
 =========
 ```dart
@@ -47,46 +36,26 @@ server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTy
 server.start();
 ```
 
+Lib Doc
+=========
+The Lib is devided into 3 parts:
+* Common: Here are functions which are required on client and server side (e.g. route defenitions, ...)
+ * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RouteDefenition.md)
+* Server: Here are the server side specific implementations
+ * [Router](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Router.md)
+* Client: Here are the client side specific impelmentations
+
+To get an idea of the state, take a look at the example, doc and/or the tests.
+
+Roadmap
+=========
+See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Roadmap.md)
+
 Targets
 =========
 * be extendable (e.g. via plugins)
 * be easy
 * be fast
-
-
-Roadmap
-=========
-Legend: [ ] Planned, [/] Progress, [X] Finished
-
-
-- [X] Routing Common
- - [ ] Add Query-Parameters
-- [X] Routing Server Side
- - [X] Routing to Logic
- - [X] Routing to Files (e.g. pictures, css, js, html, ...)
-
-**Milestone 1** (Jan 2014)
-
-- [ ] Routing Client Side
-- [ ] Routing Server Side
- - [ ] Routing to Template Files (using JS-Tamplate engines with Dart-JS-Bridge)
-
-**Milestone 2** (feb 2014)
-
-- [ ] Add Middleware Engine
- - [ ] Add Vaidation
-
-**Milestone 3**
-
-- [ ] Middleware
- - [ ] Add Auth
-
-**Milestone 4**
-
-- [ ] Feature
-- [ ] Feature
-- [ ] Feature
-- [ ] ...
 
 FAQ
 =========

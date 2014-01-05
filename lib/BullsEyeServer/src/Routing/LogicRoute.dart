@@ -18,7 +18,7 @@ class LogicRoute extends Route {
     }
     catch(e)
     {
-      this._handleException(e, context.request);
+      this._handleException(new WrappedHttpRequestException(context.request, e));
     }
   }
 }

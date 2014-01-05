@@ -1,6 +1,6 @@
 part of softhai.bulls_eye.Server;
 
-typedef void HandleRoutingException(Route route, HttpRequest request, Exception ex);
+typedef void HandleRoutingException(HttpRequestException ex);
 
 abstract class Route {
   
@@ -17,10 +17,10 @@ abstract class Route {
     this._handleRoutingException.add(handler);
   }
   
-  void _handleException(Exception ex, HttpRequest request)
+  void _handleException(HttpRequestException ex)
   {
     for(var handler in this._handleRoutingException){
-      handler(this, request, ex);
+      handler(ex);
     }
   }
   
@@ -62,6 +62,10 @@ abstract class Route {
   }
   
   bool _internalExecute(RouteContext context);
+  
+  String toString() {
+    return this._routeDefenition.name;
+  }
 }
 
 class RouteContext {

@@ -1,28 +1,27 @@
 part of softhai.bulls_eye.Server;
 
-abstract class RoutingException implements Exception {
+abstract class RoutingException extends HttpRequestException {
 
   Route route;
   
-  RoutingException(this.route);
+  RoutingException(HttpRequest request, this.route) : super(request);
   
   String toString() {
     var routeName = this.route._routeDefenition.name;
     
-    return "The route '$routeName' creates an Error";
+    return super.toString() + "The route '$routeName' creates an unhandled error";
   }
 }
 
-class NotFoundException extends RoutingException {
+class FileNotFoundException extends NotFoundException {
 
-  String resource;
+  Route route;
   
-  NotFoundException(Route route, this.resource) : super(route);
+  FileNotFoundException(HttpRequest request, String resource, this.route) : super(request, resource, "File");
   
   String toString() {
     var routeName = this.route._routeDefenition.name;
-    var resource = this.resource;
     
-    return "During executing of the route '$routeName', the resource '$resource' was not found";
+    return super.toString() + " This was reported by the route '$routeName'.";
   }
 }
