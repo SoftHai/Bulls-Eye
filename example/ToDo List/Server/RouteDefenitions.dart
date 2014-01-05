@@ -12,11 +12,12 @@ var itemID = new Variable("ItemID");
 
 // Gobal Pathes
 var jsPath = new RouteDef("js/*", "JS File access");
+var dartPath = new RouteDef("dart/*", "Dart File access");
 var cssPath = new RouteDef("css/*", "CSS File access");
 
 // Pages
 var jshome = new RouteDef("", "Home JavaScript");
-var darthome = new RouteDef("dart", "Home Dart");
+var darthome = new RouteDef("darthome", "Home Dart");
 var about = new RouteDef.fromObjects([new Static("about")], "Aboute Route");
 var todoLists = new RouteDef.fromObjects([toDo], "ToDo Lists Route");
 var todoList = new RouteDef.fromObjects([toDo, listID], "ToDo List Route");

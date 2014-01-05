@@ -2,11 +2,13 @@ part of softhai.bulls_eye.Common;
 
 abstract class RoutePart {
   
+  const RoutePart();
+  
 }
 
 class WildCard extends RoutePart {
   
-  WildCard() : super();
+  const WildCard() : super();
   
   String toString() 
   {
@@ -17,9 +19,9 @@ class WildCard extends RoutePart {
 
 class Static extends RoutePart {
   
-  String partName;
+  final String partName;
   
-  Static(this.partName) : super();
+  const Static(this.partName) : super();
   
   String toString() 
   {
@@ -29,13 +31,10 @@ class Static extends RoutePart {
 
 class Variable extends RoutePart {
   
-  String varName;
-  bool isOptional = false;
+  final String varName;
+  final bool isOptional;
   
-  Variable(this.varName, [bool isOptinal = false]) : super() 
-  {
-    this.isOptional = isOptinal;
-  }
+  const Variable(this.varName, [bool isOptional = false]) : this.isOptional = isOptional, super();
   
   void CheckUsage(RouteDef currentRoute) 
   {
