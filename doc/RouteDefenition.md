@@ -20,8 +20,9 @@ Its easier to recognize a route named "ToDo List Item" than "/ToDo/:List/:item".
 
 A URL-Part is all between two '/'. The following parts are supported:
 * **Static**: This is an static string part of an URL (e.g. /`ToDo`/:ID)
-* **Variable**: This in an part of the URL which is variable (e.g. an ID of an entity -> /ToDo/`:ID`).
+* **Variable**: This in an part of the URL which is variable (e.g. an ID of an entity -> /ToDo/`:ID`).c
 * **Wildcard**: A Wildcard means that the rest of the URL be be what ever. Thats interesting if you have an folder with Lib-Files like \*.js or \*.css files which you want to handle all over the same logic (e.g. "/lib/JS/`*`")
+ * **QueryVariables**: This are additional URL query data (e.g. /search/?`q=searchword`)
 
 ####Special URL-Variable-Parts
 
@@ -38,13 +39,16 @@ All parts of an URL are seperated in single objects: <br/>
 var toDoItem = new RouteDef.fromObjects([
                       new Static("ToDo"),
                       new Variable("ToDoListID"),
-                      new Variable("ToDoItemID", true)]);
+                      new Variable("ToDoItemID", true)]
+                      queryParts: [new QVariable("q")],
+                      name: "Optional Name");
 ```
 
 The following Objects are supported:
 * **Static**: Takes a string in the constructor
 * **Variable**: Takes a string (variable name) and an optional bool-Flag if it is an optinonal variable or not (default not optional)
 * **WildCard**: Takes no parameter. represent an *.
+* **QVariable**: Takes a string (variable name) and an optional bool-Flag if it is an optinonal variable or not (default not optional)
 
 The Advantage is that it has the best performace (because the strings has not to be parsed) and you can use all feature that will be add in the future (e.g. vaidation, ...). <br/>
 The disadvantage is that it has not a good readability but you can solve this by adding a commet with the String-Style (see example above).
@@ -54,13 +58,14 @@ The disadvantage is that it has not a good readability but you can solve this by
 In the String-Style you pass only a string to the RouteDef Object and that will be split and parsed into the objects: <br/>
 **Example** <br/>
 ```dart
-var toDoItem = new RouteDef("ToDo/:ToDoListID/:ToDoItemID");
+var toDoItem = new RouteDef("ToDo/:ToDoListID/:ToDoItemID?q");
 ```
 
 You can represent the parts as string in the following way:
 * **Static**: any string between two '/'
 * **Variable**: a variable starts with an ':'. To mark an variable as optional, surround it with round barkecks (e.g. "Foo/`(:variable)`/Bar")
 * **WildCard**: a '*' defines that there can comes what ever
+* **QueryVariable**: Add the query variables without the '=value' part (e.g. search?`var1`&`var2`)
 
 ####Customizing the String-Style
 
@@ -79,7 +84,7 @@ You can change this by executing the `RouteDefConfig` constructor: <br/>
 **Attantion:** This must be happens before you create any `RouteDef`. Otherwise the `RouteDef`until this code will use the default.
 
 After that, the URL-Defenition use the following style:<br/>
-`Part1/{Var}/!{OptVar}/Part3/%`
+`Part1/{Var}/!{OptVar}/Part3/%?QVar1&{QVar2}`
 
 This is useful if you migrate from another engine to bullseye and you want to copy and past the URL defenition.
 
@@ -90,7 +95,8 @@ In the Mixed-Style you can combine both worlds. But it makes most sence if you h
 var path = new RouteDeffromMixed([
                            "Part1/Part2/Part3/",
                             new Variable("Var"),
-                            "Part4/Part5/"]);
+                            "Part4/Part5",
+                            new QVariable("q")]);
 ```
 
 ###Warnings

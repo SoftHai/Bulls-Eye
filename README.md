@@ -8,8 +8,23 @@ Bull's Eye is a Dart-IO Web-Server (like Node JS / Express). It should bring the
 Install
 =========
 
-Currently you have to use the source code from github.
-In near future there will be a dartlang-pub-deployment for this. I will start with this when I reached my first Milestone (see road map below).
+You can get Bulls-Eye from the Dart Pub Manager.<br/>
+**Get the Package**
+* Add the dependancy 'bulls_eye' to your pubspec.yaml
+ * Via the DartEditor dialog
+ * By adding the following to the file:
+   ```
+   dependencies:
+       bulls_eye: any
+   ```
+* Update your depandancies by running `pub install`
+
+**Use the Package**
+```dart
+import 'package:bulls_eye/BullsEyeCommon/bulls_eye_common.dart'; // For route defenition
+import 'package:bulls_eye/BullsEyeServer/bulls_eye_server.dart'; // For using the web server
+```
+**Note:** *I will change this in future to 'bulls_eye/common.dart' and  'bulls_eye/server.dart'*
 
 Example
 =========
@@ -50,7 +65,7 @@ The Lib is devided into 3 parts:
 
 To get an idea of the state, take a look at the example, doc and/or the tests.
 
-Roadmap
+Changelog / Roadmap
 =========
 See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Roadmap.md)
 
