@@ -80,4 +80,4 @@ FAQ
 *Why not using an available implementation?*
 
 I know there are some projects out there which doing the same. But I want to build a server which fits more my needs and implements some features I missed on other implementations. <br/>
-Another reason is to learn and study DART. It's like an case study to prove if it fits my requirements better than other languages (PHP, JS, Phython, Ruby, ...).
+Another reason is to learn and study DART. It's like an case study to prove if it fits my requirements better than other languages (PHP, JavaScript, Python, Ruby...).
