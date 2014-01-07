@@ -1,5 +1,5 @@
 name: bulls_eye
-version: 0.0.1-alpha
+version: 0.1.0-alpha
 author: SoftHai <softhai@gmx.de>
 description: Bulls Eye is an Dart-IO Extension to build up an WebServer (like node.js and Express)
 homepage: https://github.com/SoftHai/Bulls-Eye
