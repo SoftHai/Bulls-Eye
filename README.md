@@ -65,7 +65,11 @@ The Lib is devided into 3 parts:
 
 To get an idea of the state, take a look at the example, doc and/or the tests.
 
-Changelog / Roadmap
+Changelog
+=========
+See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/CHANGELOG.md)
+
+Roadmap
 =========
 See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Roadmap.md)
 
