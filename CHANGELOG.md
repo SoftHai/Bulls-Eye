@@ -21,6 +21,8 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 - Class `RoutePart` was renamed in `PathPart`
 - Class `RouteDefConfig` was renamed in `UrlDefConfig`
 - Class `UriMatcher` was renamed in `UrlMatcher`
+- Class `LogicRoute` was renamed in `ExecuteCode` and refactored to implement RouteLogic
+- Class `FileRoute` was renamed in `LoadFile` and refactored to implement RouteLogic
 
 **Breaking Changes**
 - Method `RegisterRoute` of the class `Server` was renamed in `route`

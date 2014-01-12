@@ -11,12 +11,12 @@ void main() {
   var server = new Server(debug: true);
   
   // Register routes
-  server..route(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
-        ..route(new FileRoute.fromUri(jsPath, methods: ["GET"]))
-        ..route(new FileRoute.fromUri(dartPath, methods: ["GET"]))
-        ..route(new FileRoute.fromPath(jshome, "client/jshome.html", methods: ["GET"]))
-        ..route(new FileRoute.fromPath(darthome, "client/darthome.html", methods: ["GET"]))
-        ..route(new LogicRoute(about, logic.aboutRouteLogic, methods: ["GET"]));
+  server..route("GET", cssPath, new LoadFile.fromUrl(), contentTypes: ["text/css"]) // Only CSS allowed
+        ..route("GET", jsPath, new LoadFile.fromUrl())
+        ..route("GET", dartPath, new LoadFile.fromUrl())
+        ..route("GET", jshome, new LoadFile.fromPath("client/jshome.html"))
+        ..route("GET", darthome, new LoadFile.fromPath("client/darthome.html"))
+        ..route("GET", about, new ExecuteCode(logic.aboutRouteLogic));
   
   // Start Server
   server.start();

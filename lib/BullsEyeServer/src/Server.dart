@@ -3,16 +3,24 @@ part of softhai.bulls_eye.Server;
 class Server {
   
   bool _debugMode = false;
-  List<Route> _routes = new List<Route>();
+  List<_RouteManager> _routes = new List<_RouteManager>();
+  Map<String, _MiddlewareImpl> _middlewares = new Map<String, _MiddlewareImpl>();
   
   Server({bool debug: false}) : this._debugMode = debug;
   
-  void route(Route route){
-    this._routes.add(route);
+  Middleware middleware(String name) {
+    var middleware = new _MiddlewareImpl(name, this._handleMiddlewareException);
+    _middlewares[name] = middleware;
     
-    route.registerExceptionHandler(this._handleRoutingException);
+    return middleware;
   }
   
+  void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware}) {
+    this._routes.add(new _RouteManager(method, url, logic, contentTypes, middleware));
+    
+    logic.onError(this._handleRoutingException);
+  }
+
   void start() {
     HttpServer.bind('127.0.0.1', 8080).then((server) {
       server.listen((HttpRequest request) {
@@ -28,8 +36,29 @@ class Server {
             this._debugOutput("route '$route' matched! Executing...");
             
             // Results: true = successful, null = executing async, false = npt executed - try next route
-            var result = route.execute(request);
+            var context = route.createContext(request);
+            if(route.middleware != null)
+            {
+              // execute with middleware
+              var middleware = this._middlewares[route.middleware];
+              middleware.execute(context, route.logic.execute);
+            }
+            else
+            {
+              // execute only logic
+              var future = new Future.sync(() => route.logic.execute(context));
+              future.catchError((ex) {
+                  if(ex is HttpRequestException) {
+                    this._handleRoutingException(ex);
+                  }
+                  else {
+                    this._debugOutput("Unhandled Exception $ex");
+                  }
+                });
+            }
             
+            return;
+            /*
             this._debugOutput("route '$route' finished with '$result'");
             
             if(result == true || result == null)
@@ -37,6 +66,7 @@ class Server {
               this._debugOutput();
               return;
             }
+            */
           }
         }
         
@@ -58,6 +88,20 @@ class Server {
         */
       });
     });
+  }
+  
+  bool _handleMiddlewareException(ReqResContext context, MiddlewareError error)
+  {
+    if(error.catchedError is HttpRequestException)
+    {
+      this._handleRoutingException(error.catchedError);
+    }
+    else {
+      context.request.response.statusCode = HttpStatus.BAD_REQUEST;
+      context.request.response.close();
+    }
+    
+    return false;
   }
   
   void _handleRoutingException(HttpRequestException ex)
