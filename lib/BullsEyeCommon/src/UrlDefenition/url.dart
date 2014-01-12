@@ -1,23 +1,23 @@
 part of softhai.bulls_eye.Common;
 
-class RouteDef {
+class Url {
   
   String name;
-  UriMatcher matcher;
-  RouteDefConfig config = new RouteDefConfig.Current();
-  List<RoutePart> routeParts = new List<RoutePart>();
+  UrlMatcher matcher;
+  UrlDefConfig config = new UrlDefConfig.Current();
+  List<PathPart> routeParts = new List<PathPart>();
   List<QueryPart> queryParts = new List<QueryPart>();
   
-  RouteDef(String routeString, [String name]) {
+  Url(String routeString, [String name]) {
     
     this.name = name == null ? routeString : name;
 
     this._parseRoute(routeString);
     
-    this.matcher = new UriMatcher(this);
+    this.matcher = new UrlMatcher(this);
   }
   
-  RouteDef.fromObjects(this.routeParts, {this.queryParts, String name}) {
+  Url.fromObjects(this.routeParts, {this.queryParts, String name}) {
     
     if(this.queryParts == null) this.queryParts = new List<QueryPart>();
     
@@ -33,17 +33,17 @@ class RouteDef {
           }
         });
     
-    this.matcher = new UriMatcher(this);
+    this.matcher = new UrlMatcher(this);
   }
   
-  RouteDef.fromMixed(List<Object> parts, {String name}) {
+  Url.fromMixed(List<Object> parts, {String name}) {
     
     parts.forEach((part) {
       if(part is String)
       {
         this._parseRoute(part);
       }
-      else if (part is RoutePart)
+      else if (part is PathPart)
       {
         this.routeParts.add(part);
       }
@@ -59,7 +59,7 @@ class RouteDef {
     
     this.name = name == null ? this._buildUrl() : name;
     
-    this.matcher = new UriMatcher(this);
+    this.matcher = new UrlMatcher(this);
   }
   
   void _parseRoute(String routeString)

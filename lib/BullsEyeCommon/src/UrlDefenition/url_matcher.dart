@@ -1,15 +1,15 @@
 part of softhai.bulls_eye.Common;
 
-class UriMatcher {
+class UrlMatcher {
   
   RegExp _regex;
   List<_VariableManager<Variable>> _routeVars;
   List<_VariableManager<QVariable>> _queryVars;
-  RouteDef routeDef; 
+  Url routeDef; 
   
   bool hasOptionalVariables = false;
   
-  UriMatcher(this.routeDef)
+  UrlMatcher(this.routeDef)
   {
     this.hasOptionalVariables = this.routeDef.routeParts.where((part) => part is Variable && (part as Variable).isOptional).length > 0 ||
                                 this.routeDef.queryParts.where((part) => part is QVariable && (part as QVariable).isOptional).length > 0; 

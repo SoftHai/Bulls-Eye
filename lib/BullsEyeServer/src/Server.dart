@@ -7,7 +7,7 @@ class Server {
   
   Server({bool debug: false}) : this._debugMode = debug;
   
-  void RegisterRoute(Route route){
+  void route(Route route){
     this._routes.add(route);
     
     route.registerExceptionHandler(this._handleRoutingException);

@@ -4,11 +4,11 @@ class FileRoute extends Route {
   
   String _filePath;
   
-  FileRoute.fromUri(common.RouteDef routeDefenition, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
+  FileRoute.fromUri(common.Url routeDefenition, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
     
-  FileRoute.fromPath(common.RouteDef routeDefenition, this._filePath, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
+  FileRoute.fromPath(common.Url routeDefenition, this._filePath, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes);
   
-  bool _internalExecute(RouteContext context) 
+  bool _internalExecute(ReqResContext context) 
   {
     var filePath = this._filePath; 
     

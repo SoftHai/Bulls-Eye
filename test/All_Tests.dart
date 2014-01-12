@@ -1,8 +1,8 @@
-import 'BullsEyeCommon_RouteDefTests.dart' as RouteDef;
+import 'BullsEyeCommon_UrlDefTests.dart' as UrlDef;
 import 'BullsEyeServer_RouteTests.dart' as Route;
 
 main() {
   
-  RouteDef.main();
+  UrlDef.main();
   Route.main();
 }

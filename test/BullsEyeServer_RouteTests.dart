@@ -36,8 +36,8 @@ main()  {
   // Make sure the Mock works as expected
   test("Test HttpRequestMock", () { TestHttpRequestMock(); });
   
-  var routeDef = new RouteDef("/Part1/:var1/Part2/(:var2)", "Demo Route");
-  var route = new LogicRoute(routeDef, (context) { return true; }, methods: ["GET"], contentTypes: ["application/html"]);
+  var urlDef = new Url("/Part1/:var1/Part2/(:var2)", "Demo Route");
+  var route = new LogicRoute(urlDef, (context) { return true; }, methods: ["GET"], contentTypes: ["application/html"]);
   
   group("BullsEye Server -", () {
     
@@ -87,19 +87,19 @@ main()  {
     group("LogicRoute -", () {
       
       test("Test - Route execute", () {
-        var routeExecute = new LogicRoute(routeDef, (RouteContext context) { 
-          expect(context.currentRoute, same(routeDef));
+        var routeExecute = new LogicRoute(urlDef, (ReqResContext context) { 
+          expect(context.currentRoute, same(urlDef));
           expect(context.request, isNotNull);
-          expect(context.routeVariables.result.length, 2);
-          expect(context.routeVariables.getVariable("var1"), equals("123"));
+          expect(context.variables.routeVariables.result.length, 2);
+          expect(context.variables.routeVariables.getVariable("var1"), equals("123"));
           
           if(context.request.uri.path == "/Part1/123/Part2/")
           {
-            expect(context.routeVariables.getVariable("var2"), isNull);
+            expect(context.variables.routeVariables.getVariable("var2"), isNull);
           }
           else if(context.request.uri.path == "/Part1/123/Part2/456")
           {
-            expect(context.routeVariables.getVariable("var2"), "456");
+            expect(context.variables.routeVariables.getVariable("var2"), "456");
           }
           
           return true;
@@ -115,7 +115,7 @@ main()  {
       
       skip_test("Test - Route Exception", () {
         bool exceptionRaised = false;
-        var routeExecute = new LogicRoute(routeDef, (RouteContext context) { 
+        var routeExecute = new LogicRoute(urlDef, (ReqResContext context) { 
           throw new Exception("Test Exception");
           }, methods: ["GET"], contentTypes: ["application/html"]);
         

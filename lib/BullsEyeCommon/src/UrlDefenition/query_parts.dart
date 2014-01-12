@@ -15,7 +15,7 @@ class QVariable extends QueryPart {
   
   String toString() 
   {
-    var config = new RouteDefConfig.Current();
+    var config = new UrlDefConfig.Current();
 
     if(this.isOptional)
     {

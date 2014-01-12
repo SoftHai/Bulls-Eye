@@ -1,16 +1,16 @@
 part of softhai.bulls_eye.Server;
 
-typedef bool LogicCall(RouteContext context);
+typedef bool LogicCall(ReqResContext context);
 
 class LogicRoute extends Route {
   
   LogicCall _logicCall;
   
-  LogicRoute(common.RouteDef routeDefenition, this._logicCall, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes) {
+  LogicRoute(common.Url routeDefenition, this._logicCall, {List<String> methods, List<String> contentTypes}) : super(routeDefenition, methods, contentTypes) {
     
   }
   
-  bool _internalExecute(RouteContext context) 
+  bool _internalExecute(ReqResContext context) 
   {
     try
     {

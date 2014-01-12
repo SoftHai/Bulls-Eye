@@ -1,8 +1,8 @@
 part of softhai.bulls_eye.Common;
 
-typedef Variable TryParseSpecialVariable(String rawStr, String cleanStr, bool isOptional, RouteDefConfig currentConfig, RouteDef currentRoute);
+typedef Variable TryParseSpecialVariable(String rawStr, String cleanStr, bool isOptional, UrlDefConfig currentConfig, Url currentRoute);
 
-class RouteDefConfig {
+class UrlDefConfig {
 
   final String RoutePartSeperator = "/";
   final String RoutePartQueryStart = "?";
@@ -16,24 +16,24 @@ class RouteDefConfig {
   
   List<TryParseSpecialVariable> specialVariableParsers = new List<TryParseSpecialVariable>(); 
   
-  static RouteDefConfig _config = null;
+  static UrlDefConfig _config = null;
 
-  RouteDefConfig.Costumize(this.RoutePartVariableStart, this.RoutePartVariableEnd, this.RoutePartVariableOptionalStart, this.RoutePartVariableOptionalEnd, this.RoutePartWildCard) {
+  UrlDefConfig.Costumize(this.RoutePartVariableStart, this.RoutePartVariableEnd, this.RoutePartVariableOptionalStart, this.RoutePartVariableOptionalEnd, this.RoutePartWildCard) {
     _config = this;
   }
   
-  factory RouteDefConfig.SetToDefault() 
+  factory UrlDefConfig.SetToDefault() 
   {
-    _config = new RouteDefConfig.Costumize(":", "", "(", ")", "*"); // Default Config
+    _config = new UrlDefConfig.Costumize(":", "", "(", ")", "*"); // Default Config
     
     return _config;
   }  
   
-  factory RouteDefConfig.Current() 
+  factory UrlDefConfig.Current() 
   {
     if(_config == null)
     {
-      _config = new RouteDefConfig.SetToDefault();
+      _config = new UrlDefConfig.SetToDefault();
     }
     
     return _config;

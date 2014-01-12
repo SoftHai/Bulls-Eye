@@ -4,7 +4,7 @@ typedef void HandleRoutingException(HttpRequestException ex);
 
 abstract class Route {
   
-  common.RouteDef _routeDefenition;
+  common.Url _routeDefenition;
   List<String> _methods;
   List<String> _contentTypes;
   List<HandleRoutingException> _handleRoutingException = new List<HandleRoutingException>();
@@ -57,25 +57,15 @@ abstract class Route {
   bool execute(HttpRequest request) 
   {
     var variables = this._routeDefenition.matcher.getMatches(request.uri.path);
-    var context = new RouteContext(request, this._routeDefenition, variables);
+    var context = new ReqResContext(request, this._routeDefenition, variables);
     return this._internalExecute(context);
   }
   
-  bool _internalExecute(RouteContext context);
+  bool _internalExecute(ReqResContext context);
   
   String toString() {
     return this._routeDefenition.name;
   }
 }
 
-class RouteContext {
 
-  HttpRequest request;
-  common.RouteDef currentRoute;
-  common.UriMatcherResult variables;
-  Map<String, Object> contextData;
-
-  RouteContext(this.request, this.currentRoute, this.variables) {
-    this.contextData = new Map<String,Object>();
-  }
-}

@@ -1,23 +1,23 @@
 part of softhai.bulls_eye.Common;
 
-abstract class RoutePart {
+abstract class PathPart {
   
-  const RoutePart();
+  const PathPart();
   
 }
 
-class WildCard extends RoutePart {
+class WildCard extends PathPart {
   
   const WildCard() : super();
   
   String toString() 
   {
-    var config = new RouteDefConfig.Current();
+    var config = new UrlDefConfig.Current();
     return config.RoutePartWildCard;
   }
 }
 
-class Static extends RoutePart {
+class Static extends PathPart {
   
   final String partName;
   
@@ -29,21 +29,21 @@ class Static extends RoutePart {
   }
 }
 
-class Variable extends RoutePart {
+class Variable extends PathPart {
   
   final String varName;
   final bool isOptional;
   
   const Variable(this.varName, [bool isOptional = false]) : this.isOptional = isOptional, super();
   
-  void CheckUsage(RouteDef currentRoute) 
+  void CheckUsage(Url currentRoute) 
   {
     
   }
   
   String toString() 
   {
-    var config = new RouteDefConfig.Current();
+    var config = new UrlDefConfig.Current();
     
     var partStr = config.RoutePartVariableStart + this.varName + config.RoutePartVariableEnd;
     if(this.isOptional)

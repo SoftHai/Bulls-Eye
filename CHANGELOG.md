@@ -12,3 +12,15 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 - **(NEW)** Add Route-Matching
 - **(NEW)** Add WebServer
 - **(NEW)** Add Server-Side Routing
+
+##Version 0.2.0-Alpha
+**Release date: not released**
+
+**Breaking Changes (reason: fits more the defined names of an url, reduce name conflicts between url defenition and routing engine)**
+- Class `RouteDef` was renamed in `Url`
+- Class `RoutePart` was renamed in `PathPart`
+- Class `RouteDefConfig` was renamed in `UrlDefConfig`
+- Class `UriMatcher` was renamed in `UrlMatcher`
+
+**Breaking Changes**
+- Method `RegisterRoute` of the class `Server` was renamed in `route`

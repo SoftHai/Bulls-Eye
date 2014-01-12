@@ -11,12 +11,12 @@ void main() {
   var server = new Server(debug: true);
   
   // Register routes
-  server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
-        ..RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]))
-        ..RegisterRoute(new FileRoute.fromUri(dartPath, methods: ["GET"]))
-        ..RegisterRoute(new FileRoute.fromPath(jshome, "client/jshome.html", methods: ["GET"]))
-        ..RegisterRoute(new FileRoute.fromPath(darthome, "client/darthome.html", methods: ["GET"]))
-        ..RegisterRoute(new LogicRoute(about, logic.aboutRouteLogic, methods: ["GET"]));
+  server..route(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
+        ..route(new FileRoute.fromUri(jsPath, methods: ["GET"]))
+        ..route(new FileRoute.fromUri(dartPath, methods: ["GET"]))
+        ..route(new FileRoute.fromPath(jshome, "client/jshome.html", methods: ["GET"]))
+        ..route(new FileRoute.fromPath(darthome, "client/darthome.html", methods: ["GET"]))
+        ..route(new LogicRoute(about, logic.aboutRouteLogic, methods: ["GET"]));
   
   // Start Server
   server.start();

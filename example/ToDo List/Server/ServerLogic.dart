@@ -4,7 +4,7 @@ import '../../../lib/BullsEyeServer/bulls_eye_server.dart';
 
 class ServerLogic {
   
-  bool aboutRouteLogic(RouteContext context) 
+  bool aboutRouteLogic(ReqResContext context) 
   { 
     print("ABOUT"); 
     context.request.response.write('ABOUT');

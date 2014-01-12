@@ -9,7 +9,7 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
  - [X] WildCard
  - [X] Query-Parameters (Required / Optional)
 
-- [X] WebServer
+- [X] Server
  - [X] Routing
    - [X] Routing to Logic (e.g. Load data from database and return json)
    - [X] Routing to Files (e.g. pictures, css, js, html, ...)
@@ -20,30 +20,35 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 **Milestone 1** (0.1.0 - 05 Jan 2014)
 
 - Bugfixes / Improvements
-- WebServer
- - [ ] Routing Server Side
-   - [ ] Routing to Template Files (using JS-Tamplate engines with Dart-JS-Bridge)
+- Server
+ - [ ] Add Middleware Engine
  - [ ] Customizable Error Handling (404, ...)
 
 **Milestone 2** (0.2.0 - Feb 2014)
 
-- [ ] Add Middleware Engine
-- [ ] Add Vaidation
-  - [ ] Route Variables
-  - [ ] Query Variables
-  - [ ] Post Data
+- Middleware
+ - [ ] Vaidation
+   - [ ] Route Variables
+   - [ ] Query Variables
+   - [ ] Post Data
+  - [ ] feature toogle
+   - [ ] GlobalContext
+   - [ ] UserContext
 
 **Milestone 3** (0.3.0)
 
 - [ ] Middleware
- - [ ] Add Auth (Custom, OAuth, OpenID, ...)
+ - [ ] Auth (Custom, OAuth, OpenID, ...)
 
 **Milestone 4** (0.4.0)
 
-- [ ] WebSocket Server
- - [ ] WAMP-Protokoll
-   - [ ] Using same Route defenition engine
-- [ ] feature toogles engine
+- Middleware
+ - [ ] Template Files pre processsing (using JS-Tamplate engines with Dart-JS-Bridge)
+- Server
+ - [ ] WebSocket support
+   - [ ] WAMP-Protokoll
+     - [ ] Using same Route defenition engine as WebServer
+  - [ ] Apache Thrift
 - [ ] ...
 
 **Beta 1** (1.0.0-beta1)
