@@ -23,7 +23,7 @@ class _MiddlewareChannelPart extends MiddlewareController {
         before(context);
       }
       catch (ex) {
-        if(!this._executeOnError(ex)) return;
+        if(!this._executeOnError(context, ex)) return;
       }
     }
     
@@ -31,7 +31,7 @@ class _MiddlewareChannelPart extends MiddlewareController {
     try {
       if(this.aroundEndpoint != null)
       {
-        this.aroundEndpoint(context);
+        this.aroundEndpoint(context, this);
       }
       else
       {
@@ -39,7 +39,7 @@ class _MiddlewareChannelPart extends MiddlewareController {
       }
     }
     catch (ex) {
-      if(!this._executeOnError(ex)) return;
+      if(!this._executeOnError(context, ex)) return;
     }
     
     // Execute after channel
@@ -48,7 +48,7 @@ class _MiddlewareChannelPart extends MiddlewareController {
         after(context);
       }
       catch (ex) {
-        if(!this._executeOnError(ex)) return;
+        if(!this._executeOnError(context, ex)) return;
       }
     }
     
@@ -69,11 +69,11 @@ class _MiddlewareChannelPart extends MiddlewareController {
     }
   }
   
-  bool _executeOnError(Object catchedError) {
+  bool _executeOnError(ReqResContext context, Object catchedError) {
     
     if(this._onError != null)
     {
-      return this._onError(catchedError);
+      return this._onError(context, catchedError);
     }
     
     return false;

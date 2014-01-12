@@ -64,9 +64,13 @@ class _MiddlewareImpl implements Middleware  {
   
   _MiddlewareChannelPart _nextPart() {
     
-    var last = this._channel.last;
+    _MiddlewareChannelPart last = null;
+    if(this._channel.length > 0) {
+      last = this._channel.last;
+    }
+    
     if(last != null) {
-      if(last.aroundEndpoint != null) {
+      if(last.aroundEndpoint == null) {
         // Not finalized, return
         return last;
       }
@@ -80,6 +84,8 @@ class _MiddlewareImpl implements Middleware  {
         
         // Connect the part before with the new one
         last.then(newPart.execute);
+        
+        return newPart;
       }
     }
     else {
