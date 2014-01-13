@@ -10,9 +10,9 @@ part 'src/Server.dart';
 part 'src/Exceptions.dart';
 
 // Middleware
-part 'src/Middleware/Middleware.dart';
+part 'src/Middleware/middleware.dart';
 part 'src/Middleware/middleware_channel_part.dart';
-part 'src/Middleware/Middleware_error.dart';
+part 'src/Middleware/middleware_error.dart';
 
 // Routing
 part 'src/Routing/RouteManager.dart';
