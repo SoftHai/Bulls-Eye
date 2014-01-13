@@ -12,9 +12,9 @@ part '../lib/BullsEyeServer/src/req_res_context.dart';
 part '../lib/BullsEyeServer/src/Exceptions.dart';
 
 // Middleware
-part '../lib/BullsEyeServer/src/Middleware/Middleware.dart';
+part '../lib/BullsEyeServer/src/Middleware/middleware.dart';
 part '../lib/BullsEyeServer/src/Middleware/middleware_channel_part.dart';
-part '../lib/BullsEyeServer/src/Middleware/Middleware_error.dart';
+part '../lib/BullsEyeServer/src/Middleware/middleware_error.dart';
 
 // Routing
 part '../lib/BullsEyeServer/src/Routing/RouteManager.dart';
