@@ -23,7 +23,8 @@ class _MiddlewareChannelPart extends MiddlewareController {
         before(context);
       }
       catch (ex) {
-        if(!this._executeOnError(context, ex)) return;
+        var errorContinue = this._executeOnError(context, ex);
+        if(errorContinue != true) return;
       }
     }
     
@@ -39,16 +40,18 @@ class _MiddlewareChannelPart extends MiddlewareController {
       }
     }
     catch (ex) {
-      if(!this._executeOnError(context, ex)) return;
+      var errorContinue = this._executeOnError(context, ex);
+      if(errorContinue != true) return;
     }
     
     // Execute after channel
-    for(var after in this.afterChannel) {
+    for(var after in this.afterChannel.reversed) {
       try {
         after(context);
       }
       catch (ex) {
-        if(!this._executeOnError(context, ex)) return;
+        var errorContinue = this._executeOnError(context, ex);
+        if(errorContinue != true) return;
       }
     }
     

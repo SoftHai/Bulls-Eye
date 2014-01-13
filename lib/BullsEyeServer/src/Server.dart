@@ -3,7 +3,7 @@ part of softhai.bulls_eye.Server;
 class Server {
   
   bool _debugMode = false;
-  List<_RouteManager> _routes = new List<_RouteManager>();
+  List<RouteManager> _routes = new List<RouteManager>();
   Map<String, _MiddlewareImpl> _middlewares = new Map<String, _MiddlewareImpl>();
   
   Server({bool debug: false}) : this._debugMode = debug;
@@ -16,7 +16,7 @@ class Server {
   }
   
   void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware}) {
-    this._routes.add(new _RouteManager(method, url, logic, contentTypes, middleware));
+    this._routes.add(new RouteManager(method, url, logic, contentTypes, middleware));
     
     logic.onError(this._handleRoutingException);
   }

@@ -11,7 +11,7 @@ abstract class RouteLogic {
 
 typedef void HandleRoutingException(HttpRequestException ex);
 
-class _RouteManager {
+class RouteManager {
   
   common.Url routeDefenition;
   String method;
@@ -19,7 +19,7 @@ class _RouteManager {
   RouteLogic logic;
   String middleware;
   
-  _RouteManager(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware);
+  RouteManager(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware);
   
 
   // Route match the path

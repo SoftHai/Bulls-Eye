@@ -2,9 +2,9 @@ part of softhai.bulls_eye.Server;
 
 class MiddlewareError {
   
-  String MiddlewareName;
+  String middlewareName;
   Object catchedError;
   
-  MiddlewareError(this.MiddlewareName, this.catchedError);
+  MiddlewareError(this.middlewareName, this.catchedError);
   
 }
