@@ -3,7 +3,7 @@
 Legend: [ ] Planned - [/] Progress - [X] Finished
 ```
 
-- [X] Route Defenition
+- [X] URL Defenition
  - [X] Static Parts
  - [X] Variable Parts (Required / Optional)
  - [X] WildCard
@@ -19,13 +19,14 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 **Milestone 1** (0.1.0 - 05 Jan 2014)
 
-- Bugfixes / Improvements
+- [/] Bugfixes / Improvements
 - Server
- - [ ] Add Middleware Engine
+ - [X] Add Middleware Engine
  - [ ] Customizable Error Handling (404, ...)
 
 **Milestone 2** (0.2.0 - Feb 2014)
 
+- [ ] Bugfixes / Improvements
 - Middleware
  - [ ] Vaidation
    - [ ] Route Variables

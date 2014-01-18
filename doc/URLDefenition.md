@@ -1,22 +1,20 @@
-#Routing Engine
+#URL Definition
+The URL defenition is located in the COMMON namespace. This is because the definition will be used in Client-Side (replacing Variables against data) and on the Server-Side (Parsing the url and extracting the Variables).
 
-##Route Definition
-The route defenition is located in the COMMON namespace. This is because the definition will be used in Client-Side (replacing Variables against data) and on the Server-Side (Parsing the route and extracting the Variables).
+The URL defenition is presented by the object `URL`.
 
-The route defenition is presented by the object `RouteDef`.
+You can create an url defenition by passing the URL in different styles to the URL Constructors. The following styles (constructors) are supported:<br/>
 
-You can create a route defenition by passing the route in different styles to the RouteDef Constructors. The following styles (constructors) are supported:<br/>
-
-* Objects (Constructor: `RouteDef.fromObjects(...)`)
-* Mixed  (Constructor: `RouteDef.fromMixed(...)`)
-* String (Constructor: `RouteDef(...)`)
+* Objects (Constructor: `URL.fromObjects(...)`)
+* Mixed  (Constructor: `URL.fromMixed(...)`)
+* String (Constructor: `URL(...)`)
 
 All styles have its own adventages and disadvantages (see below).
 
-Optional you can pass a Route-Name for the `RouteDef`. By default that will be the route string (`route.toString()`). This name will be used in Exceptions, Outputs and so one. <br/>
-Its easier to recognize a route named "ToDo List Item" than "/ToDo/:List/:item". Especially with many long routes.
+Optional you can pass a URL-Name for the `URL`. By default that will be the URL string (`url.toString()`). This name will be used in Exceptions, Outputs and so one. <br/>
+Its easier to recognize an URL named "ToDo List Item" than "/ToDo/:List/:item". Especially with many long URLs.
 
-###Supported URL-Part
+##Supported URL-Part
 
 A URL-Part is all between two '/'. The following parts are supported:
 * **Static**: This is an static string part of an URL (e.g. /`ToDo`/:ID)
@@ -24,19 +22,19 @@ A URL-Part is all between two '/'. The following parts are supported:
 * **Wildcard**: A Wildcard means that the rest of the URL be be what ever. Thats interesting if you have an folder with Lib-Files like \*.js or \*.css files which you want to handle all over the same logic (e.g. "/lib/JS/`*`")
  * **QueryVariables**: This are additional URL query data (e.g. /search/?`q=searchword`)
 
-####Special URL-Variable-Parts
+###Special URL-Variable-Parts
 
 You can create own special variables by inherit from the class `Variable`. That can be useful to have variables which interact better with features. <br/>
 e.g. there is an special Variable `Version`. It is used for API URLs to know which version is called and to use the right validation for this Version (Part1/`v1`/Part3/Part4/...) and to know which Version of return data you have to response. <br/>
 And there will be some other features in the future which make use of this.
 
-###Object-Style
+##Object-Style
 
 All parts of an URL are seperated in single objects: <br/>
 **Example**<br/>
 ```dart
 // this produce the URL "ToDo/:ToDoListID/(:ToDoItemID)"
-var toDoItem = new RouteDef.fromObjects([
+var toDoItem = new URL.fromObjects([
                       new Static("ToDo"),
                       new Variable("ToDoListID"),
                       new Variable("ToDoItemID", true)]
@@ -53,12 +51,12 @@ The following Objects are supported:
 The Advantage is that it has the best performace (because the strings has not to be parsed) and you can use all feature that will be add in the future (e.g. vaidation, ...). <br/>
 The disadvantage is that it has not a good readability but you can solve this by adding a commet with the String-Style (see example above).
 
-###String-Style
+##String-Style
 
-In the String-Style you pass only a string to the RouteDef Object and that will be split and parsed into the objects: <br/>
+In the String-Style you pass only a string to the URL Object and that will be split and parsed into the objects: <br/>
 **Example** <br/>
 ```dart
-var toDoItem = new RouteDef("ToDo/:ToDoListID/:ToDoItemID?q");
+var toDoItem = new URL("ToDo/:ToDoListID/:ToDoItemID?q");
 ```
 
 You can represent the parts as string in the following way:
@@ -67,7 +65,7 @@ You can represent the parts as string in the following way:
 * **WildCard**: a '*' defines that there can comes what ever
 * **QueryVariable**: Add the query variables without the '=value' part (e.g. search?`var1`&`var2`)
 
-####Customizing the String-Style
+###Customizing the String-Style
 
 The default configuration use the folowing values:
 * Variable-Start: `:`
@@ -79,29 +77,29 @@ The default configuration use the folowing values:
 A URL-Defenition with the default config looks like this: <br/>
 `Part1/:Var/(:OptVar)/Part3/*`
 
-You can change this by executing the `RouteDefConfig` constructor: <br/>
-`var custConfig = new RouteDefConfig.Costumize("{", "}", "!", "", "%");` <br/>
-**Attantion:** This must be happens before you create any `RouteDef`. Otherwise the `RouteDef`until this code will use the default.
+You can change this by executing the `URLDefConfig` constructor: <br/>
+`var custConfig = new URLDefConfig.Costumize("{", "}", "!", "", "%");` <br/>
+**Attantion:** This must be happens before you create any `URL`. Otherwise the `URL`until this code will use the default.
 
 After that, the URL-Defenition use the following style:<br/>
 `Part1/{Var}/!{OptVar}/Part3/%?QVar1&{QVar2}`
 
 This is useful if you migrate from another engine to bullseye and you want to copy and past the URL defenition.
 
-###Mixed-Style
+##Mixed-Style
 In the Mixed-Style you can combine both worlds. But it makes most sence if you have more static than variable parts:<br/>
 **Example**<br/>
 ```dart
-var path = new RouteDeffromMixed([
+var path = new URL.fromMixed([
                            "Part1/Part2/Part3/",
                             new Variable("Var"),
                             "Part4/Part5",
                             new QVariable("q")]);
 ```
 
-###Warnings
+##Warnings
 
-####Several Optional Variables in a row
+###Several Optional Variables in a row
 If you use 2 or more optional variables in a row than the variable parsing could have problems: <br/>
 **Example**: <br/>
 `"/Part1/(:OptVar1)/(:OptVar2)/Part2/Part3"`
@@ -115,7 +113,7 @@ If you need several optional parameters in the url, devide these by a static par
 **Example**: <br/>
 `"/Part1/(:OptVar1)/Part3/(:OptVar2)/Part3/Part4"`
 
-####Optional Variables combined with WildCard
+###Optional Variables combined with WildCard
 If you use an Optinal-Variable together with an WildVard than you could have the following problems: <br/>
 **Example**: <br/>
 `"/Part1/(:OptVar1)/*"`
@@ -128,7 +126,7 @@ To protect this, put an static part between the variable and the wildcard: <br/>
 **Example**: <br/>
 `"/Part1/(:OptVar1)/Part2/*"`
 
-###FAQ
+##FAQ
 
 *So which style do you should use?* <br/>
 

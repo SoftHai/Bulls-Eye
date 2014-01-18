@@ -42,16 +42,29 @@ var searchRoute = new RouteDef("search?q&(ResultCount)"); // Define query variab
 // Create Server
 var server = new Server();
 
+// Middleware
+// Add some middleware code which can be executed before, around or after the route logic.
+server.middleware("Example")..before((context) => print("do something before the route logic (e.g. validation, auth, ...)"))
+                         ..after((context) => print("do something after the route logic"))
+                         ..around((context, ctrl) {
+                             print("do something before ...");
+                             return ctrl.next()
+                                        .then((_) => print("and after the route logic (e.g. logging, performance tests, ...)"));
+                           });
+// ... define more middleware combination if you need
+
 // Define Routes
-server..RegisterRoute(new FileRoute.fromUri(cssPath, methods: ["GET"], contentTypes: ["text/css"])) // Only CSS allowed
-      ..RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]))
-      ..RegisterRoute(new FileRoute.fromPath(home, "html/home.html", methods: ["GET"]))
-      ..RegisterRoute(new LogicRoute(toDoListItemRoute, (context) {
-        //Logic to execute here
-      }, methods: ["GET"]));
-	 ..RegisterRoute(new LogicRoute(searchRoute, (context) {
-        // Search logic to execute here
-      }, methods: ["GET"]));
+server..route("GET", cssPath, new LoadFile.fromUrl(), contentTypes: ["text/css"]) // Only CSS allowed
+      ..route("GET", jsPath, new LoadFile.fromUrl())
+      ..route("GET", jshome, new LoadFile.fromPath("client/jshome.html"))
+      ..route("GET", darthome, new LoadFile.fromPath("client/darthome.html"), middleware: "Example") // Use the middleware defenition where you need
+      ..route("GET", about, new ExecuteCode((context) {
+      	//Logic to execute here
+      }));
+      ..route("GET", searchRoute, new ExecuteCode((context) {
+      	// Search logic to execute here
+      }));
+
 // Start Server
 server.start();
 ```
@@ -59,8 +72,8 @@ server.start();
 Lib Doc
 =========
 The Lib is devided into 3 parts:
-* Common: Here are functions which are required on client and server side (e.g. route defenitions, ...)
- * [RouteDefenition](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/RouteDefenition.md)
+* Common: Here are functions which are required on client and server side (e.g. url defenitions, ...)
+ * [URLDefenition](/doc/URLDefenition.md)
 * Server: Here are the server side specific implementations
  * WebServer
 * Client: Here are the client side specific impelmentations
@@ -69,11 +82,11 @@ To get an idea of the state, take a look at the example, doc and/or the tests.
 
 Changelog
 =========
-See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/CHANGELOG.md)
+See [here](/CHANGELOG.md)
 
 Roadmap
 =========
-See [here](https://github.com/SoftHai/Bulls-Eye/blob/master/doc/Roadmap.md)
+See [here](/Roadmap.md)
 
 Targets
 =========

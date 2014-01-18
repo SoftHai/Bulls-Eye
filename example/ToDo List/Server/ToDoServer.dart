@@ -1,5 +1,5 @@
 import '../../../lib/BullsEyeServer/bulls_eye_server.dart';
-import 'RouteDefenitions.dart';
+import 'URLDefenitions.dart';
 import 'ServerLogic.dart';
 
 void main() {
@@ -15,8 +15,8 @@ void main() {
                            ..after((context) => print("after"))
                            ..around((context, ctrl) {
                              print("around-before");
-                             ctrl.next();
-                             print("around-after");
+                             return ctrl.next()
+                                        .then((_) => print("around-after"));
                            });
   
   // Register routes
