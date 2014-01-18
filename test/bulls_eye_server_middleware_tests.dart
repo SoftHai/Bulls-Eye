@@ -1,6 +1,7 @@
 library softhai.bulls_eye.Server;
 
 import 'dart:io';
+import 'dart:async';
 import '../lib/BullsEyeCommon/bulls_eye_common.dart' as common;
 import 'HttpMocks.dart';
 
@@ -24,37 +25,35 @@ part '../lib/BullsEyeServer/src/Routing/RoutingExceptions.dart';
 
 void main() {
   
-  var feature = new Feature("Middleware", "With the middleware, developer can extract common code from the logic");
+  var feature = new Feature("Middleware", "With the middleware, developer can extract common code from the logic")
+                    ..setUp(createHttpRequest); // Setup a mock http Reuqest object
+  
   var storyMiddlewareCode = feature.story("Middleware functions", 
                             asA: "WebServer Developer", 
                             iWant: "to add middleware code before/after/around the route logic called", 
-                            soThat: "I can control and/or manipulate the route executing");
+                            soThat: "I can control and/or manipulate the route executing and the input and/or output data");
   
   storyMiddlewareCode.scenario("Add logic before")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "is a middleware defenition with a before call", func: middlewareBeforeCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "is a middleware defenition with a before call", func: middlewareBeforeCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the before code was called before the logic", func: middlewareBeforeCheck);
  
   storyMiddlewareCode.scenario("Add logic after")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with a after call", func: middlewareAfterCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with a after call", func: middlewareAfterCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the after code was called after the logic", func: middlewareAfterCheck);
 
   storyMiddlewareCode.scenario("Add logic around")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with a around call", func: middlewareAroundCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with a around call", func: middlewareAroundCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the after code was called after the logic", func: middlewareAroundCheck);
 
   storyMiddlewareCode.scenario("Add complex middleware calls")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with a complex structure (Before, Before, Around, Before, Code, After, After, Arround, After)", func: middlewareComplexCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with a complex structure (Before, Before, Around, Before, Code, After, After, Arround, After)", func: middlewareComplexCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the call order is as expected", func: middlewareComplexCheck);
 
@@ -64,34 +63,32 @@ void main() {
       soThat: "I can handle the exceptions in a customized way");
   
   storyExceptionHandling.scenario("Exception in before call")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with an exception in an before call", func: middlewareExceptionBeforeCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with an exception in an before call", func: middlewareExceptionBeforeCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the exception in the before call was handled", func: middlewareExceptionBeforeCheck);
 
   storyExceptionHandling.scenario("Exception in after call")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with an exception in an after call", func: middlewareExceptionAfterCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with an exception in an after call", func: middlewareExceptionAfterCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the exception in the after call was handled", func: middlewareExceptionAfterCheck);
   
   storyExceptionHandling.scenario("Exception in around call before the logic")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with an exception in an around call before the logic", func: middlewareExceptionAroundBeforeCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with an exception in an around call before the logic", func: middlewareExceptionAroundBeforeCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the exception in the around call was handled", func: middlewareExceptionAroundBeforeCheck);
 
   storyExceptionHandling.scenario("Exception in around call after the logic")
-        ..given(text: "is a call counter", func: createCallCounter)
-          .and(text: "a middleware defenition with an exception in an around call after the logic", func: middlewareExceptionAroundAfterCreate)
-          .and(text: "a http request", func: createHttpRequest)
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with an exception in an around call after the logic", func: middlewareExceptionAroundAfterCreate)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the exception in the around call was handled", func: middlewareExceptionAroundAfterCheck);
   
-  if(!feature.run()) exitCode = 2; // Error
+  feature.run().then((v) { 
+    if(!v) exitCode = 2; // Error
+  });
 }
 
 // Common Test Functions
@@ -106,8 +103,9 @@ bool createHttpRequest(SpecContext context) {
   context.data["ReqRes"] = route.createContext(request);
 }
 
-bool executeMiddleware(SpecContext context) {
-  context.data["middleware"].execute(context.data["ReqRes"], (midContext) { context.data["CodeCalled"] = ++context.data["CallCounter"]; });
+Future executeMiddleware(SpecContext context) {
+  return context.data["middleware"].execute(context.data["ReqRes"], (midContext) 
+      { context.data["CodeCalled"] = ++context.data["CallCounter"]; });
 }
 
 // Middleware Before Test Code
@@ -118,9 +116,9 @@ bool middlewareBeforeCreate(SpecContext context) {
 }
 
 bool middlewareBeforeCheck(SpecContext context) {
+  expect(context.data["ErrorCalled"], isNull);
   expect(context.data["BeforeCodeCalled"], equals(1));
   expect(context.data["CodeCalled"], equals(2));
-  expect(context.data["ErrorCalled"], isNull);
   return true;
 }
 
@@ -132,9 +130,9 @@ bool middlewareAfterCreate(SpecContext context) {
 }
 
 bool middlewareAfterCheck(SpecContext context) {
+  expect(context.data["ErrorCalled"], isNull);
   expect(context.data["CodeCalled"], equals(1));
   expect(context.data["AfterCodeCalled"], equals(2));
-  expect(context.data["ErrorCalled"], isNull);
   return true;
 }
 
@@ -150,10 +148,10 @@ bool middlewareAroundCreate(SpecContext context) {
 }
 
 bool middlewareAroundCheck(SpecContext context) {
+  expect(context.data["ErrorCalled"], isNull);
   expect(context.data["AroundBeforeCodeCalled"], equals(1)); 
   expect(context.data["CodeCalled"], equals(2));
   expect(context.data["AroundAfterCodeCalled"], equals(3));
-  expect(context.data["ErrorCalled"], isNull);
   return true;
 }
 
@@ -165,8 +163,8 @@ bool middlewareComplexCreate(SpecContext context) {
   middleware.after((midContext) { context.data["After3Called"] = ++context.data["CallCounter"]; });
   middleware.around((midContext, ctrl) { 
     context.data["Around1BeforeCalled"] = ++context.data["CallCounter"]; 
-    ctrl.next();
-    context.data["Around1AfterCalled"] = ++context.data["CallCounter"]; 
+    return ctrl.next()
+               .then((_) => context.data["Around1AfterCalled"] = ++context.data["CallCounter"] );
   });
   middleware.before((midContext) { context.data["Before3Called"] = ++context.data["CallCounter"]; });
   middleware.after((midContext) { context.data["After2Called"] = ++context.data["CallCounter"]; });
@@ -175,6 +173,7 @@ bool middlewareComplexCreate(SpecContext context) {
 }
 
 bool middlewareComplexCheck(SpecContext context) {
+  expect(context.data["ErrorCalled"], isNull);
   expect(context.data["Before1Called"], equals(1)); 
   expect(context.data["Before2Called"], equals(2)); 
   expect(context.data["Around1BeforeCalled"], equals(3)); 
@@ -184,7 +183,6 @@ bool middlewareComplexCheck(SpecContext context) {
   expect(context.data["After2Called"], equals(7));
   expect(context.data["Around1AfterCalled"], equals(8)); 
   expect(context.data["After3Called"], equals(9));
-  expect(context.data["ErrorCalled"], isNull);
   return true;
 }
 

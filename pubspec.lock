@@ -8,7 +8,7 @@ packages:
   spec_dart:
     description: spec_dart
     source: hosted
-    version: "0.1.0-beta"
+    version: "0.2.0-beta"
   stack_trace:
     description: stack_trace
     source: hosted
@@ -16,4 +16,4 @@ packages:
   unittest:
     description: unittest
     source: hosted
-    version: "0.9.2+1"
+    version: "0.9.3"

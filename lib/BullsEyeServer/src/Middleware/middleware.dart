@@ -1,15 +1,15 @@
 part of softhai.bulls_eye.Server;
 
-typedef void _MiddlewareThan(ReqResContext context);
+typedef Future _MiddlewareThan(ReqResContext context);
 
-typedef void MiddlewareBefore(ReqResContext context);
-typedef void MiddlewareAfter(ReqResContext context);
-typedef void MiddlewareAround(ReqResContext context, MiddlewareController midCtrl);
+typedef Future MiddlewareBefore(ReqResContext context);
+typedef Future MiddlewareAfter(ReqResContext context);
+typedef Future MiddlewareAround(ReqResContext context, MiddlewareController midCtrl);
 
 typedef bool MiddlewereOnError(ReqResContext context, MiddlewareError error);
 
 abstract class MiddlewareController {
-  void next();
+  Future next();
 }
 
 abstract class Middleware {
@@ -33,13 +33,13 @@ class _MiddlewareImpl implements Middleware  {
   
   _MiddlewareImpl(this.name, this._errorHandler);
   
-  void execute(ReqResContext context, _MiddlewareThan thenFunc) {
+  Future execute(ReqResContext context, _MiddlewareThan thenFunc) {
     this._thenHandler = thenFunc;
     
     var first = this._channel.first;
     if(first != null)
     {
-      first.execute(context);
+      return first.execute(context);
     }
   }
   
@@ -101,8 +101,8 @@ class _MiddlewareImpl implements Middleware  {
     
   }
   
-  void _handleChannelPartThen(ReqResContext context) {
-    this._thenHandler(context);
+  Future _handleChannelPartThen(ReqResContext context) {
+    return this._thenHandler(context);
   }
   
   bool _handleChannelPartError(ReqResContext context, Object error) {
