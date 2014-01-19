@@ -21,6 +21,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
   // New - better readability
   server.route("GET", jsPath, new LoadFile.fromUrl());
   ``` 
+
 --------------------------------------------------------------
 
 - **(NEW)** Add Middleware
