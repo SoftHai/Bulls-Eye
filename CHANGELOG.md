@@ -15,6 +15,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 - Class `LogicRoute` was renamed in `ExecuteCode` and refactored
 - Class `FileRoute` was renamed in `LoadFile` and refactored
 - Method `RegisterRoute` of the class `Server` was renamed in `route` and gots a new parameter order:
+
   ```dart
   // Old
   server.RegisterRoute(new FileRoute.fromUri(jsPath, methods: ["GET"]));
