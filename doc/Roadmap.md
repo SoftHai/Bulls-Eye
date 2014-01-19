@@ -29,12 +29,12 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 - [ ] Bugfixes / Improvements
 - Middleware
  - [ ] Vaidation
-   - [ ] Route Variables
-   - [ ] Query Variables
-   - [ ] Post Data
+    - [ ] Route Variables
+    - [ ] Query Variables
+    - [ ] Post Data
   - [ ] feature toogle
-   - [ ] GlobalContext
-   - [ ] UserContext
+    - [ ] GlobalContext
+    - [ ] UserContext
 
 **Milestone 3** (0.3.0)
 
