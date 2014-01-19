@@ -79,8 +79,8 @@ The Lib is devided into 3 parts:
  * [URLDefenition](/doc/URLDefenition.md)
 * Server: Here are the server side specific implementations
  * [Server](/doc/Server/Server.md)
-   * [Routing](/doc/Server/Server.md#route)
-   * [Middleware](/doc/Server/Server.md#middleware)
+    * [Routing](/doc/Server/Server.md#route)
+    * [Middleware](/doc/Server/Server.md#middleware)
 * Client: Here are the client side specific impelmentations
 
 To get an idea of the state, take a look at the example, doc and/or the tests.

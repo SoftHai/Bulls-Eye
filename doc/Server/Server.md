@@ -29,7 +29,7 @@ The `ReqResContext` is an object which is created for each incoming call. It has
 ##Route
 
 The basic workflow of Bulls-Eye is as followed:
-![Bais Server Workflow](\img\Bulls-Eye-Server - Basic.png);
+![Bais Server Workflow](/img/Bulls-Eye-Server - Basic.png);
 
 You have to define which routes (URLs) your Bulls-Eye server should handle. to do this, you have to call the function `route` of the `Server`class:
 ```dart
@@ -86,7 +86,7 @@ Functions:
 ##Middleware
 
 The workflow of Bulls-Eye with an example middleware:
-![Bais Server Workflow](\img\Bulls-Eye-Server - Middleware.png);
+![Bais Server Workflow](/img/Bulls-Eye-Server - Middleware.png);
 
 As you can see in the diagram, with the middleware you can add common tasks (like validation, auth, ...) to the middleware instead of handling this in each route logic seperate.
 
