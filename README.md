@@ -3,7 +3,10 @@ Bulls-Eye
 
 [![Build Status](https://drone.io/github.com/SoftHai/Bulls-Eye/status.png)](https://drone.io/github.com/SoftHai/Bulls-Eye/latest)
 
-Bull's Eye is a Dart-IO Web-Server (like Node JS / Express). It should bring the speed of Dart to the server-side. To have an single language to program server and client.
+Bull's Eye is a Dart-IO Web Application Framework (like Express on Node.js). 
+It should bring the speed of Dart to the server-side. To have an single language to program server and client.
+
+![Example Workflow](/doc/Server/img/Bulls-Eye-Server - Middleware.png)
 
 [Bulls-Eye on Dart Package Manager](http://pub.dartlang.org/packages/bulls_eye)
 
@@ -43,7 +46,7 @@ var searchRoute = new RouteDef("search?q&(ResultCount)"); // Define query variab
 var server = new Server();
 
 // Middleware
-// Add some middleware code which can be executed before, around or after the route logic.
+// Add some middleware code which can be executed before, around and/or after the route logic.
 server.middleware("Example")..before((context) => print("do something before the route logic (e.g. validation, auth, ...)"))
                          ..after((context) => print("do something after the route logic"))
                          ..around((context, ctrl) {
@@ -75,7 +78,9 @@ The Lib is devided into 3 parts:
 * Common: Here are functions which are required on client and server side (e.g. url defenitions, ...)
  * [URLDefenition](/doc/URLDefenition.md)
 * Server: Here are the server side specific implementations
- * WebServer
+ * [Server](/doc/Server/Server.md)
+   * [Routing](/doc/Server/Server.md#route)
+   * [Middleware](/doc/Server/Server.md#middleware)
 * Client: Here are the client side specific impelmentations
 
 To get an idea of the state, take a look at the example, doc and/or the tests.
@@ -86,7 +91,7 @@ See [here](/CHANGELOG.md)
 
 Roadmap
 =========
-See [here](/Roadmap.md)
+See [here](/doc/Roadmap.md)
 
 Targets
 =========
