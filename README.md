@@ -95,9 +95,12 @@ See [here](/doc/Roadmap.md)
 
 Targets
 =========
-* be extendable (e.g. via plugins)
-* be easy
-* be fast
+Building a Web Application Framework specialize for RESTful, Webservices and SinglePage WebApplications. 
+
+It should be:
+* extendable
+* easy
+* and fast
 
 FAQ
 =========
