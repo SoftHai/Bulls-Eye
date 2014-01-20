@@ -1,12 +1,9 @@
 part of softhai.bulls_eye.Server;
 
-typedef void RouteLogicError(HttpRequestException error);
 
 abstract class RouteLogic {
-  
-  void onError(RouteLogicError errorHandler);
-  
-  void execute(ReqResContext context);
+
+  Future execute(ReqResContext context);
 }
 
 typedef void HandleRoutingException(HttpRequestException ex);
@@ -52,10 +49,10 @@ class RouteManager {
   }
   
   // Executer
-  ReqResContext createContext(HttpRequest request) 
+  ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler) 
   {
     var variables = this.routeDefenition.matcher.getMatches(request.uri.path);
-    var context = new ReqResContext(request, this.routeDefenition, variables);
+    var context = new ReqResContext(request, this.routeDefenition, variables, errorHandler);
     return context;
   }
 

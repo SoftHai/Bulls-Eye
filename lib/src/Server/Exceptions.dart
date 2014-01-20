@@ -16,7 +16,7 @@ abstract class HttpRequestException implements Exception {
 
 class WrappedHttpRequestException extends HttpRequestException {
   
-  Exception originalException;
+  Object originalException;
   
   WrappedHttpRequestException(HttpRequest request, this.originalException) : super(request);
   

@@ -25,6 +25,7 @@ The `ReqResContext` is an object which is created for each incoming call. It has
 * **currentRoute**: Contains the URL defenition of the current called route. Use this e.g. in Middleware to identify the current called URL if your middleware code is reused over several routes.
 * **variables**: Contains all variables which was defined by the `URL` and extracted from the called URL.
 * **contextData**: This is an map where you can store data to reuse it over the call executing (e.g. store user data in an Auth-Middleware and use it in your route logic or store the database connection during the route executing).
+* **HandleError(error)**: Use this function to handle an Error by the global error handler.
 
 ##Route
 
@@ -73,15 +74,10 @@ You can create custom reusable route logic by implementing the following interfa
 abstract class RouteLogic {
 
   void execute(ReqResContext context);
-
-  void onError(RouteLogicError errorHandler);
-
 }
 ```
 Functions:
 * **execute**: will be called when the route logic comes to execute.
-
-* **onError**: will be called if the route logic has an unhandled exception.
 
 ##Middleware
 
@@ -104,6 +100,7 @@ With the returned `Middleware`object you can define which code should execute at
 * after
 * around
 * onError
+* add
 
 All Middleware functions are getting the current `ReqResContext` as parameter. This way you can store e.g. loaded user data to the context to reuse it in later middlewares or in the route logic.
 
@@ -159,4 +156,33 @@ With this handle you can implement Middleware specific exception handling. By de
 You can do that by calling the function `onError` on the `Middleware` object:
 ```dart
 bool onError(Future func(ReqResContext context, MiddlewareError error))
+```
+
+####Add
+
+Sometime is a function call not enough for an middleware implementation (e.g. if you want to initialize your middleare code with some parameter). Than you can use this function.
+
+To use this, inherit from one of the following classes and add an instance of the class to the middleware:
+* `BeforeHook`: Class for a before hook
+* `AfterHook`: Class for an after hook
+* `AroundHook`: Class for an around hook
+
+**Example**
+```dart
+
+class LogMiddleware implements AroundHook {
+  String logFile = "default.txt";
+
+  LogMiddleware(this.logFile);
+
+  Future around(context, ctrl) {
+  	// Log code to defined file here
+  }
+}
+
+// ...
+
+server..middleware("Log to File A").add(new LogMiddleware("FileA.txt"))
+      ..middleware("Log to File B").add(new LogMiddleware("FileB.txt"))
+
 ```

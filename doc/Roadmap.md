@@ -38,8 +38,11 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 **Milestone 3** (0.3.0)
 
-- [ ] Middleware
+- Middleware
  - [ ] Auth (Custom, OAuth, OpenID, ...)
+ - [ ] Statistic Collector
+   - [ ] Collect (Caller, URL, Browser, SourceURL, ...)
+   - [ ] Custom Statistic Handler (e.g. store to database, ...) 
 
 **Milestone 4** (0.4.0)
 

@@ -1,22 +1,17 @@
 part of softhai.bulls_eye.Server;
 
-typedef bool CodeCall(ReqResContext context);
+typedef Future CodeCall(ReqResContext context);
 
 class ExecuteCode implements RouteLogic {
   
-  RouteLogicError _errorHandler;
   CodeCall _codeCall;
   
   ExecuteCode(this._codeCall) {
     
   }
-  
-  void onError(RouteLogicError errorHandler) {
-    this._errorHandler = errorHandler;
-  }
-  
-  void execute(ReqResContext context) 
+
+  Future execute(ReqResContext context) 
   {
-    this._codeCall(context);
+    return new Future.sync(() => this._codeCall(context)).catchError((ex) => context.HandleError(ex));
   }
 }

@@ -11,6 +11,7 @@ part 'src/Server/Exceptions.dart';
 
 // Middleware
 part 'src/Server/Middleware/middleware.dart';
+part 'src/Server/Middleware/middleware_impl.dart';
 part 'src/Server/Middleware/middleware_channel_part.dart';
 part 'src/Server/Middleware/middleware_error.dart';
 

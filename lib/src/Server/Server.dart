@@ -9,7 +9,7 @@ class Server {
   Server({bool debug: false}) : this._debugMode = debug;
   
   Middleware middleware(String name) {
-    var middleware = new _MiddlewareImpl(name, this._handleMiddlewareException);
+    var middleware = new _MiddlewareImpl(name);
     _middlewares[name] = middleware;
     
     return middleware;
@@ -17,8 +17,6 @@ class Server {
   
   void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware}) {
     this._routes.add(new RouteManager(method, url, logic, contentTypes, middleware));
-    
-    logic.onError(this._handleRoutingException);
   }
 
   void start() {
@@ -35,45 +33,37 @@ class Server {
           {
             this._debugOutput("route '$route' matched! Executing...");
             
-            // Results: true = successful, null = executing async, false = npt executed - try next route
-            var context = route.createContext(request);
+            var context = route.createContext(request, this._handleException);
+            Future future = null;
             if(route.middleware != null)
             {
               // execute with middleware
               var middleware = this._middlewares[route.middleware];
-              middleware.execute(context, route.logic.execute);
+              future = middleware.execute(context, route.logic.execute);
             }
             else
             {
               // execute only logic
-              var future = new Future.sync(() => route.logic.execute(context));
-              future.catchError((ex) {
-                  if(ex is HttpRequestException) {
-                    this._handleRoutingException(ex);
-                  }
-                  else {
-                    this._debugOutput("Unhandled Exception $ex");
-                  }
-                });
+              future = new Future.sync(() => route.logic.execute(context));
             }
+            future.catchError((ex) {
+              if(ex is HttpRequestException) {
+                this._handleException(ex);
+              }
+              else {
+                this._handleException(new WrappedHttpRequestException(request, ex));
+                this._debugOutput("Unhandled Exception $ex");
+              }
+            });
             
             return;
-            /*
-            this._debugOutput("route '$route' finished with '$result'");
-            
-            if(result == true || result == null)
-            {
-              this._debugOutput();
-              return;
-            }
-            */
           }
         }
         
         // No match found
         this._debugOutput("No route Matched!");
         
-        this._handleRoutingException(new NotFoundException(request, request.uri.path, "Route for"));
+        this._handleException(new NotFoundException(request, request.uri.path, "Route for"));
         
         /*
         print("");
@@ -94,7 +84,7 @@ class Server {
   {
     if(error.catchedError is HttpRequestException)
     {
-      this._handleRoutingException(error.catchedError);
+      this._handleException(error.catchedError);
     }
     else {
       context.request.response.statusCode = HttpStatus.BAD_REQUEST;
@@ -104,7 +94,7 @@ class Server {
     return false;
   }
   
-  void _handleRoutingException(HttpRequestException ex)
+  void _handleException(HttpRequestException ex)
   {
     if(ex is NotFoundException)
     {

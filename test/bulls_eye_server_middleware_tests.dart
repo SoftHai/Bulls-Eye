@@ -14,6 +14,7 @@ part '../lib/src/Server/Exceptions.dart';
 
 // Middleware
 part '../lib/src/Server/Middleware/middleware.dart';
+part '../lib/src/Server/Middleware/middleware_impl.dart';
 part '../lib/src/Server/Middleware/middleware_channel_part.dart';
 part '../lib/src/Server/Middleware/middleware_error.dart';
 
@@ -26,31 +27,52 @@ part '../lib/src/Server/Routing/RoutingExceptions.dart';
 void main() {
   
   var feature = new Feature("Middleware", "With the middleware, developer can extract common code from the logic")
-                    ..setUp(createHttpRequest); // Setup a mock http Reuqest object
+                    ..setUp((context) {
+                        createCallCounter(context);
+                        createHttpRequest(context);
+                      }); // Setup a mock http Reuqest object
   
   var storyMiddlewareCode = feature.story("Middleware functions", 
                             asA: "WebServer Developer", 
                             iWant: "to add middleware code before/after/around the route logic called", 
                             soThat: "I can control and/or manipulate the route executing and the input and/or output data");
   
-  storyMiddlewareCode.scenario("Add logic before")
+  storyMiddlewareCode.scenario("Add logic before via function")
         ..setUp(createCallCounter) // set Call Counter to 0
-        ..given(text: "is a middleware defenition with a before call", func: middlewareBeforeCreate)
+        ..given(text: "is a middleware defenition with a before call", func: middlewareBeforeCreateFunc)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the before code was called before the logic", func: middlewareBeforeCheck);
  
-  storyMiddlewareCode.scenario("Add logic after")
+  storyMiddlewareCode.scenario("Add logic after via function")
         ..setUp(createCallCounter) // set Call Counter to 0
-        ..given(text: "a middleware defenition with a after call", func: middlewareAfterCreate)
+        ..given(text: "a middleware defenition with a after call", func: middlewareAfterCreateFunc)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the after code was called after the logic", func: middlewareAfterCheck);
 
-  storyMiddlewareCode.scenario("Add logic around")
+  storyMiddlewareCode.scenario("Add logic around via function")
         ..setUp(createCallCounter) // set Call Counter to 0
-        ..given(text: "a middleware defenition with a around call", func: middlewareAroundCreate)
+        ..given(text: "a middleware defenition with a around call", func: middlewareAroundCreateFunc)
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the after code was called after the logic", func: middlewareAroundCheck);
 
+  storyMiddlewareCode.scenario("Add logic before via class")
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "is a middleware defenition with a before call", func: middlewareBeforeCreateClass)
+        ..when(text: "the middleware is executed", func: executeMiddleware)
+        ..than(text: "the before code was called before the logic", func: middlewareBeforeCheck);
+ 
+  storyMiddlewareCode.scenario("Add logic after via class")
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with a after call", func: middlewareAfterCreateClass)
+        ..when(text: "the middleware is executed", func: executeMiddleware)
+        ..than(text: "the after code was called after the logic", func: middlewareAfterCheck);
+
+  storyMiddlewareCode.scenario("Add logic around via class")
+        ..setUp(createCallCounter) // set Call Counter to 0
+        ..given(text: "a middleware defenition with a around call", func: middlewareAroundCreateClass)
+        ..when(text: "the middleware is executed", func: executeMiddleware)
+        ..than(text: "the after code was called after the logic", func: middlewareAroundCheck);
+  
   storyMiddlewareCode.scenario("Add complex middleware calls")
         ..setUp(createCallCounter) // set Call Counter to 0
         ..given(text: "a middleware defenition with a complex structure (Before, Before, Around, Before, Code, After, After, Arround, After)", func: middlewareComplexCreate)
@@ -100,7 +122,7 @@ bool createHttpRequest(SpecContext context) {
   var urlDef = new common.Url("/Part1/:var1/Part2/(:var2)", "Demo Route");
   var route = new RouteManager("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null);
   var request = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["*/*"]);
-  context.data["ReqRes"] = route.createContext(request);
+  context.data["ReqRes"] = route.createContext(request, (ex) { });
 }
 
 Future executeMiddleware(SpecContext context) {
@@ -109,9 +131,25 @@ Future executeMiddleware(SpecContext context) {
 }
 
 // Middleware Before Test Code
-bool middlewareBeforeCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { context.data["ErrorCalled"] = ++context.data["CallCounter"]; });
+bool middlewareBeforeCreateFunc(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
   middleware.before((midContext) { context.data["BeforeCodeCalled"] = ++context.data["CallCounter"]; });
+  context.data["middleware"] = middleware;
+}
+
+class BeforeTest implements BeforeHook {
+  SpecContext context;
+  
+  BeforeTest(this.context);
+  
+  Future before(reqRes) { context.data["BeforeCodeCalled"] = ++context.data["CallCounter"]; }
+}
+
+bool middlewareBeforeCreateClass(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
+  middleware.add(new BeforeTest(context));
   context.data["middleware"] = middleware;
 }
 
@@ -123,9 +161,25 @@ bool middlewareBeforeCheck(SpecContext context) {
 }
 
 // Middleware After Test Code
-bool middlewareAfterCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { context.data["ErrorCalled"] = ++context.data["CallCounter"]; });
+bool middlewareAfterCreateFunc(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
   middleware.after((midContext) { context.data["AfterCodeCalled"] = ++context.data["CallCounter"]; });
+  context.data["middleware"] = middleware;
+}
+
+class AfterTest implements AfterHook {
+  SpecContext context;
+  
+  AfterTest(this.context);
+  
+  Future after(reqRes) { context.data["AfterCodeCalled"] = ++context.data["CallCounter"]; }
+}
+
+bool middlewareAfterCreateClass(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
+  middleware.add(new AfterTest(context));
   context.data["middleware"] = middleware;
 }
 
@@ -137,13 +191,33 @@ bool middlewareAfterCheck(SpecContext context) {
 }
 
 // Middleware Around Test Code
-bool middlewareAroundCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { context.data["ErrorCalled"] = ++context.data["CallCounter"]; });
+bool middlewareAroundCreateFunc(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
   middleware.around((midContext, ctrl) { 
     context.data["AroundBeforeCodeCalled"] = ++context.data["CallCounter"]; 
     ctrl.next();
     context.data["AroundAfterCodeCalled"] = ++context.data["CallCounter"]; 
   });
+  context.data["middleware"] = middleware;
+}
+
+class AroundTest implements AroundHook {
+  SpecContext context;
+  
+  AroundTest(this.context);
+  
+  Future around(reqRes, ctrl) { 
+    context.data["AroundBeforeCodeCalled"] = ++context.data["CallCounter"]; 
+    ctrl.next();
+    context.data["AroundAfterCodeCalled"] = ++context.data["CallCounter"]; 
+  }
+}
+
+bool middlewareAroundCreateClass(SpecContext context) {
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
+  middleware.add(new AroundTest(context));
   context.data["middleware"] = middleware;
 }
 
@@ -157,7 +231,8 @@ bool middlewareAroundCheck(SpecContext context) {
 
 // Middleware Complex Test Code
 bool middlewareComplexCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { context.data["ErrorCalled"] = ++context.data["CallCounter"]; });
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) => context.data["ErrorCalled"] = ++context.data["CallCounter"] );
   middleware.before((midContext) { context.data["Before1Called"] = ++context.data["CallCounter"]; });
   middleware.before((midContext) { context.data["Before2Called"] = ++context.data["CallCounter"]; });
   middleware.after((midContext) { context.data["After3Called"] = ++context.data["CallCounter"]; });
@@ -188,7 +263,8 @@ bool middlewareComplexCheck(SpecContext context) {
 
 // Middleware Exception Before Test Code
 bool middlewareExceptionBeforeCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { 
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error)  { 
     context.data["ErrorCalled"] = ++context.data["CallCounter"]; 
     context.data["Error"] = error; 
   });
@@ -211,7 +287,8 @@ bool middlewareExceptionBeforeCheck(SpecContext context) {
 
 // Middleware Exception After Test Code
 bool middlewareExceptionAfterCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { 
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) { 
     context.data["ErrorCalled"] = ++context.data["CallCounter"]; 
     context.data["Error"] = error; 
   });
@@ -234,7 +311,8 @@ bool middlewareExceptionAfterCheck(SpecContext context) {
 
 // Middleware Exception Around Before Test Code
 bool middlewareExceptionAroundBeforeCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { 
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) { 
     context.data["ErrorCalled"] = ++context.data["CallCounter"]; 
     context.data["Error"] = error; 
   });
@@ -257,7 +335,8 @@ bool middlewareExceptionAroundBeforeCheck(SpecContext context) {
 
 // Middleware Exception Around After Test Code
 bool middlewareExceptionAroundAfterCreate(SpecContext context) {
-  var middleware = new _MiddlewareImpl("Middleware", (reqRes, error) { 
+  var middleware = new _MiddlewareImpl("Middleware");
+  middleware.onError((reqRes, error) { 
     context.data["ErrorCalled"] = ++context.data["CallCounter"]; 
     context.data["Error"] = error; 
   });
