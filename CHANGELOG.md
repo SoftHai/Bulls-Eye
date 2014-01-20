@@ -22,7 +22,8 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
   // New - better readability
   server.route("GET", jsPath, new LoadFile.fromUrl());
   ``` 
-
+- (#4) Renamed the Common-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_common.dart` to `package:bulls_eye/common.dart`
+- (#4) Renamed the Server-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_server.dart` to `package:bulls_eye/server.dart`
 --------------------------------------------------------------
 
 - **(NEW)** Add Middleware

@@ -1,4 +1,4 @@
-import '../../../lib/BullsEyeServer/bulls_eye_server.dart';
+import '../../../lib/server.dart';
 import 'URLDefenitions.dart';
 import 'ServerLogic.dart';
 

@@ -2,26 +2,26 @@ library softhai.bulls_eye.Server;
 
 import 'dart:io';
 import 'dart:async';
-import '../lib/BullsEyeCommon/bulls_eye_common.dart' as common;
+import '../lib/common.dart' as common;
 import 'HttpMocks.dart';
 
 import 'package:unittest/unittest.dart';
 import 'package:spec_dart/spec_dart.dart';
 
 // Globals
-part '../lib/BullsEyeServer/src/req_res_context.dart';
-part '../lib/BullsEyeServer/src/Exceptions.dart';
+part '../lib/src/Server/req_res_context.dart';
+part '../lib/src/Server/Exceptions.dart';
 
 // Middleware
-part '../lib/BullsEyeServer/src/Middleware/middleware.dart';
-part '../lib/BullsEyeServer/src/Middleware/middleware_channel_part.dart';
-part '../lib/BullsEyeServer/src/Middleware/middleware_error.dart';
+part '../lib/src/Server/Middleware/middleware.dart';
+part '../lib/src/Server/Middleware/middleware_channel_part.dart';
+part '../lib/src/Server/Middleware/middleware_error.dart';
 
 // Routing
-part '../lib/BullsEyeServer/src/Routing/RouteManager.dart';
-part '../lib/BullsEyeServer/src/Routing/ExecuteCode.dart';
-part '../lib/BullsEyeServer/src/Routing/LoadFile.dart';
-part '../lib/BullsEyeServer/src/Routing/RoutingExceptions.dart';
+part '../lib/src/Server/Routing/RouteManager.dart';
+part '../lib/src/Server/Routing/ExecuteCode.dart';
+part '../lib/src/Server/Routing/LoadFile.dart';
+part '../lib/src/Server/Routing/RoutingExceptions.dart';
 
 void main() {
   

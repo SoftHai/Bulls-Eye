@@ -1,5 +1,5 @@
 import 'package:unittest/unittest.dart';
-import '../lib/BullsEyeCommon/bulls_eye_common.dart';
+import '../lib/common.dart';
 
 void _BullsEyeCommonTest_RouteDefenition_Test(Url urlDef, String expectedPath, [String expectedName]) {
   expectedName = expectedName == null ? expectedPath : expectedName;

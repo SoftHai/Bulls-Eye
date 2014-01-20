@@ -1,6 +1,6 @@
 library softhai.Example.ToDo.Server;
 
-import '../../../lib/BullsEyeServer/bulls_eye_server.dart';
+import '../../../lib/server.dart';
 
 class ServerLogic {
   

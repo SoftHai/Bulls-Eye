@@ -1,6 +1,6 @@
 library softhai.Example.ToDo.Common;
 
-import '../../../lib/BullsEyeCommon/bulls_eye_common.dart';
+import '../../../lib/common.dart';
 
 // ----------Variable Parts----------
 var toDo = new Static("ToDo");

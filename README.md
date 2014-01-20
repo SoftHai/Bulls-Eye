@@ -26,10 +26,9 @@ You can get Bulls-Eye from the Dart Pub Manager.<br/>
 
 **Use the Package**
 ```dart
-import 'package:bulls_eye/BullsEyeCommon/bulls_eye_common.dart'; // For route defenition
-import 'package:bulls_eye/BullsEyeServer/bulls_eye_server.dart'; // For using the web server
+import 'package:bulls_eye/common.dart'; // For URL defenition
+import 'package:bulls_eye/server.dart'; // For using the web server
 ```
-**Note:** *I will change this in future to 'bulls_eye/common.dart' and  'bulls_eye/server.dart'*
 
 Example
 =========

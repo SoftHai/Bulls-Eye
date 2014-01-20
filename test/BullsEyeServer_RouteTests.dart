@@ -2,8 +2,8 @@ import 'package:unittest/unittest.dart';
 import 'HttpMocks.dart';
 
 import 'dart:io';
-import '../lib/BullsEyeCommon/bulls_eye_common.dart';
-import '../lib/BullsEyeServer/bulls_eye_server.dart';
+import '../lib/common.dart';
+import '../lib/server.dart';
 
 void TestHttpRequestMock() {
   
