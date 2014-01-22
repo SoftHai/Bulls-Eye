@@ -93,33 +93,33 @@ class UrlMatcher {
           queryResult[vm.variable] = null;
         }
       });
-      return new UriMatcherResult(routeResult, queryResult);
     }
     else 
     {
       var m = this._regex.allMatches(path);
-      var match = m.elementAt(0);
-      if(match.groupCount == this._routeVars.length)
+      if(m.length > 0)
       {
-        int globalI = 0;
-        // Route Variables
-        for(int i = 0; i < this._routeVars.length; i++)
+        var match = m.elementAt(0);
+        if(match.groupCount == this._routeVars.length)
         {
-          routeResult[this._routeVars[i].variable] = match[i+1];
-          globalI = i;
+          int globalI = 0;
+          // Route Variables
+          for(int i = 0; i < this._routeVars.length; i++)
+          {
+            routeResult[this._routeVars[i].variable] = match[i+1];
+            globalI = i;
+          }
+          
+          // Query Variable
+          for(int i = 0; i < this._queryVars.length; i++)
+          {
+            queryResult[this._queryVars[i].variable] = match[globalI+i+1];
+          }
         }
-        
-        // Query Variable
-        for(int i = 0; i < this._queryVars.length; i++)
-        {
-          queryResult[this._queryVars[i].variable] = match[globalI+i+1];
-        }
-        
-        return new UriMatcherResult(routeResult, queryResult);
       }
     }
     
-    return null;
+    return new UriMatcherResult(routeResult, queryResult);
   }
   
   String replace(Map<String,Object> values)
