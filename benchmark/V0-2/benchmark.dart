@@ -154,7 +154,7 @@ class URLExtractingBenchmark extends BenchmarkBase {
   void run() {
     // All
     var matches = url.matcher.getMatches(extractUrl);
-    if(matches.routeVariables.result.length + matches.queryVariables.result.length != varCount) throw "Extracting wrong";
+    //if(matches.routeVariables.result.length + matches.queryVariables.result.length != varCount) throw "Extracting wrong";
   }
 
   // Not measured: setup code executed before the benchmark runs.
