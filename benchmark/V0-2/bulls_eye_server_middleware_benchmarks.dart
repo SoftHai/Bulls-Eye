@@ -5,7 +5,7 @@ library softhai.bulls_eye.Server;
 import 'dart:io';
 import 'dart:async';
 import '../../lib/common.dart' as common;
-import '../../Test/HttpMocks.dart';
+import '../../test/HttpMocks.dart';
 
 import 'package:spec_dart/spec_dart.dart';
 
