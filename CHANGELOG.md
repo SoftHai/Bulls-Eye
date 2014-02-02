@@ -28,6 +28,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 
 - **(NEW)** Add Middleware
 - **(IMP)** Documentation
+- **(FIX)** A Problem with extracting variables from URLs with only required variables (Route and Query)
 
 ##Version 0.1.0-Alpha
 **Release date: *05 Jan 2014* **

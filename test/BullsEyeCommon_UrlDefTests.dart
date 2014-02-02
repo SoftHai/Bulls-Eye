@@ -143,11 +143,28 @@ main()  {
 
         UriMatcherResult variables = routeDef.matcher.getMatches("/Part1/Part2");
         
+        expect(variables.routeVariables.result, hasLength(0));
         expect(variables.routeVariables["abc"], isNull);
         expect(variables.routeVariables.getVariable("abc"), isNull);
 
+        expect(variables.queryVariables.result, hasLength(0));
         expect(variables.queryVariables["abc"], isNull);
         expect(variables.queryVariables.getVariable("abc"), isNull);
+        
+      });
+      
+      solo_test("Test - UriMatcher Match - Not optional variables", () {
+        var routeDef = new Url("Part1/:Var1/Part3?QVar1");
+
+        UriMatcherResult variables = routeDef.matcher.getMatches("Part1/123/Part3?QVar1=12");
+        
+        expect(variables.routeVariables.result, hasLength(1));
+        expect(variables.routeVariables.getVariable("Var1"), new isInstanceOf<Variable>());
+        expect(variables.routeVariables["Var1"], "123");
+        
+        expect(variables.queryVariables.result, hasLength(1));
+        expect(variables.queryVariables.getVariable("QVar1"), new isInstanceOf<QVariable>());
+        expect(variables.queryVariables["QVar1"], "12");
         
       });
       

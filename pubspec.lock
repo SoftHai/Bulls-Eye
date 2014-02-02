@@ -16,7 +16,7 @@ packages:
   spec_dart:
     description: spec_dart
     source: hosted
-    version: "0.2.0-beta"
+    version: "0.3.2-beta"
   stack_trace:
     description: stack_trace
     source: hosted

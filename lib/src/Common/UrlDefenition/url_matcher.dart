@@ -100,14 +100,14 @@ class UrlMatcher {
       if(m.length > 0)
       {
         var match = m.elementAt(0);
-        if(match.groupCount == this._routeVars.length)
+        if(match.groupCount == (this._routeVars.length + this._queryVars.length))
         {
           int globalI = 0;
           // Route Variables
           for(int i = 0; i < this._routeVars.length; i++)
           {
             routeResult[this._routeVars[i].variable] = match[i+1];
-            globalI = i;
+            globalI = i+1;
           }
           
           // Query Variable

@@ -2,108 +2,112 @@
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bulls_eye/common.dart';
+import 'package:spec_dart/spec_dart.dart';
 
 void executeBenchmark() {
-  URLStringDefBenchmark.main();
-  URLObjectDefBenchmark.main();
-  URLMixedDefBenchmark.main();
   
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", true, "Complex - All");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/456/Part3?QVar1=10&QVar2=11", true, "Complex - All (without wildcard)");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/Part3/Folder/Folder/file.js?QVar1=10", true, "Complex - Only required + wildcard");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/Part3?QVar1=10", true, "Complex - Only required");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part111/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", false, "Complex - early Error");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part222/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", false, "Complex - middle Error");
-  URLMatchingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar111=10&QVar2=11", false, "Complex - late Error");
-  URLMatchingBenchmark.main("Part1/Part2/Part3", "Part1/Part2/Part3", true, "Static");
-  URLMatchingBenchmark.main("Part1/Part222/Part3", "Part1/Part2/Part3", false, "Static");
-  URLMatchingBenchmark.main("Part1/:Var1/Part3?QVar1", "Part1/123/Part3?QVar1=12", true, "No Optional");
-  URLMatchingBenchmark.main("Part1/:Var1/Part3?QVar1", "Part1/123/Part333?QVar1=12", false, "No Optional");
+  var suite = Suite.create();
+  suite.interations(1);
+  var urlDefBenchmark = suite.add("URLDef");
+  
+  urlDefBenchmark..bench(URLStringDef_Benchmark, name: "String", unit: MICROSECONDS)
+                 ..bench(URLObjectDef_Benchmark, name: "Object", unit: MICROSECONDS)
+                 ..bench(URLMixedDef_Benchmark, name: "Mixed", unit: MICROSECONDS);
+  
+  var urlMatchingComplexBenchmark = suite.add("URLMatching - Complex");
+  
+  urlMatchingComplexBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)"); })
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", true),
+                                     name: "(All)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part2/456/Part3?QVar1=10&QVar2=11", true),
+                                     name: "(without wildcard)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part2/Part3/Folder/Folder/file.js?QVar1=10", true),
+                                     name: "(without optional)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part2/Part3?QVar1=10", true),
+                                     name: "(Only required)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part111/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", false),
+                                     name: "(early Error)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part222/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", false),
+                                     name: "(middle Error)", unit: MICROSECONDS)
+                             ..bench((context) => URLMatching_Benchmark(context, "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar111=10&QVar2=11", false),
+                                     name: "(late Error)", unit: MICROSECONDS);
+  
+  var urlMatchingStaticBenchmark = suite.add("URLMatching - Static");
+  
+  urlMatchingStaticBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/Part2/Part3"); })
+                            ..bench((context) => URLMatching_Benchmark(context, "Part1/Part2/Part3", true),
+                                    name: "(matched)", unit: MICROSECONDS)
+                            ..bench((context) => URLMatching_Benchmark(context, "Part1/Part222/Part3", false),
+                                    name: "(not matched)", unit: MICROSECONDS);
+  
+  var urlMatchingNoOptionalBenchmark = suite.add("URLMatching - No Optional");
+  
+  urlMatchingNoOptionalBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/:Var1/Part3?QVar1"); })
+                                ..bench((context) => URLMatching_Benchmark(context, "Part1/123/Part3?QVar1=12", true),
+                                        name: "(matched)", unit: MICROSECONDS)
+                                ..bench((context) => URLMatching_Benchmark(context, "Part1/123/Part333?QVar1=12", false),
+                                        name: "(not matched)", unit: MICROSECONDS);
+
+  var urlExtractingComplexBenchmark = suite.add("URLExtracting - Complex");
+  
+  urlExtractingComplexBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)"); })
+                               ..bench((context) => URLExtracting_Benchmark(context, "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", 6),
+                                        unit: MICROSECONDS);
+ 
+  var urlExtractingStaticBenchmark = suite.add("URLExtracting - Static");
+  
+  urlExtractingStaticBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/Part2/Part3"); })
+                              ..bench((context) => URLExtracting_Benchmark(context, "Part1/Part2/Part3", 0),
+                                        unit: MICROSECONDS);
+
+  var urlExtractingNoOptionalBenchmark = suite.add("URLExtracting - NoOptional");
+  
+  urlExtractingNoOptionalBenchmark..setUp((context) { context.data["URL"] = new Url("Part1/:Var1/Part3?QVar1"); })
+                                  ..bench((context) => URLExtracting_Benchmark(context, "Part1/123/Part3?QVar1=12", 2),
+                                          unit: MICROSECONDS);
+  
+  suite.run();
+ 
+  return;
   
   URLExtractingBenchmark.main("Part1/:Version/:Var1/Part2/(:OptVar2)/Part3/*?QVar1&(QVar2)", "Part1/v1/123/Part2/456/Part3/Folder/Folder/file.js?QVar1=10&QVar2=11", 6, "Complex - All");
   URLExtractingBenchmark.main("Part1/Part222/Part3", "Part1/Part2/Part3", 0, "Static");
   URLExtractingBenchmark.main("Part1/:Var1/Part3?QVar1", "Part1/123/Part3?QVar1=12", 2, "No Optional");
 }
 
-class URLStringDefBenchmark extends BenchmarkBase {
-  const URLStringDefBenchmark() : super("V0.2 - URL String Def");
-
-  static void main() {
-    new URLStringDefBenchmark().report();
-  }
-
-  // The benchmark code.
-  void run() {
-    var urlObj = new Url("Part1/:Version/:Var1/Part2/(:OptVar2)/*?QVar1&(QVar2)");
-  }
-
-  // Not measured: setup code executed before the benchmark runs.
-  void setup() { 
-    
-  }
-
-  // Not measured: teardown code executed after the benchmark runs.
-  void teardown() { 
-    
-  }
+void URLStringDef_Benchmark(context) {
+  var urlObj = new Url("Part1/:Version/:Var1/Part2/(:OptVar2)/*?QVar1&(QVar2)");
 }
 
-class URLObjectDefBenchmark extends BenchmarkBase {
-  const URLObjectDefBenchmark() : super("V0.2 - URL Object Def");
-
-  static void main() {
-    new URLObjectDefBenchmark().report();
-  }
-
-  // The benchmark code.
-  void run() {
-    var urlObj = new Url.fromObjects([new Static("Part1"), 
-                          new Version(), 
-                          new Variable("Var1"), 
-                          new Static("Part2"),
-                          new Variable("OptVar2", true),
-                          new WildCard()], 
-                          queryParts: [new QVariable("QVar1"),
-                                       new QVariable("QVar2", true)]);
-  }
-
-  // Not measured: setup code executed before the benchmark runs.
-  void setup() { 
-    
-  }
-
-  // Not measured: teardown code executed after the benchmark runs.
-  void teardown() { 
-    
-  }
+void URLObjectDef_Benchmark(context) {
+  var urlObj = new Url.fromObjects([new Static("Part1"), 
+                                    new Version(), 
+                                    new Variable("Var1"), 
+                                    new Static("Part2"),
+                                    new Variable("OptVar2", true),
+                                    new WildCard()], 
+                                    queryParts: [new QVariable("QVar1"),
+                                                 new QVariable("QVar2", true)]);
 }
 
-class URLMixedDefBenchmark extends BenchmarkBase {
-  const URLMixedDefBenchmark() : super("V0.2 - URL Mixed Def");
+void URLMixedDef_Benchmark(context) {
+  var urlObj = new Url.fromMixed(["Part1/:Version", 
+                                  new Variable("Var1"), 
+                                  "Part2",
+                                  new Variable("OptVar2", true),
+                                  "*?QVar1",
+                                  new QVariable("QVar2", true)]);
+}
 
-  static void main() {
-    new URLMixedDefBenchmark().report();
-  }
+void URLMatching_Benchmark(BenchContext context, String url, bool matched) {
+  var result = context.data["URL"].matcher.match(url);
+  if(result != matched) throw "Matched wrong";
+}
 
-  // The benchmark code.
-  void run() {
-    var urlObj = new Url.fromMixed(["Part1/:Version", 
-                                      new Variable("Var1"), 
-                                      "Part2",
-                                      new Variable("OptVar2", true),
-                                      "*?QVar1",
-                                      new QVariable("QVar2", true)]);
-  }
-
-  // Not measured: setup code executed before the benchmark runs.
-  void setup() { 
-    
-  }
-
-  // Not measured: teardown code executed after the benchmark runs.
-  void teardown() { 
-    
-  }
+void URLExtracting_Benchmark(BenchContext context, String url, int expactedCount) {
+  var matches = context.data["URL"].matcher.getMatches(url);
+  var actualCount = matches.routeVariables.result.length + matches.queryVariables.result.length;
+  if(matches.routeVariables.result.length + matches.queryVariables.result.length != expactedCount) throw "Extracting wrong - expected '$expactedCount' but was '$actualCount'";
 }
 
 class URLMatchingBenchmark extends BenchmarkBase {
