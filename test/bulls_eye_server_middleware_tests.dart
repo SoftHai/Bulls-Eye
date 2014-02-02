@@ -29,8 +29,8 @@ void main() {
   var feature = new Feature("Middleware", "With the middleware, developer can extract common code from the logic")
                     ..setUp((context) {
                         createCallCounter(context);
-                        createHttpRequest(context);
-                      }); // Setup a mock http Reuqest object
+                        createHttpRequest(context); // Setup a mock http Reuqest object
+                      });
   
   var storyMiddlewareCode = feature.story("Middleware functions", 
                             asA: "WebServer Developer", 

@@ -5,6 +5,5 @@ homepage: https://github.com/SoftHai/Bulls-Eye
 description: Bulls Eye is an Dart-IO Extension to build up an WebServer (like node.js and Express)
 documentation: https://github.com/SoftHai/Bulls-Eye
 dev_dependencies:
-  benchmark_harness: any
   spec_dart: any
   unittest: '>=0.9.0 <2.0.0'
