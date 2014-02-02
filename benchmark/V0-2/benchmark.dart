@@ -7,7 +7,7 @@ import 'package:spec_dart/spec_dart.dart';
 void executeBenchmark() {
   
   var suite = Suite.create();
-  suite.interations(1);
+  suite.interations(5);
   var urlDefBenchmark = suite.add("URLDef");
   
   urlDefBenchmark..bench(URLStringDef_Benchmark, name: "String", unit: MICROSECONDS)

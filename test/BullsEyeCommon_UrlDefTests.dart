@@ -153,7 +153,7 @@ main()  {
         
       });
       
-      solo_test("Test - UriMatcher Match - Not optional variables", () {
+      test("Test - UriMatcher Match - Not optional variables", () {
         var routeDef = new Url("Part1/:Var1/Part3?QVar1");
 
         UriMatcherResult variables = routeDef.matcher.getMatches("Part1/123/Part3?QVar1=12");
