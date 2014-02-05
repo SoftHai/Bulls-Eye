@@ -19,12 +19,12 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 **Milestone 1** (0.1.0 - 05 Jan 2014)
 
-- [/] Bugfixes / Improvements
+- [X] Bugfixes / Improvements
 - Server
  - [X] Add Middleware Engine
- - [ ] Customizable Error Handling (404, ...)
+ - [X] Customizable Error Handling (404, ...)
 
-**Milestone 2** (0.2.0 - Feb 2014)
+**Milestone 2** (0.2.0 - 05 Feb 2014)
 
 - [ ] Bugfixes / Improvements
 - Middleware

@@ -1,10 +1,13 @@
 part of softhai.bulls_eye.Server;
 
+typedef bool ExceptionHandler(HttpRequestException ex);
+
 class Server {
   
   bool _debugMode = false;
   List<RouteManager> _routes = new List<RouteManager>();
   Map<String, _MiddlewareImpl> _middlewares = new Map<String, _MiddlewareImpl>();
+  ExceptionHandler _customExceptionHandler;
   
   Server({bool debug: false}) : this._debugMode = debug;
   
@@ -80,28 +83,38 @@ class Server {
     });
   }
   
-  bool _handleMiddlewareException(ReqResContext context, MiddlewareError error)
-  {
-    if(error.catchedError is HttpRequestException)
-    {
-      this._handleException(error.catchedError);
-    }
-    else {
-      context.request.response.statusCode = HttpStatus.BAD_REQUEST;
-      context.request.response.close();
-    }
-    
-    return false;
+  void exception(ExceptionHandler handler) {
+    this._customExceptionHandler = handler;
   }
+  
   
   void _handleException(HttpRequestException ex)
   {
-    if(ex is NotFoundException)
+    this._debugOutput("Error '$ex' occurred!");
+    
+    bool handled = false;
+    
+    // Custom Error handling
+    if(this._customExceptionHandler != null)
     {
-      this._debugOutput(ex.toString());
-      
-      ex.request.response.statusCode = HttpStatus.NOT_FOUND;
-      ex.request.response.close();
+      handled = this._customExceptionHandler(ex);
+    }
+    
+    if(handled != true)
+    {
+      // Default Error handling
+      if(ex is NotFoundException)
+      {
+        this._debugOutput(ex.toString());
+        
+        ex.request.response.statusCode = HttpStatus.NOT_FOUND;
+        ex.request.response.close();
+      }
+      else
+      {
+        ex.request.response.statusCode = HttpStatus.BAD_REQUEST;
+        ex.request.response.close();
+      }
     }
   }
   

@@ -128,7 +128,10 @@ class _MiddlewareImpl implements Middleware  {
   
   void _handleChannelPartError(ReqResContext context, Object error) {
     if(_errorHandler != null) {
-      this._errorHandler(context, new MiddlewareError(this.name, error));
+      var handled = this._errorHandler(context, new MiddlewareError(this.name, error));
+      if(handled != true) {
+        context.HandleError(new MiddlewareError(this.name, error));
+      }
     }
     else {
       context.HandleError(new MiddlewareError(this.name, error));

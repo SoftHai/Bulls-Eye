@@ -1,20 +1,20 @@
 #Changelog
 ```
-Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
+DateFormat: DD.MM.YYYY
+Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (e.g. Breaking Changes)
 ```
 
 ##Version 0.2.0-Alpha
-**Release date: *not released* **
+**Release date: *05 Feb 2014* **
 
 --------------------------------------------------------------
-**Breaking Changes**
-- Class `RouteDef` was renamed in `Url`
-- Class `RoutePart` was renamed in `PathPart`
-- Class `RouteDefConfig` was renamed in `UrlDefConfig`
-- Class `UriMatcher` was renamed in `UrlMatcher`
-- Class `LogicRoute` was renamed in `ExecuteCode` and refactored
-- Class `FileRoute` was renamed in `LoadFile` and refactored
-- Method `RegisterRoute` of the class `Server` was renamed in `route` and gots a new parameter order:
+- **(!!!) Class `RouteDef` was renamed in `Url`**
+- **(!!!) Class `RoutePart` was renamed in `PathPart`**
+- **(!!!) Class `RouteDefConfig` was renamed in `UrlDefConfig`**
+- **(!!!) Class `UriMatcher` was renamed in `UrlMatcher`**
+- **(!!!) Class `LogicRoute` was renamed in `ExecuteCode` and refactored**
+- **(!!!) Class `FileRoute` was renamed in `LoadFile` and refactored**
+- **(!!!) Method `RegisterRoute` of the class `Server` was renamed in `route` and gots a new parameter order:**
 
   ```dart
   // Old
@@ -22,11 +22,13 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
   // New - better readability
   server.route("GET", jsPath, new LoadFile.fromUrl());
   ``` 
-- (#4) Renamed the Common-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_common.dart` to `package:bulls_eye/common.dart`
-- (#4) Renamed the Server-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_server.dart` to `package:bulls_eye/server.dart`
+- **(!!!) (#4) Renamed the Common-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_common.dart` to `package:bulls_eye/common.dart`**
+- **(!!!) (#4) Renamed the Server-Lib import from `package:bulls_eye/BullsEyeCommon/bulls_eye_server.dart` to `package:bulls_eye/server.dart`**
+
 --------------------------------------------------------------
 
 - **(NEW)** Add Middleware
+- **(IMP)** Add funxtion `exception` to `Server` object for custom exception handling
 - **(IMP)** Documentation
 - **(FIX)** A Problem with extracting variables from URLs with only required variables (Route and Query)
 

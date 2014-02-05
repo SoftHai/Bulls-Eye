@@ -28,7 +28,7 @@ part '../../lib/src/Server/Routing/RoutingExceptions.dart';
 Suite buildBenchmark() {
   
   var suite = Suite.create();
-  suite.interations(5);
+  suite.interations(3);
 
   suite.add("Middleware - Before Func")
             ..setUp(buildMiddleware_BeforeFunc)
