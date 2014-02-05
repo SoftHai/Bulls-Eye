@@ -27,7 +27,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 
 --------------------------------------------------------------
 
-- **(NEW)** Add Middleware
+- **(NEW)** Add [Middleware](/doc/Server/Middleware.md)
 - **(IMP)** Add funxtion `exception` to `Server` object for custom exception handling
 - **(IMP)** Documentation
 - **(FIX)** A Problem with extracting variables from URLs with only required variables (Route and Query)
