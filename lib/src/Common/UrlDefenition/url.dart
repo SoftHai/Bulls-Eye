@@ -134,7 +134,7 @@ class Url {
     bool isOptinal = this._isOptionalVariable(part);
     var clean = this._cleanVariable(part);
     
-    this.queryParts.add(new QVariable(clean, isOptinal));
+    this.queryParts.add(new QVariable(clean, isOptional: isOptinal));
   }
   
   bool _isOptionalVariable(String variable)

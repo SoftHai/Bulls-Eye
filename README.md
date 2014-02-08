@@ -37,13 +37,13 @@ Example
 // URL part definition
 var todo = new Static("todo");
 var listID = new Variable("ListID", extensions: { ValidationKey: isInt }); // Define the validation rule for the variable to be handled by the validation middleware
-var itemID = new Variable("ItemID", isOptional: true, extensions: { ValidationKey: isInt });
+var itemID = new Variable("ItemID", isOptional: true, extensions: { ValidationKey: isInt }); // Define the validation rule for the variable to be handled by the validation middleware
 
 // Route defenition
 var jsPath = new RouteDef("js/*"); // Add a wildcard '*' to match all routes they start with the defined route
 var cssPath = new RouteDef("css/*");
 var home = new RouteDef("");
-var toDoListItemRoute = new RouteDef.fromObj([todo, listID, itemID]); use the URL Parts in several routes
+var toDoListItemRoute = new RouteDef.fromObj([todo, listID, itemID]); // use the URL Parts in several routes
 var searchRoute = new RouteDef("search?q&(ResultCount)"); // Define query variables 'q' and optional query variables 'ResultCount'
 
 // Create Server

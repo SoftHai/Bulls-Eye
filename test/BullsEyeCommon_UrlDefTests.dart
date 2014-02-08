@@ -41,7 +41,7 @@ Url _Build_RouteDefenition_FromObjects1() {
                                    new Variable("OptVar2", isOptional: true),
                                    new WildCard()], 
                                    queryParts: [new QVariable("QVar1"),
-                                                new QVariable("QVar2", true)]);
+                                                new QVariable("QVar2", isOptional: true)]);
 }
 
 Url _Build_RouteDefenition_FromMixed1() {
@@ -51,7 +51,7 @@ Url _Build_RouteDefenition_FromMixed1() {
                                  "Part2",
                                  new Variable("OptVar2", isOptional:  true),
                                  "*?QVar1",
-                                 new QVariable("QVar2", true)]);
+                                 new QVariable("QVar2", isOptional: true)]);
 }
 
 Url _Build_RouteDefenition_FromString1() {
