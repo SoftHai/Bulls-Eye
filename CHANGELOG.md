@@ -4,6 +4,15 @@ DateFormat: DD.MM.YYYY
 Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (e.g. Breaking Changes)
 ```
 
+##Version 0.3.0-Alpha
+**Release date: *Not Released* **
+
+--------------------------------------------------------------
+- **(!!!) Changed constructor optional parameter of `Variable` from positional to named**
+
+--------------------------------------------------------------
+
+
 ##Version 0.2.0-Alpha
 **Release date: *05 Feb 2014* **
 

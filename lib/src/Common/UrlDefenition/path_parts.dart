@@ -33,16 +33,20 @@ class Variable extends PathPart {
   
   final String varName;
   final bool isOptional;
+  final Map<String,dynamic> extensions = new Map<String, dynamic>();
   
-  const Variable(this.varName, [bool isOptional = false]) : this.isOptional = isOptional, super();
+  Variable(this.varName, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
+    if(extensions != null)
+    {
+      this.extensions.addAll(extensions);
+    }
+  }
   
-  void CheckUsage(Url currentRoute) 
-  {
+  void CheckUsage(Url currentRoute) {
     
   }
   
-  String toString() 
-  {
+  String toString() {
     var config = new UrlDefConfig.Current();
     
     var partStr = config.RoutePartVariableStart + this.varName + config.RoutePartVariableEnd;

@@ -29,7 +29,7 @@ class UrlMatcher {
       routeVars.forEach((vpart) {
           String regExpStr = this._buildRegExp(vpart);
           
-          vpart = vpart is WildCard ? new Variable("*", true) : vpart;
+          vpart = vpart is WildCard ? new Variable("*", isOptional: true) : vpart;
           
           this._routeVars.add(new _VariableManager<Variable>(new RegExp(regExpStr), vpart));
         });
@@ -43,7 +43,7 @@ class UrlMatcher {
     else
     {
       // No induvidual regex required
-      routeVars.forEach((vpart) { _routeVars.add(new _VariableManager<Variable>(null, (vpart is Variable ? vpart : new Variable("*", true)))); });
+      routeVars.forEach((vpart) { _routeVars.add(new _VariableManager<Variable>(null, (vpart is Variable ? vpart : new Variable("*", isOptional: true)))); });
       
       this.routeDef.queryParts.forEach((vpart) { _queryVars.add(new _VariableManager<QVariable>(null, vpart)); });
     }

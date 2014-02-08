@@ -4,7 +4,7 @@ class Version extends Variable {
 
   static String routePartVariableVersion = "Version";
 
-  Version() : super(routePartVariableVersion, false) 
+  Version() : super(routePartVariableVersion, isOptional: false) 
   {
     RegisterParseFunc();
   }

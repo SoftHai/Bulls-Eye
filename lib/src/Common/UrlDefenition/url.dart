@@ -114,7 +114,7 @@ class Url {
       // Variable
       if(!isSpecialVar)
       {
-        this.routeParts.add(new Variable(clean, isOptional));
+        this.routeParts.add(new Variable(clean, isOptional: isOptional));
       }
     }
     else

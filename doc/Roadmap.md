@@ -28,8 +28,8 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 - [ ] Bugfixes / Improvements
 - Middleware
- - [ ] Vaidation
-    - [ ] Route Variables
+ - [/] (#7) Vaidation
+    - [/] Route Variables
     - [ ] Query Variables
     - [ ] Post Data
   - [ ] feature toogle
