@@ -1,5 +1,7 @@
 part of softhai.bulls_eye.Common;
 
+const String ValidatorKey = "Validation";
+
 /**
  * Base class for validation logic
  */
@@ -14,14 +16,20 @@ abstract class Validator {
   
 }
 
+const String AND = "and";
+const String OR = "or";
+
+Validator composed(List<Validator> validators, [String composeType = AND]) => new _ComposedImpl(validators, composeType);
+
 /**
  * A Validator which compose several single validator to one
  */
-class ComposedValidators implements Validator {
+class _ComposedImpl implements Validator {
   
   final List<Validator> _validators;
+  final String _composeType;
   
-  const ComposedValidators(List<Validator> validators) : this._validators = validators, super();
+  const _ComposedImpl(List<Validator> validators, this._composeType) : this._validators = validators, super();
   
   /**
    * Verifice if the input data are valid or not
@@ -31,18 +39,26 @@ class ComposedValidators implements Validator {
    */
   bool isValid(Object data) {
     
-    for(var validator in this._validators)
-    {
+    for(var validator in this._validators) {
       var isValid = validator.isValid(data); 
-      // if one is invalid than abort and return
-      if(!isValid)
-      {
+
+      if(_composeType == AND && !isValid) {
+        // if AND and one is invalid than abort and return false
         return false;
+      }
+      else if(_composeType == OR && isValid) {
+        // if OR and one is valid than abort and return true
+        return true;
       }
     }
     
-    // all executed without abort => valid
-    return true;
+    // all executed without abort
+    if(_composeType == AND) {
+      return true;
+    }
+    else if (_composeType == OR) {
+      return false;
+    }
   }
 }
 

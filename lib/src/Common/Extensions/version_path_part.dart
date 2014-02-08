@@ -4,7 +4,7 @@ class Version extends Variable {
 
   static String routePartVariableVersion = "Version";
 
-  Version() : super(routePartVariableVersion, isOptional: false) 
+  Version([Map<String,dynamic> extensions]) : super(routePartVariableVersion, isOptional: false, extensions: extensions) 
   {
     RegisterParseFunc();
   }

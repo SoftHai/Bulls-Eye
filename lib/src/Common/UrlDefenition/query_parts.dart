@@ -10,8 +10,14 @@ class QVariable extends QueryPart {
   
   final String varName;
   final bool isOptional;
+  final Map<String,dynamic> extensions = new Map<String, dynamic>();
   
-  const QVariable(this.varName, [bool isOptional = false]) : this.isOptional = isOptional, super();
+  QVariable(this.varName, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
+    if(extensions != null)
+    {
+      this.extensions.addAll(extensions);
+    }
+  }
   
   String toString() 
   {

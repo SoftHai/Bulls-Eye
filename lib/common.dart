@@ -12,3 +12,5 @@ part 'src/Common/Validation/validator.dart';
 part 'src/Common/Validation/num_validators.dart';
 part 'src/Common/Validation/string_validators.dart';
 part 'src/Common/Validation/datetime_validators.dart';
+part 'src/Common/Validation/bool_validators.dart';
+part 'src/Common/Validation/list_validators.dart';

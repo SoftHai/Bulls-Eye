@@ -121,6 +121,75 @@ main() {
                   ..example([{ "data": "20130804", "from": new DateTime(2010, 01, 01), "to": new DateTime(2014, 01, 01), "valid": true }, 
                              { "data": "20140202", "from": new DateTime(2010, 01, 01), "to": new DateTime(2014, 01, 01), "valid": false }]);
   
+  storyValidators.scenario("NoOlderThanValidator")
+                  ..given(text: "Input data that should be a date time and not longer in the past than [duration]")
+                    .and(text: "A not older than validator", 
+                         func: (context) { context.data["validator"] = notOlderThan(context.data["duration"]); } )
+                  ..when(text: "I validate this with the notOlderThan Validator", 
+                         func: Validate)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": new DateTime.now().subtract(new Duration(days: 120)).toString(), "duration": new Duration(days: 360), "valid": true }, 
+                             { "data": new DateTime.now().subtract(new Duration(days: 400)).toString(), "duration": new Duration(days: 360), "valid": false }]);
+  
+  // Bool Validation
+  storyValidators.scenario("IsBoolValidator")
+                  ..given(text: "Input data that should be an bool")
+                    .and(text: "A bool validator", 
+                         func: (context) { context.data["validator"] = isBool; } )
+                  ..when(text: "I validate this with the isBool Validator", 
+                         func: Validate)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": "true", "valid": true }, 
+                             { "data": "false", "valid": true },
+                             { "data": "1", "valid": true },
+                             { "data": "0", "valid": true },
+                             { "data": "abc", "valid": false }]);
+  
+  // List Validation
+  storyValidators.scenario("InListValidator")
+                  ..given(text: "Input data that should be a string in a list of strings")
+                    .and(text: "A InList validator", 
+                         func: (context) { context.data["validator"] = inList(context.data["listData"]); } )
+                  ..when(text: "I validate this with the InList Validator", 
+                         func: Validate)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": "soft", "listData": ["soft", "hai", "bulls", "eye"], "valid": true }, 
+                             { "data": "eye", "listData": ["soft", "hai", "bulls", "eye"], "valid": true },
+                             { "data": "spec", "listData": ["soft", "hai", "bulls", "eye"], "valid": false }]);
+  
+  // Other
+  storyValidators.scenario("ComposedValidators OR")
+                  ..given(text: "Input data that should be a an Email or a Integer")
+                    .and(text: "A composed validator", 
+                         func: (context) { context.data["validator"] = composed([isEmail(), isInt], OR); } )
+                  ..when(text: "I validate this with the ComposedValidator", 
+                         func: Validate)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": "softhai@gmx.de", "valid": true }, 
+                             { "data": "100", "valid": true },
+                             { "data": "softhai", "valid": false }]);
+  
+  storyValidators.scenario("ComposedValidators AND")
+                  ..given(text: "Input data that should be a an Email and in a list")
+                    .and(text: "A composed validator", 
+                         func: (context) { context.data["validator"] = composed([isEmail(), inList(["softhai@gmx.de"])], AND); } )
+                  ..when(text: "I validate this with the ComposedValidator", 
+                         func: Validate)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": "softhai@gmx.de", "valid": true }, 
+                             { "data": "somewhere@company.de", "valid": false }]);
+  
+  
   feature.run();
   
 }

@@ -9,9 +9,11 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 
 --------------------------------------------------------------
 - **(!!!) Changed constructor optional parameter of `Variable` from positional to named**
+- **(!!!) Changed constructor optional parameter of `QVariable` from positional to named**
 
 --------------------------------------------------------------
 
+- **(NEW)** (#7) Add a validation engine with predefined [validators](/doc/Validators.md)
 
 ##Version 0.2.0-Alpha
 **Release date: *05 Feb 2014* **

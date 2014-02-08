@@ -46,13 +46,13 @@ class _InRangeDTImpl extends IsTypeOf<num> {
   }
 }
 
-Validator isNotOlderThan(Duration duration) => new _IsNotOlderThanImpl(duration);
+Validator notOlderThan(Duration duration) => new _NotOlderThanImpl(duration);
 
-class _IsNotOlderThanImpl extends IsTypeOf<num> {
+class _NotOlderThanImpl extends IsTypeOf<num> {
   
   final Duration _duration;
   
-  const _IsNotOlderThanImpl(this._duration) : super();
+  const _NotOlderThanImpl(this._duration) : super();
   
   bool isValid(Object data) {
     var parsedDateTime = _convertToDateTime(data);
