@@ -45,13 +45,13 @@ class RouteManager {
     }
     
     // Check Route
-    return this.routeDefenition.matcher.match(request.uri.path);
+    return this.routeDefenition.matcher.match(request.uri.toString());
   }
   
   // Executer
   ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler) 
   {
-    var variables = this.routeDefenition.matcher.getMatches(request.uri.path);
+    var variables = this.routeDefenition.matcher.getMatches(request.uri.toString());
     var context = new ReqResContext(request, this.routeDefenition, variables, errorHandler);
     return context;
   }

@@ -9,8 +9,8 @@ class HttpHeadersMock extends Mock implements HttpHeaders {
 
 class HttpRequestMock extends Mock implements HttpRequest {
   
-  HttpRequestMock(String path, String method, List<String> httpHeaderAccept) {
-    this.when(callsTo("get uri")).alwaysReturn(new Uri.file(path));
+  HttpRequestMock(Uri path, String method, List<String> httpHeaderAccept) {
+    this.when(callsTo("get uri")).alwaysReturn(path);
     this.when(callsTo("get method")).alwaysReturn(method);
     this.when(callsTo("get headers")).alwaysReturn(new HttpHeadersMock(httpHeaderAccept));
   }

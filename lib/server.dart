@@ -9,14 +9,18 @@ part 'src/Server/req_res_context.dart';
 part 'src/Server/Server.dart';
 part 'src/Server/Exceptions.dart';
 
+// Routing
+part 'src/Server/Routing/RouteManager.dart';
+part 'src/Server/Routing/ExecuteCode.dart';
+part 'src/Server/Routing/LoadFile.dart';
+part 'src/Server/Routing/RoutingExceptions.dart';
+
 // Middleware
 part 'src/Server/Middleware/middleware.dart';
 part 'src/Server/Middleware/middleware_impl.dart';
 part 'src/Server/Middleware/middleware_channel_part.dart';
 part 'src/Server/Middleware/middleware_error.dart';
 
-// Routing
-part 'src/Server/Routing/RouteManager.dart';
-part 'src/Server/Routing/ExecuteCode.dart';
-part 'src/Server/Routing/LoadFile.dart';
-part 'src/Server/Routing/RoutingExceptions.dart';
+// Middleware - Validation
+part 'src/Server/Middleware/Validation/ValidationEngine.dart';
+part 'src/Server/Middleware/Validation/ValidationException.dart';

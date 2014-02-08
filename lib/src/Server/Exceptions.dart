@@ -7,9 +7,7 @@ abstract class HttpRequestException implements Exception {
   HttpRequestException(this.request);
   
   String toString() {
-    var requestPath = this.request.uri.toString();
-    
-    return "During executing the request '$requestPath' happens an error: ";
+    return "During executing the request '${this.request.uri}' happens an error: ";
   }
   
 }
@@ -25,6 +23,23 @@ class WrappedHttpRequestException extends HttpRequestException {
   }
 }
 
+/**
+ * Exception for HTTP Failure: 400
+ */
+class BadRequestException extends HttpRequestException {
+
+  String reason;
+  
+  BadRequestException(HttpRequest request, this.reason) : super(request);
+  
+  String toString() {
+    return super.toString() + "It was a bad request because: ${this.reason}";
+  }
+}
+
+/**
+ * Exception for HTTP Failure: 404
+ */
 class NotFoundException extends HttpRequestException {
 
   String resourceType;
@@ -33,9 +48,6 @@ class NotFoundException extends HttpRequestException {
   NotFoundException(HttpRequest request, this.resource, [this.resourceType]) : super(request);
   
   String toString() {
-    var type = this.resourceType;
-    var resource = this.resource;
-    
-    return super.toString() + "The resource '$type: $resource' was not found!";
+    return super.toString() + "The resource '${this.resource}: ${this.resourceType}' was not found!";
   }
 }

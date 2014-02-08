@@ -163,7 +163,7 @@ class UrlMatcher {
 
   String _buildRegExp([Object currentVar])
   {
-    String regExpStr = r"^\" + this.routeDef.config.RoutePartSeperator + "?";
+    String regExpStr = r"^.*\" + this.routeDef.config.RoutePartSeperator + "?";
     this.routeDef.routeParts.forEach((part) {
       var vpart = currentVar == null ? part : currentVar;
       
@@ -266,5 +266,9 @@ class UriVariableResult<VarType> {
   
   VarType getVariable(String varName) {
     return this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null);
+  }
+  
+  Map<VarType, String> getVariables() {
+    return this.result;
   }
 }

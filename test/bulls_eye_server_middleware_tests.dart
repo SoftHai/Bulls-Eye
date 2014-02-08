@@ -121,7 +121,7 @@ bool createCallCounter(SpecContext context) {
 bool createHttpRequest(SpecContext context) {
   var urlDef = new common.Url("/Part1/:var1/Part2/(:var2)", "Demo Route");
   var route = new RouteManager("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null);
-  var request = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["*/*"]);
+  var request = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "GET", ["*/*"]);
   context.data["ReqRes"] = route.createContext(request, (ex) { });
 }
 

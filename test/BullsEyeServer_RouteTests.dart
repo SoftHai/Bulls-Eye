@@ -7,7 +7,7 @@ import '../lib/server.dart';
 
 void TestHttpRequestMock() {
   
-  var httpRequest = new HttpRequestMock("/Test/X/Foo/Bar", "GET", ["Bla Bla Bla"]);
+  var httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Test/X/Foo/Bar"), "GET", ["Bla Bla Bla"]);
 
   expect(httpRequest.uri.path, "/Test/X/Foo/Bar");
   expect(httpRequest.method, "GET");
@@ -28,41 +28,41 @@ main()  {
       
       test("Test - Route Matching Successful", () {
         // Allow all ContentTypes
-        var httpRequest = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["*/*"]);
+        var httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "GET", ["*/*"]);
         expect(route.match(httpRequest), isTrue);
         
         // Test with optional var
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["application/html"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "GET", ["application/html"]);
         expect(route.match(httpRequest), isTrue);
         
         // Test without optional var
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/"), "GET", ["application/html"]);
         expect(route.match(httpRequest), isTrue);     
         
         // Test with multible allowed contents
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/html,*/*"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/"), "GET", ["application/html,*/*"]);
         expect(route.match(httpRequest), isTrue);     
       });  
       
       test("Test - Route Matching Not Successful", () {
         // Wrong Path
-        var httpRequest = new HttpRequestMock("/Part1/123/Part5/456", "GET", ["application/html"]);
+        var httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part5/456"), "GET", ["application/html"]);
         expect(route.match(httpRequest), isFalse);
         
         // Wrong Method
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/456", "POST", ["application/html"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "POST", ["application/html"]);
         expect(route.match(httpRequest), isFalse);
         
         // Wrong ContentType
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/456", "GET", ["application/json"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "GET", ["application/json"]);
         expect(route.match(httpRequest), isFalse);
         
         // Wrong Method
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/", "POST", ["application/html"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/"), "POST", ["application/html"]);
         expect(route.match(httpRequest), isFalse);
         
         // Wrong ContentType
-        httpRequest = new HttpRequestMock("/Part1/123/Part2/", "GET", ["application/json"]);
+        httpRequest = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/"), "GET", ["application/json"]);
         expect(route.match(httpRequest), isFalse);        
       }); 
     });
