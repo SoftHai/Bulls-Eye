@@ -38,7 +38,7 @@ Url _Build_RouteDefenition_FromObjects1() {
                                    new Version(), 
                                    new Variable("Var1"), 
                                    new Static("Part2"),
-                                   new Variable("OptVar2", true),
+                                   new Variable("OptVar2", isOptional: true),
                                    new WildCard()], 
                                    queryParts: [new QVariable("QVar1"),
                                                 new QVariable("QVar2", true)]);
@@ -49,7 +49,7 @@ Url _Build_RouteDefenition_FromMixed1() {
   return new Url.fromMixed(["Part1/:Version", 
                                  new Variable("Var1"), 
                                  "Part2",
-                                 new Variable("OptVar2", true),
+                                 new Variable("OptVar2", isOptional:  true),
                                  "*?QVar1",
                                  new QVariable("QVar2", true)]);
 }
