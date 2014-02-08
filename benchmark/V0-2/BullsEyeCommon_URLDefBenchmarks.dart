@@ -70,19 +70,19 @@ void URLObjectDef_Benchmark(context) {
                                     new Version(), 
                                     new Variable("Var1"), 
                                     new Static("Part2"),
-                                    new Variable("OptVar2", true),
+                                    new Variable("OptVar2", isOptional: true),
                                     new WildCard()], 
                                     queryParts: [new QVariable("QVar1"),
-                                                 new QVariable("QVar2", true)]);
+                                                 new QVariable("QVar2", isOptional: true)]);
 }
 
 void URLMixedDef_Benchmark(context) {
   var urlObj = new Url.fromMixed(["Part1/:Version", 
                                   new Variable("Var1"), 
                                   "Part2",
-                                  new Variable("OptVar2", true),
+                                  new Variable("OptVar2", isOptional: true),
                                   "*?QVar1",
-                                  new QVariable("QVar2", true)]);
+                                  new QVariable("QVar2", isOptional: true)]);
 }
 
 void URLMatching_Benchmark(BenchContext context, String url, bool matched) {
