@@ -10,6 +10,8 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 --------------------------------------------------------------
 - **(!!!) Changed constructor optional parameter of `Variable` from positional to named**
 - **(!!!) Changed constructor optional parameter of `QVariable` from positional to named**
+- **(!!!) Changed property `varName` of `Variable` and `QVariable` to `name`**
+- **(!!!) Changed property `routeParts` of `Url` to `pathParts`**
 
 --------------------------------------------------------------
 

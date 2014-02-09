@@ -1,14 +1,5 @@
 part of softhai.bulls_eye.Common;
 
-abstract class VariableInfo {
-  
-  final String name;
-  final bool isOptional;
-  final Map<String,dynamic> extensions;  
-  
-  VariableInfo._internal(this.name, this.isOptional, this.extensions);
-}
-
 class UrlMatcher {
   
   RegExp _regex;
@@ -20,7 +11,7 @@ class UrlMatcher {
   
   UrlMatcher(this.routeDef)
   {
-    this.hasOptionalVariables = this.routeDef.routeParts.where((part) => part is Variable && (part as Variable).isOptional).length > 0 ||
+    this.hasOptionalVariables = this.routeDef.pathParts.where((part) => part is Variable && (part as Variable).isOptional).length > 0 ||
                                 this.routeDef.queryParts.where((part) => part is QVariable && (part as QVariable).isOptional).length > 0; 
     
     this._initUriMatcher();
@@ -30,16 +21,14 @@ class UrlMatcher {
   {
     this._routeVars = new List<_VariableManager<VariableInfo>>();
     this._queryVars = new List<_VariableManager<VariableInfo>>();
-    var routeVars = this.routeDef.routeParts.where((part) => part is VariableInfo).toList();
+    var routeVars = this.routeDef.pathParts.where((part) => part is VariableInfo).toList();
   
     if(this.hasOptionalVariables)
     {
       // Build a individual regex for each variable (reqiured if optional part are available)
       routeVars.forEach((vpart) {
           String regExpStr = this._buildRegExp(vpart);
-          
-          //vpart = vpart is WildCard ? new Variable("*", isOptional: true) : vpart;
-          
+
           this._routeVars.add(new _VariableManager<VariableInfo>(new RegExp(regExpStr), vpart));
         });
       
@@ -173,7 +162,7 @@ class UrlMatcher {
   String _buildRegExp([Object currentVar])
   {
     String regExpStr = r"^.*\" + this.routeDef.config.RoutePartSeperator + "?";
-    this.routeDef.routeParts.forEach((part) {
+    this.routeDef.pathParts.forEach((part) {
       var vpart = currentVar == null ? part : currentVar;
       
       if(part is Static)

@@ -1,30 +1,40 @@
 part of softhai.bulls_eye.Common;
 
+abstract class VariableInfo {
+  
+  final String name;
+  final bool isOptional;
+  final Map<String,dynamic> extensions;  
+  
+  VariableInfo._internal(this.name, this.isOptional, this.extensions);
+}
+
+
 class Url {
   
   String name;
   UrlMatcher matcher;
   UrlDefConfig config = new UrlDefConfig.Current();
-  List<PathPart> routeParts = new List<PathPart>();
+  List<PathPart> pathParts = new List<PathPart>();
   List<QueryPart> queryParts = new List<QueryPart>();
   
-  Url(String routeString, [String name]) {
+  Url(String url, [String name]) {
     
-    this.name = name == null ? routeString : name;
+    this.name = name == null ? url : name;
 
-    this._parseRoute(routeString);
+    this._parseRoute(url);
     
     this.matcher = new UrlMatcher(this);
   }
   
-  Url.fromObjects(this.routeParts, {this.queryParts, String name}) {
+  Url.fromObjects(this.pathParts, {this.queryParts, String name}) {
     
     if(this.queryParts == null) this.queryParts = new List<QueryPart>();
     
     this.name = name == null ? this._buildUrl() : name;
     
     // Check if multiple Version-Elements are defined
-    this.routeParts.forEach((part) 
+    this.pathParts.forEach((part) 
         { 
           if(part is Variable) 
           {
@@ -45,7 +55,7 @@ class Url {
       }
       else if (part is PathPart)
       {
-        this.routeParts.add(part);
+        this.pathParts.add(part);
       }
       else if (part is QueryPart)
       {
@@ -90,7 +100,7 @@ class Url {
   {
     if(part == this.config.RoutePartWildCard)
     {
-      this.routeParts.add(new WildCard());
+      this.pathParts.add(new WildCard());
     }
     else if((part.startsWith(this.config.RoutePartVariableOptionalStart) && part.endsWith(this.config.RoutePartVariableOptionalEnd))||
         (part.startsWith(this.config.RoutePartVariableStart) && part.endsWith(this.config.RoutePartVariableEnd)))
@@ -105,7 +115,7 @@ class Url {
         var value = parseFunc(part, clean, isOptional, this.config, this);
         if(value != null)
         {
-          this.routeParts.add(value);
+          this.pathParts.add(value);
           isSpecialVar = true;
           break;
         }
@@ -114,13 +124,13 @@ class Url {
       // Variable
       if(!isSpecialVar)
       {
-        this.routeParts.add(new Variable(clean, isOptional: isOptional));
+        this.pathParts.add(new Variable(clean, isOptional: isOptional));
       }
     }
     else
     {
       // StaticPart
-      this.routeParts.add(new Static(part));
+      this.pathParts.add(new Static(part));
     }
   }
   
@@ -152,7 +162,7 @@ class Url {
   
   String _buildUrl()
   {
-    var url = this.routeParts.join(this.config.RoutePartSeperator);
+    var url = this.pathParts.join(this.config.RoutePartSeperator);
     if(this.queryParts.length > 0)
     {
       url += this.config.RoutePartQueryStart + this.queryParts.join(this.config.RoutePartQuerySeperator);
