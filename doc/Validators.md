@@ -30,15 +30,6 @@ Validator isRegEx(RegExp regEx);
   Validator isEmail();
   ```
 
-##ListValidators
-
-###InList Validator
-
-This validator acts like an enum. It checks if the data are in a list of strings.
-```dart
-Validator inList(List<String> list);
-```
-
 ##Numeric Validators
 
 ###IsNum / IsInt Validator
@@ -91,10 +82,32 @@ Validator isBool;
 
 ###Composed Validator
 
-This validator allows you to define several validation rules for a single input. Also you can define if the rules are AND or OR connected.
+This validator allows you to define several validation rules for a single input. Also you can define if the rules are `AND` or `OR` connected.
 ```dart
 Validator composed(List<Validator> validators, [String composeType = AND]);
 ```
+###InList Validator
+
+This validator acts like an enum. It checks if the data are in a list of strings.
+```dart
+Validator inList(List<String> list);
+```
+**Example:** Validating if the `Version`-Variables has a valid version key.
+
+Lets say that you have release 2 versions of your API (v1 and v2) and only this values are valid for the `Version`-Variable
+```dart
+var version = new Version(extensions: {ValidationKey: inList(["v1", "v2"]) })
+```
+* A call to a URL like `.../v1/...` is valid.
+* A call to a URL like `.../v3/...` is not valid because `v3` is not in the list.
+
+###VersionDep Validator
+
+This validator checks depended on the version-Variable the input data. This is helpful for APIs which change over the time. So is in API v1 a value of 10 to 20 valid. In API v2 is a value of 10 to 30 valid, because you made some extensions.
+```dart
+Validator versionDep(Map<String, Validator> versionValidator, [bool invalidIfNoValidatorFound = true]);
+```
+
 ##Own Validators
 
 You can implement own Validators (e.g. for special checks) by implementing the interface `Validator`:

@@ -149,7 +149,7 @@ main() {
                              { "data": "0", "valid": true },
                              { "data": "abc", "valid": false }]);
   
-  // List Validation
+  // Other
   storyValidators.scenario("InListValidator")
                   ..given(text: "Input data that should be a string in a list of strings")
                     .and(text: "A InList validator", 
@@ -163,7 +163,6 @@ main() {
                              { "data": "eye", "listData": ["soft", "hai", "bulls", "eye"], "valid": true },
                              { "data": "spec", "listData": ["soft", "hai", "bulls", "eye"], "valid": false }]);
   
-  // Other
   storyValidators.scenario("ComposedValidators OR")
                   ..given(text: "Input data that should be a an Email or a Integer")
                     .and(text: "A composed validator", 
@@ -189,6 +188,20 @@ main() {
                   ..example([{ "data": "softhai@gmx.de", "valid": true }, 
                              { "data": "somewhere@company.de", "valid": false }]);
   
+  storyValidators.scenario("VersionDepValidator")
+                  ..given(text: "Input data that should be a validated depended on the version")
+                    .and(text: "A VersionDep validator", 
+                         func: (context) { context.data["validator"] = versionDep({ "v1": isBool, "v2": isInt }); } )
+                  ..when(text: "I validate this with the VersionDep Validator", 
+                         func: ValidateVersionDep)
+                  ..than(text: "The data should be valid?", 
+                         func: (context) { 
+                           expect(context.data["result"], equals(context.data["valid"])); })
+                  ..example([{ "data": "1", "version": "v1", "valid": true }, 
+                             { "data": "true", "version": "v1", "valid": true },
+                             { "data": "10", "version": "v1", "valid": false },
+                             { "data": "true", "version": "v2", "valid": false },
+                             { "data": "10", "version": "v2", "valid": true }]);
   
   feature.run();
   
@@ -196,4 +209,8 @@ main() {
 
 bool Validate(context) {
   context.data["result"] = context.data["validator"].isValid(context.data["data"]);
+}
+
+bool ValidateVersionDep(context) {
+  context.data["result"] = context.data["validator"].isValid(context.data["data"], context.data["version"]);
 }

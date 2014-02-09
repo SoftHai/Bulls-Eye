@@ -48,9 +48,11 @@ void main() {
                func: (context) => createHttpRequest(context, context.data["url"]))
         ..when(text: "the middleware is executed", func: executeMiddleware)
         ..than(text: "the validation protects the logic before bad requests", func: validationCheck)
-        ..example([ { "url": new Uri.http("www.example.com", "/Part1/15", { "QVar": "20140202" }), "valid": true },
-                    { "url": new Uri.http("www.example.com", "/Part1/15", { "QVar": "Hallo" }), "valid": false },
-                    { "url": new Uri.http("www.example.com", "/Part1/30", { "QVar": "20140202" }), "valid": false }]);
+        ..example([ { "url": new Uri.http("www.example.com", "/Part1/v1/15", { "QVar": "20140202" }), "valid": true },
+                    { "url": new Uri.http("www.example.com", "/Part1/v1/15", { "QVar": "Hallo" }), "valid": false },
+                    { "url": new Uri.http("www.example.com", "/Part1/v1/30", { "QVar": "20140202" }), "valid": false },
+                    { "url": new Uri.http("www.example.com", "/Part1/v2/30", { "QVar": "20140202" }), "valid": true },
+                    { "url": new Uri.http("www.example.com", "/Part1/v3/30", { "QVar": "20140202" }), "valid": false }]);
   
   feature.run();
   
@@ -61,10 +63,12 @@ bool createCallCounter(SpecContext context) {
 }
 
 bool createHttpRequest(SpecContext context, Uri url) {
-  var routeVariable = new common.Variable("var1", extensions: { common.ValidatorKey: common.inRangeNum(10, 20) });
+  var versionVariable = new common.Version();
+  var routeVariable = new common.Variable("var1", extensions: { common.ValidatorKey: common.versionDep( {"v1": common.inRangeNum(10, 20),
+                                                                                                         "v2": common.inRangeNum(10, 50) }) });
   var queryVariable = new common.QVariable("QVar", extensions: { common.ValidatorKey: common.isDateTime });
   
-  var urlDef = new common.Url.fromObjects([new common.Static("Part1"), routeVariable],  queryParts: [queryVariable], name: "Demo Route");
+  var urlDef = new common.Url.fromObjects([new common.Static("Part1"), versionVariable, routeVariable],  queryParts: [queryVariable], name: "Demo Route");
   var route = new RouteManager("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null);
   var request = new HttpRequestMock(url, "GET", ["*/*"]);
   context.data["ReqRes"] = route.createContext(request, (ex) { });
