@@ -6,9 +6,18 @@ abstract class PathPart {
   
 }
 
-class WildCard extends PathPart {
+class WildCard extends PathPart implements VariableInfo {
   
-  const WildCard() : super();
+  final String name = new UrlDefConfig.Current().RoutePartWildCard;
+  final bool isOptional = true;
+  final Map<String,dynamic> extensions = new Map<String, dynamic>();
+  
+  WildCard({Map<String,dynamic> extensions}) : super() {
+    if(extensions != null)
+    {
+      this.extensions.addAll(extensions);
+    }
+  }
   
   String toString() 
   {
@@ -29,13 +38,13 @@ class Static extends PathPart {
   }
 }
 
-class Variable extends PathPart {
+class Variable extends PathPart implements VariableInfo {
   
-  final String varName;
+  final String name;
   final bool isOptional;
   final Map<String,dynamic> extensions = new Map<String, dynamic>();
   
-  Variable(this.varName, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
+  Variable(this.name, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
     if(extensions != null)
     {
       this.extensions.addAll(extensions);
@@ -49,7 +58,7 @@ class Variable extends PathPart {
   String toString() {
     var config = new UrlDefConfig.Current();
     
-    var partStr = config.RoutePartVariableStart + this.varName + config.RoutePartVariableEnd;
+    var partStr = config.RoutePartVariableStart + this.name + config.RoutePartVariableEnd;
     if(this.isOptional)
     {
       partStr = config.RoutePartVariableOptionalStart + partStr + config.RoutePartVariableOptionalEnd;

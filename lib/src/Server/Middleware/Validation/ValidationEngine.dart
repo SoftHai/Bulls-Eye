@@ -9,7 +9,7 @@ class Validation implements BeforeHook {
       this._validateVariables(context.variables.queryVariables.getVariables(), context);
   }
   
-  void _validateVariables(Map<dynamic, String> variables, ReqResContext context) {
+  void _validateVariables(Map<common.VariableInfo, String> variables, ReqResContext context) {
     for(var variable in variables.keys) {
       
       var validator = variable.extensions[common.ValidatorKey] as common.Validator;
@@ -17,7 +17,7 @@ class Validation implements BeforeHook {
         
         var data = variables[variable];
         if(!validator.isValid(data)) {
-          throw new VariableValidationException(context.request, "The variable '${variable.varName}' is not valid", variable);
+          throw new VariableValidationException(context.request, "The variable '${variable.name}' is not valid", variable);
         }
       }
     }

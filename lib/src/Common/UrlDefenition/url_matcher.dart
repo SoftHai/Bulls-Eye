@@ -1,10 +1,19 @@
 part of softhai.bulls_eye.Common;
 
+abstract class VariableInfo {
+  
+  final String name;
+  final bool isOptional;
+  final Map<String,dynamic> extensions;  
+  
+  VariableInfo._internal(this.name, this.isOptional, this.extensions);
+}
+
 class UrlMatcher {
   
   RegExp _regex;
-  List<_VariableManager<Variable>> _routeVars;
-  List<_VariableManager<QVariable>> _queryVars;
+  List<_VariableManager<VariableInfo>> _routeVars;
+  List<_VariableManager<VariableInfo>> _queryVars;
   Url routeDef; 
   
   bool hasOptionalVariables = false;
@@ -19,9 +28,9 @@ class UrlMatcher {
   
   void _initUriMatcher()
   {
-    this._routeVars = new List<_VariableManager<Variable>>();
-    this._queryVars = new List<_VariableManager<QVariable>>();
-    var routeVars = this.routeDef.routeParts.where((part) => part is Variable || part is WildCard).toList();
+    this._routeVars = new List<_VariableManager<VariableInfo>>();
+    this._queryVars = new List<_VariableManager<VariableInfo>>();
+    var routeVars = this.routeDef.routeParts.where((part) => part is VariableInfo).toList();
   
     if(this.hasOptionalVariables)
     {
@@ -29,23 +38,23 @@ class UrlMatcher {
       routeVars.forEach((vpart) {
           String regExpStr = this._buildRegExp(vpart);
           
-          vpart = vpart is WildCard ? new Variable("*", isOptional: true) : vpart;
+          //vpart = vpart is WildCard ? new Variable("*", isOptional: true) : vpart;
           
-          this._routeVars.add(new _VariableManager<Variable>(new RegExp(regExpStr), vpart));
+          this._routeVars.add(new _VariableManager<VariableInfo>(new RegExp(regExpStr), vpart));
         });
       
       this.routeDef.queryParts.forEach((vpart) {
         String regExpStr = this._buildRegExp(vpart);
         
-        this._queryVars.add(new _VariableManager<QVariable>(new RegExp(regExpStr), vpart));
+        this._queryVars.add(new _VariableManager<VariableInfo>(new RegExp(regExpStr), vpart));
       });
     }
     else
     {
       // No induvidual regex required
-      routeVars.forEach((vpart) { _routeVars.add(new _VariableManager<Variable>(null, (vpart is Variable ? vpart : new Variable("*", isOptional: true)))); });
+      routeVars.forEach((vpart) { _routeVars.add(new _VariableManager<VariableInfo>(null, vpart)); });
       
-      this.routeDef.queryParts.forEach((vpart) { _queryVars.add(new _VariableManager<QVariable>(null, vpart)); });
+      this.routeDef.queryParts.forEach((vpart) { _queryVars.add(new _VariableManager<VariableInfo>(null, vpart)); });
     }
     
     // Build a single regex for the whole path
@@ -61,8 +70,8 @@ class UrlMatcher {
   
   UriMatcherResult getMatches(String path)
   {   
-    Map<Variable,String> routeResult = new Map<Variable,String>();
-    Map<QVariable,String> queryResult = new Map<QVariable,String>();
+    Map<VariableInfo,String> routeResult = new Map<VariableInfo,String>();
+    Map<VariableInfo,String> queryResult = new Map<VariableInfo,String>();
     
     if(this.hasOptionalVariables)
     {
@@ -136,8 +145,8 @@ class UrlMatcher {
       }
       else
       {
-        var routeVarMang = this._routeVars.firstWhere((v) => v.variable.varName == variableName, orElse: () => null);
-        var queryVarMang = this._queryVars.firstWhere((v) => v.variable.varName == variableName, orElse: () => null);
+        var routeVarMang = this._routeVars.firstWhere((v) => v.variable.name == variableName, orElse: () => null);
+        var queryVarMang = this._queryVars.firstWhere((v) => v.variable.name == variableName, orElse: () => null);
         
         if(routeVarMang != null)
         {
@@ -145,7 +154,7 @@ class UrlMatcher {
         }
         else if (queryVarMang != null)
         {
-          var varName = queryVarMang.variable.varName;
+          var varName = queryVarMang.variable.name;
           var varValue = values[variableName];
           path = path.replaceFirst(queryVarMang.variable.toString(), "$varName=$varValue");
         }
@@ -215,11 +224,11 @@ class UrlMatcher {
           regExpStr += v.isOptional ? "?" : "";
           if(qpart == v)
           {
-            regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=([^\&]*)" + (v.isOptional ? ")?" : "");
+            regExpStr += (v.isOptional ? "(?:" : "") + v.name + r"=([^\&]*)" + (v.isOptional ? ")?" : "");
           }
           else
           {
-            regExpStr += (v.isOptional ? "(?:" : "") + v.varName + r"=[^\&]*" + (v.isOptional ? ")?" : "");
+            regExpStr += (v.isOptional ? "(?:" : "") + v.name + r"=[^\&]*" + (v.isOptional ? ")?" : "");
           }
         }
         
@@ -245,12 +254,12 @@ class _VariableManager<VarType> {
 
 class UriMatcherResult {
   
-  UriVariableResult<Variable> routeVariables;
-  UriVariableResult<QVariable> queryVariables;
+  UriVariableResult<VariableInfo> routeVariables;
+  UriVariableResult<VariableInfo> queryVariables;
   
-  UriMatcherResult(Map<Variable,String> routeResult, Map<QVariable,String> queryResult) {
-    this.routeVariables = new UriVariableResult<Variable>(routeResult); 
-    this.queryVariables = new UriVariableResult<QVariable>(queryResult); 
+  UriMatcherResult(Map<VariableInfo,String> routeResult, Map<VariableInfo,String> queryResult) {
+    this.routeVariables = new UriVariableResult<VariableInfo>(routeResult); 
+    this.queryVariables = new UriVariableResult<VariableInfo>(queryResult); 
   }
 }
 
@@ -261,11 +270,11 @@ class UriVariableResult<VarType> {
   const UriVariableResult(this.result);
   
   String operator [](String varName) {
-    return this.result[this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null)];
+    return this.result[this.result.keys.firstWhere((v) => v.name == varName, orElse: () => null)];
   }
   
   VarType getVariable(String varName) {
-    return this.result.keys.firstWhere((v) => v.varName == varName, orElse: () => null);
+    return this.result.keys.firstWhere((v) => v.name == varName, orElse: () => null);
   }
   
   Map<VarType, String> getVariables() {

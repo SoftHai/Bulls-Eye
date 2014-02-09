@@ -11,24 +11,24 @@ void _BullsEyeCommonTest_RouteDefenition_Test(Url urlDef, String expectedPath, [
   expect(urlDef.routeParts[0],new isInstanceOf<Static>());
   expect((urlDef.routeParts[0] as Static).partName, "Part1");
   expect(urlDef.routeParts[1],new isInstanceOf<Version>());
-  expect((urlDef.routeParts[1] as Variable).varName, "Version");
+  expect((urlDef.routeParts[1] as Variable).name, "Version");
   expect((urlDef.routeParts[1] as Variable).isOptional, isFalse);
   expect(urlDef.routeParts[2],new isInstanceOf<Variable>());
-  expect((urlDef.routeParts[2] as Variable).varName, "Var1");
+  expect((urlDef.routeParts[2] as Variable).name, "Var1");
   expect((urlDef.routeParts[2] as Variable).isOptional, isFalse);
   expect(urlDef.routeParts[3],new isInstanceOf<Static>());
   expect((urlDef.routeParts[3] as Static).partName, "Part2");
   expect(urlDef.routeParts[4],new isInstanceOf<Variable>());
-  expect((urlDef.routeParts[4] as Variable).varName, "OptVar2");
+  expect((urlDef.routeParts[4] as Variable).name, "OptVar2");
   expect((urlDef.routeParts[4] as Variable).isOptional, isTrue);
   expect(urlDef.routeParts[5],new isInstanceOf<WildCard>());
   
   expect(urlDef.queryParts, hasLength(2));
   expect(urlDef.queryParts[0],new isInstanceOf<QVariable>());
-  expect((urlDef.queryParts[0] as QVariable).varName, "QVar1");
+  expect((urlDef.queryParts[0] as QVariable).name, "QVar1");
   expect((urlDef.queryParts[0] as QVariable).isOptional, isFalse);
   expect(urlDef.queryParts[1],new isInstanceOf<QVariable>());
-  expect((urlDef.queryParts[1] as QVariable).varName, "QVar2");
+  expect((urlDef.queryParts[1] as QVariable).name, "QVar2");
   expect((urlDef.queryParts[1] as QVariable).isOptional, isTrue);
 }
 
@@ -108,7 +108,7 @@ main()  {
         expect(variables.routeVariables["Var1"], "12345");       
         expect(variables.routeVariables.getVariable("OptVar2"), new isInstanceOf<Variable>());
         expect(variables.routeVariables["OptVar2"], "6789");
-        expect(variables.routeVariables.getVariable("*"), new isInstanceOf<Variable>());
+        expect(variables.routeVariables.getVariable("*"), new isInstanceOf<WildCard>());
         expect(variables.routeVariables["*"], "More/More.js");
         
         expect(variables.queryVariables.result, hasLength(2));
@@ -128,7 +128,7 @@ main()  {
         expect(variables.routeVariables["Var1"], "12345");       
         expect(variables.routeVariables.getVariable("OptVar2"), new isInstanceOf<Variable>());
         expect(variables.routeVariables["OptVar2"], isNull);
-        expect(variables.routeVariables.getVariable("*"), new isInstanceOf<Variable>());
+        expect(variables.routeVariables.getVariable("*"), new isInstanceOf<WildCard>());
         expect(variables.routeVariables["*"], isNull);
         
         expect(variables.queryVariables.result, hasLength(2));
@@ -213,7 +213,7 @@ main()  {
         
         expect(urlDef.matcher.replace({ "Var" : 123, "OptVar" : 456, "*" : "file.js", "QVar" : 789, "OptQVar" : 963}), "Part1/123/Part2/456/Part3/file.js?QVar=789&OptQVar=963");
         
-        expect(urlDef.matcher.replace({ "Var" : 123, "QVar" : 789}), "Part1/123/Part2/Part3/?QVar=789");
+        expect(urlDef.matcher.replace({ "Var" : 123, "QVar" : 789}), "Part1/123/Part2/Part3?QVar=789");
       });
       
     });
@@ -232,25 +232,25 @@ main()  {
         expect(urlDef.routeParts[0],new isInstanceOf<Static>());
         expect((urlDef.routeParts[0] as Static).partName, "Part1");
         expect(urlDef.routeParts[1],new isInstanceOf<Version>());
-        expect((urlDef.routeParts[1] as Variable).varName, "Version");
+        expect((urlDef.routeParts[1] as Variable).name, "Version");
         expect((urlDef.routeParts[1] as Variable).isOptional, isFalse);
         expect(urlDef.routeParts[2],new isInstanceOf<Static>());
         expect((urlDef.routeParts[2] as Static).partName, "Part2");
         expect(urlDef.routeParts[3],new isInstanceOf<Variable>());
-        expect((urlDef.routeParts[3] as Variable).varName, "var");
+        expect((urlDef.routeParts[3] as Variable).name, "var");
         expect((urlDef.routeParts[3] as Variable).isOptional, isFalse);
         expect(urlDef.routeParts[4],new isInstanceOf<Variable>());
-        expect((urlDef.routeParts[4] as Variable).varName, "OptVariable");
+        expect((urlDef.routeParts[4] as Variable).name, "OptVariable");
         expect((urlDef.routeParts[4] as Variable).isOptional, isTrue);
         expect(urlDef.routeParts[5],new isInstanceOf<Static>());
         expect((urlDef.routeParts[5] as Static).partName, "Part3");
         expect(urlDef.routeParts[6],new isInstanceOf<WildCard>());
         
         expect(urlDef.queryParts[0],new isInstanceOf<QVariable>());
-        expect((urlDef.queryParts[0] as QVariable).varName, "QVar");
+        expect((urlDef.queryParts[0] as QVariable).name, "QVar");
         expect((urlDef.queryParts[0] as QVariable).isOptional, isFalse);
         expect(urlDef.queryParts[1],new isInstanceOf<QVariable>());
-        expect((urlDef.queryParts[1] as QVariable).varName, "OptQVar");
+        expect((urlDef.queryParts[1] as QVariable).name, "OptQVar");
         expect((urlDef.queryParts[1] as QVariable).isOptional, isTrue);
         
       });

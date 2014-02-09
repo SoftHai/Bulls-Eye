@@ -6,13 +6,13 @@ abstract class QueryPart {
   
 }
 
-class QVariable extends QueryPart {
+class QVariable extends QueryPart implements VariableInfo {
   
-  final String varName;
+  final String name;
   final bool isOptional;
   final Map<String,dynamic> extensions = new Map<String, dynamic>();
   
-  QVariable(this.varName, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
+  QVariable(this.name, {bool isOptional: false, Map<String,dynamic> extensions}) : this.isOptional = isOptional, super() {
     if(extensions != null)
     {
       this.extensions.addAll(extensions);
@@ -25,9 +25,9 @@ class QVariable extends QueryPart {
 
     if(this.isOptional)
     {
-      return config.RoutePartVariableOptionalStart + this.varName + config.RoutePartVariableOptionalEnd;
+      return config.RoutePartVariableOptionalStart + this.name + config.RoutePartVariableOptionalEnd;
     }
     
-    return this.varName;
+    return this.name;
   }
 }
