@@ -69,6 +69,12 @@ Checks if given DateTime data are not older than a specific duration.
 ```dart
 Validator notOlderThan(Duration duration);
 ```
+**Example:** Lets say you have an variables which transfers a formular value birthday of a user. And only people up to 120 years are valid.
+```dart
+var birthday = new QVariable("birthday", extensions: {ValidationKey: notOlderThan(new Duration(days: 120 * 360)) })
+```
+* A Call to a URL like `...?birthday=20000101` is valid
+* A Call to a URL like `...?q=18500101` is not valid because its more in the past than 120 years.
 
 ##Bool Validators
 
@@ -86,13 +92,22 @@ This validator allows you to define several validation rules for a single input.
 ```dart
 Validator composed(List<Validator> validators, [String composeType = AND]);
 ```
+**Example:** Validating a search-variable with different validators
+Lets say you have a search-URL where user can search for different thinks. So not all strings are valid. Lets say the user can search by numbers and also by email. All other are no valid.
+```dart
+var search = new QVariable("q", extensions: {ValidationKey: composed([isInt, isEmail()], OR) })
+```
+* A Call to a URL like `...?q=123` is valid
+* A Call to a URL like `...?q=test@gmx.de` is valid
+* A Call to a URL like `...?q=some name` is not valid because it is not a number or a email
+
 ###InList Validator
 
 This validator acts like an enum. It checks if the data are in a list of strings.
 ```dart
 Validator inList(List<String> list);
 ```
-**Example:** Validating if the `Version`-Variables has a valid version key.
+**Example:** Validating if the `Version`-Variable has a valid version key.
 
 Lets say that you have release 2 versions of your API (v1 and v2) and only this values are valid for the `Version`-Variable
 ```dart
@@ -107,15 +122,37 @@ This validator checks depended on the version-Variable the input data. This is h
 ```dart
 Validator versionDep(Map<String, Validator> versionValidator, [bool invalidIfNoValidatorFound = true]);
 ```
+You can register a validator with the key `ValidatorByVersion.defaultVersionValidator` to define which validator should be used if there was no matched version key.
+
+**Example:** Validating a variable depending on the `Version`-Variable
+
+If you have an API than you need sometimes to update your API to fit new requirements. Also you can't shut down the old version because there are applications out there which still needs this.
+For this case you can define version depending validations.
+Lets say that a variables was in the API v1 a bool and in the API v2 you need more values and change it to an int
+```dart
+var version = new Version(); // You need a version variable
+var variable = new QVariable("flag", extensions: { ValidationKey: versionDep({ "v1": isBool, "v2": isInt} ) })
+```
+* A call to a URL like `.../v1/..?flag=1` is valid
+* A call to a URL like `.../v2/..?flag=100` is also valid
+* A call to a URL like `.../v1/..?flag=100` is not valid because it is not bool.
 
 ##Own Validators
 
 You can implement own Validators (e.g. for special checks) by implementing the interface `Validator`:
 ```dart
-
 class CustomValidator implements Validator {
 
   bool isValid(data) {
+    // your validation code here
+  }
+}
+```
+Or `ValidatorByVersion`:
+```dart
+class CustomValidator implements ValidatorByVersion {
+
+  bool isValid(data, [versionValue = defaultVersionValidator]) {
     // your validation code here
   }
 }
