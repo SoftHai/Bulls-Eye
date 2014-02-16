@@ -8,7 +8,8 @@ import 'HttpMocks.dart';
 
 import 'package:unittest/unittest.dart';
 import 'package:spec_dart/spec_dart.dart';
-import'package:http_server/http_server.dart';
+import 'package:http_server/http_server.dart';
+import 'package:path/path.dart' as path;
 
 // Globals
 part '../lib/src/Server/read_only_map.dart';
@@ -28,7 +29,7 @@ part '../lib/src/Server/Middleware/Validation/ValidationEngine.dart';
 part '../lib/src/Server/Middleware/Validation/ValidationException.dart';
 
 // Routing
-part '../lib/src/Server/Routing/RouteManager.dart';
+part '../lib/src/Server/Routing/Route.dart';
 part '../lib/src/Server/Routing/ExecuteCode.dart';
 part '../lib/src/Server/Routing/LoadFile.dart';
 part '../lib/src/Server/Routing/RoutingExceptions.dart';
@@ -74,7 +75,7 @@ bool createHttpRequest(SpecContext context, Uri url) {
   var queryVariable = new common.QVariable("QVar", extensions: { common.ValidatorKey: common.isDateTime });
   
   var urlDef = new common.Url.fromObjects([new common.Static("Part1"), versionVariable, routeVariable],  queryParts: [queryVariable], name: "Demo Route");
-  var route = new RouteManager("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null);
+  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, null);
   var request = new HttpRequestMock(url, "GET", ["*/*"]);
   context.data["ReqRes"] = route.createContext(request, (ex) { });
 }

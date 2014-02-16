@@ -59,11 +59,11 @@ Currently Bulls-Eye supports 2 route logics:
 ####LoadFile
 `LoadFile` has the following named constructors:
 ```dart
-LoadFile.fromUrl();
+LoadFile.fromWildcard({String basePath});
 
 LoadFile.fromPath(String filePath);
 ```
-* **fromURL**: This route logic requires and `URL` defenition with an wildcard. It takes the whole wildcard part and loads the file from this path (e.g. you have the URL defenition `/css/*` and the client makes a call to the url `/css/lib/bootstrap/css/bootstrap.css` than the route logic takes the wildcard part `lib/bootstrap/css/bootstrap.css` and looks for this in the file system). This is useful to deliver the CSS ans JS files.
+* **fromWildcard**: This route logic requires and `URL` definition with an wildcard. It takes the whole wildcard part and loads the file from this path (e.g. you have the URL defenition `/css/*` and the client makes a call to the url `/css/lib/bootstrap/css/bootstrap.css` than the route logic takes the wildcard part `lib/bootstrap/css/bootstrap.css` and looks for this in the file system). This is useful to deliver the CSS ans JS files.
 * **fromPath**: This route logic takes a fix path to a file, which sould be delivered on call. This is helpful to deliver HTML files (e.g. the `index.html` on the home call).
 
 ####Execute Code

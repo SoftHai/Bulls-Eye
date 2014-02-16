@@ -5,7 +5,7 @@ typedef bool ExceptionHandler(HttpRequestException ex);
 class Server {
   
   bool _debugMode = false;
-  List<RouteManager> _routes = new List<RouteManager>();
+  List<Route> _routes = new List<Route>();
   Map<String, _MiddlewareImpl> _middlewares = new Map<String, _MiddlewareImpl>();
   ExceptionHandler _customExceptionHandler;
   
@@ -18,8 +18,8 @@ class Server {
     return middleware;
   }
   
-  void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware}) {
-    this._routes.add(new RouteManager(method, url, logic, contentTypes, middleware));
+  void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware, Map<String,dynamic> extensions}) {
+    this._routes.add(new Route(method, url, logic, contentTypes, middleware, extensions));
   }
 
   void start() {
@@ -49,7 +49,16 @@ class Server {
               // execute only logic
               future = new Future.sync(() => route.logic.execute(context));
             }
-            future.catchError((ex) {
+            future.then((_) {
+              if(context.response.body.Data != null)
+              {
+                if(context.response.body.ContentType != null)
+                {
+                  request.response.headers.set(HttpHeaders.CONTENT_TYPE, context.response.body.ContentType);
+                }
+                request.response.write(context.response.body.Data);
+              }
+            }).catchError((ex) {
               if(ex is HttpRequestException) {
                 this._handleException(ex);
               }

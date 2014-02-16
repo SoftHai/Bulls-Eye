@@ -8,7 +8,8 @@ import 'HttpMocks.dart';
 
 import 'package:unittest/unittest.dart';
 import 'package:spec_dart/spec_dart.dart';
-import'package:http_server/http_server.dart';
+import 'package:http_server/http_server.dart';
+import 'package:path/path.dart' as path;
 
 // Globals
 part '../lib/src/Server/read_only_map.dart';
@@ -24,7 +25,7 @@ part '../lib/src/Server/Middleware/middleware_channel_part.dart';
 part '../lib/src/Server/Middleware/middleware_error.dart';
 
 // Routing
-part '../lib/src/Server/Routing/RouteManager.dart';
+part '../lib/src/Server/Routing/Route.dart';
 part '../lib/src/Server/Routing/ExecuteCode.dart';
 part '../lib/src/Server/Routing/LoadFile.dart';
 part '../lib/src/Server/Routing/RoutingExceptions.dart';
@@ -125,7 +126,7 @@ bool createCallCounter(SpecContext context) {
 
 bool createHttpRequest(SpecContext context) {
   var urlDef = new common.Url("/Part1/:var1/Part2/(:var2)", "Demo Route");
-  var route = new RouteManager("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null);
+  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, null);
   var request = new HttpRequestMock(new Uri.http("www.example.com", "/Part1/123/Part2/456"), "GET", ["*/*"]);
   context.data["ReqRes"] = route.createContext(request, (ex) { });
 }

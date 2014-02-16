@@ -5,8 +5,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'common.dart' as common;
-import'package:http_server/http_server.dart';
-
+import 'package:http_server/http_server.dart';
+import 'package:path/path.dart' as path;
 
 // Globals
 part 'src/Server/read_only_map.dart';
@@ -17,7 +17,7 @@ part 'src/Server/Server.dart';
 part 'src/Server/Exceptions.dart';
 
 // Routing
-part 'src/Server/Routing/RouteManager.dart';
+part 'src/Server/Routing/Route.dart';
 part 'src/Server/Routing/ExecuteCode.dart';
 part 'src/Server/Routing/LoadFile.dart';
 part 'src/Server/Routing/RoutingExceptions.dart';

@@ -1,6 +1,8 @@
 part of softhai.bulls_eye.Server;
 
-class _UrlDataImpl implements UrlData {
+class _RouteDataImpl implements RouteData {
+  
+  final Map<String, dynamic> extensions;
   
   final common.Url definition;
   
@@ -8,7 +10,7 @@ class _UrlDataImpl implements UrlData {
   
   final UrlVariables variables;
   
-  const _UrlDataImpl(this.definition, this.request, this.variables);
+  _RouteDataImpl(Route route, this.request, this.variables) : this.definition = route.routeDefenition, this.extensions = route.extensions;
 }
 
 class _UrlVariablesImpl implements UrlVariables {
@@ -84,15 +86,15 @@ class _RequestImpl implements Request {
   
   String method;
   
-  UrlData url;
+  RouteData route;
   
   RequestHeaderData header;
   
-  final HttpBody body;
+  final InputData<HttpBody> body;
   
-  _RequestImpl(HttpRequest request, common.Url urlDefinition, [this.body = null]) {
+  _RequestImpl(HttpRequest request, Route route, [this.body = null]) {
     this.method = request.method;
-    this.url = new _UrlDataImpl(urlDefinition, request.uri, new _UrlVariablesImpl(urlDefinition, request.uri));
+    this.route = new _RouteDataImpl(route, request.uri, new _UrlVariablesImpl(route.routeDefenition, request.uri));
     this.header = new _HeaderDataImpl(request);
   }
 }
@@ -145,8 +147,8 @@ class _ReqResContextImpl implements ReqResContextNative {
 
   Map<String, Object> data = new Map<String,Object>();
 
-  _ReqResContextImpl(this.nativeRequest, common.Url urlDefinition, this._errorHandler, [HttpBody body = null]) {
-    this.request = new _RequestImpl(this.nativeRequest, urlDefinition, body);
+  _ReqResContextImpl(this.nativeRequest, Route route, this._errorHandler, [HttpBody body = null]) {
+    this.request = new _RequestImpl(this.nativeRequest, route, (body == null ? null : new _InputDataImpl<HttpBody>("body", body)));
     this.response = new _ResponseImpl(this.nativeRequest.response);
   }
   

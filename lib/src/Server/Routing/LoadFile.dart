@@ -2,9 +2,10 @@ part of softhai.bulls_eye.Server;
 
 class LoadFile implements RouteLogic {
   
+  String _basePath;
   String _filePath;
   
-  LoadFile.fromUrl();
+  LoadFile.fromWildcard({String basePath: ""}) : this._basePath = basePath;
     
   LoadFile.fromPath(this._filePath);
   
@@ -15,7 +16,7 @@ class LoadFile implements RouteLogic {
     if(filePath == null)
     {
       // Try to find a wildcard variable
-      filePath = context.request.url.variables.path["*"].value;
+      filePath =  path.join(this._basePath, context.request.route.variables.path["*"].value);
     }
     
     if(filePath != null) {

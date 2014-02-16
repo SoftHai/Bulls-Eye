@@ -15,7 +15,7 @@ class FileNotFoundException extends NotFoundException {
 
   common.Url url;
   
-  FileNotFoundException(ReqResContext context, String resource) : this.url = context.request.url.definition,  super(context, resource, "File");
+  FileNotFoundException(ReqResContext context, String resource) : this.url = context.request.route.definition,  super(context, resource, "File");
   
   String toString() {
     return super.toString() + " This was reported by the route '${this.url.name}'.";

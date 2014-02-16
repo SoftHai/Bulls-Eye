@@ -2,7 +2,9 @@ part of softhai.bulls_eye.Server;
 
 typedef void ErrorHandler(Object ex);
 
-abstract class UrlData {
+abstract class RouteData {
+  
+  Map<String, dynamic> get extensions;
   
   common.Url get definition;
   
@@ -31,11 +33,11 @@ abstract class Request {
   
   String get method;
   
-  UrlData get url;
+  RouteData get route;
   
   RequestHeaderData get header;
   
-  HttpBody get body;
+  InputData<HttpBody> get body;
 }
 
 abstract class Response {

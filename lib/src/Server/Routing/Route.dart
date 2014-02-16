@@ -8,15 +8,20 @@ abstract class RouteLogic {
 
 typedef void HandleRoutingException(HttpRequestException ex);
 
-class RouteManager {
+class Route {
   
   common.Url routeDefenition;
   String method;
   List<String> contentTypes;
   RouteLogic logic;
   String middleware;
+  Map<String, dynamic> extensions = new Map<String, dynamic>();
   
-  RouteManager(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware);
+  Route(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware, Map<String, dynamic> extensions) {
+    if(extensions != null) {
+      this.extensions.addAll(extensions);
+    }
+  }
   
 
   // Route match the path
@@ -51,7 +56,7 @@ class RouteManager {
   // Executer
   ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler) 
   {
-    var context = new _ReqResContextImpl(request, this.routeDefenition, errorHandler);
+    var context = new _ReqResContextImpl(request, this, errorHandler);
     return context;
   }
 

@@ -6,6 +6,7 @@ homepage: https://github.com/SoftHai/Bulls-Eye
 documentation: https://github.com/SoftHai/Bulls-Eye
 dependencies:
   http_server: any
+  path: any
 dev_dependencies:
   spec_dart: any
   unittest: '>=0.9.0 <2.0.0'

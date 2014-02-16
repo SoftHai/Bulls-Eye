@@ -12,10 +12,14 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 - **(!!!) Changed constructor optional parameter of `QVariable` from positional to named**
 - **(!!!) Changed property `varName` of `Variable` and `QVariable` to `name`**
 - **(!!!) Changed property `routeParts` of `Url` to `pathParts`**
+- **(!!!) The `ReqResContext` was complete rewritten**
+- **(!!!) Renamed the Constructor `fromUrl` of the `LoadFile` route logic to `fromWildcard` to see better what it did  **
 
 --------------------------------------------------------------
 
 - **(NEW)** (#7) Add a validation engine with predefined [validators](/doc/Validators.md)
+- **(IMP)** The `ReqResContext` was complete rewritten 
+- **(IMP)** (#5) Add a base path as named parameter to the `LoadFile.fromWildcard` Route logic
 
 ##Version 0.2.0-Alpha
 **Release date: *05 Feb 2014* **
