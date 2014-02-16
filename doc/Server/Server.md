@@ -48,7 +48,8 @@ Parameter:
 * **url**: An instance of an `URL` object which defines which URL the route should handle ([see here](../URLDefenitions.dart))
 * **logic**: Defines which route logic should be executed if the defined URL was called ([see later](#route-logic)).
 * **contentTypes *(optional, default null)* **: Defines optional which contentType on this route are allowed (Content Negotiation). This way you can define that an API request only support JSON or that the call to the home route only supports HTML.
-* **middleware *(optional, default null)* **: Defines which middleware defenition should be executed with this route ([see later](#middleware))
+* **middleware *(optional, default null)* **: Defines which middleware defenition should be executed with this route ([see here](#middleware))
+* **extensions *(optional, default null)* **: Can be used by plugins to add custom extensions to the definition (e.g. [Validation](middleware_validation.md)))
 
 ###Route Logic
 Currently Bulls-Eye supports 2 route logics:

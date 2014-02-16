@@ -13,7 +13,7 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
  - [X] Routing
    - [X] Routing to Logic (e.g. Load data from database and return json)
    - [X] Routing to Files (e.g. pictures, css, js, html, ...)
-   - [X] Handle routing Errors (e.g. NotFount, ...)
+   - [X] Handle routing Errors (e.g. NotFound, ...)
 
 - [X] Replacing of Variables with Datas
 
@@ -26,13 +26,14 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 **Milestone 2** (0.2.0 - 05 Feb 2014)
 
-- [ ] Bugfixes / Improvements
+- [/] Bugfixes / Improvements
 - Middleware
  - [/] (#7) Vaidation
     - [X] Route Variables
     - [X] Query Variables
-    - [ ] Post Data
-    - [ ] Header Data
+    - [/] Post Data
+    - [/] Header Data
+    - [/] Cookies
   - [ ] feature toogle
     - [ ] GlobalContext
     - [ ] UserContext
