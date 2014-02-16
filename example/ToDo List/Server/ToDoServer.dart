@@ -20,9 +20,9 @@ void main() {
                            });
   
   // Register routes
-  server..route("GET", cssPath, new LoadFile.fromUrl(), contentTypes: ["text/css"]) // Only CSS allowed
-        ..route("GET", jsPath, new LoadFile.fromUrl())
-        ..route("GET", dartPath, new LoadFile.fromUrl())
+  server..route("GET", cssPath, new LoadFile.fromWildcard(), contentTypes: ["text/css"]) // Only CSS allowed
+        ..route("GET", jsPath, new LoadFile.fromWildcard())
+        ..route("GET", dartPath, new LoadFile.fromWildcard())
         ..route("GET", jshome, new LoadFile.fromPath("client/jshome.html"))
         ..route("GET", darthome, new LoadFile.fromPath("client/darthome.html"))
         ..route("GET", about, new ExecuteCode(logic.aboutRouteLogic), middleware: "Demo");

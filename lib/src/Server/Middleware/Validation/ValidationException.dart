@@ -1,11 +1,11 @@
 part of softhai.bulls_eye.Server;
 
 
-class VariableValidationException extends BadRequestException {
+class ValidationException extends BadRequestException {
   
-  dynamic variable;
+  InputData inputData;
   
-  VariableValidationException(ReqResContext context, String reason, this.variable) : super(context, reason) {
+  ValidationException(ReqResContext context, String reason, this.inputData) : super(context, reason) {
     
   }
 }

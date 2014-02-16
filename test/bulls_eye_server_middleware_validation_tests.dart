@@ -25,6 +25,7 @@ part '../lib/src/Server/Middleware/middleware_channel_part.dart';
 part '../lib/src/Server/Middleware/middleware_error.dart';
 
 // Middleware - Validation
+part '../lib/src/Server/Middleware/Validation/server_validator.dart';
 part '../lib/src/Server/Middleware/Validation/ValidationEngine.dart';
 part '../lib/src/Server/Middleware/Validation/ValidationException.dart';
 
@@ -75,7 +76,7 @@ bool createHttpRequest(SpecContext context, Uri url) {
   var queryVariable = new common.QVariable("QVar", extensions: { common.ValidatorKey: common.isDateTime });
   
   var urlDef = new common.Url.fromObjects([new common.Static("Part1"), versionVariable, routeVariable],  queryParts: [queryVariable], name: "Demo Route");
-  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, null);
+  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, false, null);
   var request = new HttpRequestMock(url, "GET", ["*/*"]);
   context.data["ReqRes"] = route.createContext(request, (ex) { });
 }
@@ -105,6 +106,6 @@ bool validationCheck(SpecContext context) {
   else {
     expect(context.data["CodeCalled"], isNull);
     expect(context.data["ErrorCalled"], equals(1));
-    expect(context.data["Error"].catchedError, new isInstanceOf<VariableValidationException>());
+    expect(context.data["Error"].catchedError, new isInstanceOf<ValidationException>());
   }
 }

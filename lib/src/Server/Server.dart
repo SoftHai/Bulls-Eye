@@ -18,8 +18,8 @@ class Server {
     return middleware;
   }
   
-  void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware, Map<String,dynamic> extensions}) {
-    this._routes.add(new Route(method, url, logic, contentTypes, middleware, extensions));
+  void route(String method, common.Url url, RouteLogic logic, {List<String> contentTypes, String middleware, bool parseBody: false, Map<String,dynamic> extensions}) {
+    this._routes.add(new Route(method, url, logic, contentTypes, middleware, parseBody, extensions));
   }
 
   void start() {
@@ -36,18 +36,28 @@ class Server {
           {
             this._debugOutput("route '$route' matched! Executing...");
             
-            var context = route.createContext(request, this._handleException);
+            ReqResContext context = null;
             Future future = null;
+            
+            // Parse body if wished
+            if(route.parseBody) {
+              future = new Future.sync(() => HttpBodyHandler.processRequest(request))
+                                 .then((body) => context = route.createContext(request, this._handleException, body));
+            }
+            else {
+              future = new Future.sync(() => context = route.createContext(request, this._handleException));
+            }
+            
             if(route.middleware != null)
             {
               // execute with middleware
               var middleware = this._middlewares[route.middleware];
-              future = middleware.execute(context, route.logic.execute);
+              future.then((_) =>  middleware.execute(context, route.logic.execute));
             }
             else
             {
               // execute only logic
-              future = new Future.sync(() => route.logic.execute(context));
+              future.then((context) => new Future.sync(() => route.logic.execute(context)));
             }
             future.then((_) {
               if(context.response.body.Data != null)

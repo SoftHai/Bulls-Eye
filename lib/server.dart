@@ -29,5 +29,6 @@ part 'src/Server/Middleware/middleware_channel_part.dart';
 part 'src/Server/Middleware/middleware_error.dart';
 
 // Middleware - Validation
+part 'src/Server/Middleware/Validation/server_validator.dart';
 part 'src/Server/Middleware/Validation/ValidationEngine.dart';
 part 'src/Server/Middleware/Validation/ValidationException.dart';

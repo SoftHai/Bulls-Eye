@@ -59,18 +59,18 @@ class _ComposedImpl implements Validator {
   }
 }
 
-Validator versionDep(Map<String, Validator> versionValidator, [bool invalidIfNoValidatorFound = true]) => new _VersionDepImpl(versionValidator, invalidIfNoValidatorFound);
+Validator versionDep(Map<String, Validator> versionValidator, [bool invalidIfNoValidatorFound = true]) => new _ValidatorByVersionImpl(versionValidator, invalidIfNoValidatorFound);
 
-class _VersionDepImpl implements ValidatorByVersion {
+class _ValidatorByVersionImpl implements ValidatorByVersion {
   
   final Map<String, Validator> _versionValidator;
   final bool _invalidIfNoValidatorFound;
   
-  const _VersionDepImpl(this._versionValidator, this._invalidIfNoValidatorFound) : super();
+  const _ValidatorByVersionImpl(this._versionValidator, this._invalidIfNoValidatorFound) : super();
   
-  bool isValid(Object data, [String versionValue = ValidatorByVersion.defaultVersionValidator]) {
-    if(this._versionValidator.containsKey(versionValue)) {
-      return this._versionValidator[versionValue].isValid(data);
+  bool isValid(Object data, [String verisonValue = DefaultVerisonValidator]) {
+    if(this._versionValidator.containsKey(verisonValue)) {
+      return this._versionValidator[verisonValue].isValid(data);
     }
     else {
       return !this._invalidIfNoValidatorFound;

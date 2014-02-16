@@ -20,7 +20,7 @@ main()  {
   test("Test HttpRequestMock", () { TestHttpRequestMock(); });
   
   var urlDef = new Url("/Part1/:var1/Part2/(:var2)", "Demo Route");
-  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, null);
+  var route = new Route("GET", urlDef, new ExecuteCode((context) { return true; }), ["application/html"], null, false, null);
   
   group("BullsEye Server -", () {
     

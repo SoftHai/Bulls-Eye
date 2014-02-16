@@ -15,9 +15,10 @@ class Route {
   List<String> contentTypes;
   RouteLogic logic;
   String middleware;
+  bool parseBody = false;
   Map<String, dynamic> extensions = new Map<String, dynamic>();
   
-  Route(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware, Map<String, dynamic> extensions) {
+  Route(this.method, this.routeDefenition, this.logic, this.contentTypes, this.middleware, this.parseBody, Map<String, dynamic> extensions) {
     if(extensions != null) {
       this.extensions.addAll(extensions);
     }
@@ -54,9 +55,9 @@ class Route {
   }
   
   // Executer
-  ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler) 
+  ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler, [HttpBody body = null]) 
   {
-    var context = new _ReqResContextImpl(request, this, errorHandler);
+    var context = new _ReqResContextImpl(request, this, errorHandler, body);
     return context;
   }
 
