@@ -8,7 +8,7 @@ abstract class InputData<ValueType> {
   
   bool get isValidated;
   
-  void SetIsValidated();
+  void validated([bool isValid = true]);
 }
 
 abstract class UrlInputData implements InputData<dynamic> {
@@ -20,6 +20,7 @@ abstract class UrlInputData implements InputData<dynamic> {
 class _InputDataImpl<ValueType> implements InputData<ValueType> {
   
   bool _isValidated = false;
+  bool _isValid = false;
   
   final String key;
   
@@ -27,9 +28,12 @@ class _InputDataImpl<ValueType> implements InputData<ValueType> {
   
   bool get isValidated => this._isValidated;
   
+  bool get isValid => this._isValid;
+  
   _InputDataImpl(this.key, this.value);
   
-  void SetIsValidated() {
+  void validated([bool isValid = true]) {
+    this._isValid = isValid;
     this._isValidated = true;
   }
 }

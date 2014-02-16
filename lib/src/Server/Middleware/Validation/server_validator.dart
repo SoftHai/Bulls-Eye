@@ -32,8 +32,11 @@ class _ValidatorByKeyImpl implements ValidatorByKey {
         return validator.isValid(data);
       }
     }
+    else if(this._invalidIfNoValidatorFound) {
+      return false;
+    }
     else {
-      return !this._invalidIfNoValidatorFound;
+      return null;
     }
   }
   

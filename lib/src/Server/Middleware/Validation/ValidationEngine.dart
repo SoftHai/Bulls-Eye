@@ -99,9 +99,12 @@ class Validation implements BeforeHook {
       isValid = validator.isValid(data);
     }
     
-    // Check result
-    if(isValid) {
-      inputData.SetIsValidated();
+    // Check result  
+    if(isValid == null) {
+      // Input stays unvalidated
+    }
+    else if(isValid) {
+      inputData.validated(true);
     }
     else {
       this._handleInvalid(inputData, context, onInvalid);
@@ -110,6 +113,8 @@ class Validation implements BeforeHook {
   }
   
   void _handleInvalid(InputData inputData, ReqResContext context, int onInvalid) {
+    
+    inputData.validated(false);
     
     if(onInvalid == common.OnInvalidContinue) {
       // Do nothing
