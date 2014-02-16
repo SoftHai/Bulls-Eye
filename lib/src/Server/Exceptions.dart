@@ -4,10 +4,12 @@ abstract class HttpRequestException implements Exception {
   
   HttpRequest request;
   
-  HttpRequestException(this.request);
+  HttpRequestException(ReqResContext context) : this._native((context as ReqResContextNative).nativeRequest);
+  
+  HttpRequestException._native(this.request);
   
   String toString() {
-    return "During executing the request '${this.request.uri}' happens an error: ";
+    return "During executing the request '${this.request.method} - ${this.request.uri}' happens an error: ";
   }
   
 }
@@ -16,7 +18,9 @@ class WrappedHttpRequestException extends HttpRequestException {
   
   Object originalException;
   
-  WrappedHttpRequestException(HttpRequest request, this.originalException) : super(request);
+  WrappedHttpRequestException(ReqResContext context, this.originalException) : super(context);
+  
+  WrappedHttpRequestException._native(HttpRequest request, this.originalException) : super._native(request);
   
   String toString() {
     return super.toString() + this.originalException.toString();
@@ -30,7 +34,7 @@ class BadRequestException extends HttpRequestException {
 
   String reason;
   
-  BadRequestException(HttpRequest request, this.reason) : super(request);
+  BadRequestException(ReqResContext context, this.reason) : super(context);
   
   String toString() {
     return super.toString() + "It was a bad request because: ${this.reason}";
@@ -45,7 +49,9 @@ class NotFoundException extends HttpRequestException {
   String resourceType;
   String resource;
   
-  NotFoundException(HttpRequest request, this.resource, [this.resourceType]) : super(request);
+  NotFoundException(ReqResContext context, this.resource, [this.resourceType]) : super(context);
+  
+  NotFoundException._native(HttpRequest request, this.resource, [this.resourceType]) : super._native(request);
   
   String toString() {
     return super.toString() + "The resource '${this.resource}: ${this.resourceType}' was not found!";

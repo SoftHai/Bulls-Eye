@@ -29,9 +29,10 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 - [ ] Bugfixes / Improvements
 - Middleware
  - [/] (#7) Vaidation
-    - [/] Route Variables
-    - [ ] Query Variables
+    - [X] Route Variables
+    - [X] Query Variables
     - [ ] Post Data
+    - [ ] Header Data
   - [ ] feature toogle
     - [ ] GlobalContext
     - [ ] UserContext

@@ -1,15 +1,13 @@
-library softhai.Example.ToDo.Server;
-
+import 'dart:async';
 import '../../../lib/server.dart';
 
 class ServerLogic {
   
-  bool aboutRouteLogic(ReqResContext context) 
+  Future aboutRouteLogic(ReqResContext context) 
   { 
     print("ABOUT"); 
-    context.request.response.write('ABOUT');
-    context.request.response.close();
-    return true;
+    (context as ReqResContextNative).nativeRequest.response.write('ABOUT');
+    (context as ReqResContextNative).nativeRequest.response.close();
   }
   
 }

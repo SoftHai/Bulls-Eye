@@ -5,7 +5,7 @@ class VariableValidationException extends BadRequestException {
   
   dynamic variable;
   
-  VariableValidationException(HttpRequest request, String reason, this.variable) : super(request, reason) {
+  VariableValidationException(ReqResContext context, String reason, this.variable) : super(context, reason) {
     
   }
 }

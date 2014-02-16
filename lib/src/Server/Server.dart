@@ -54,7 +54,7 @@ class Server {
                 this._handleException(ex);
               }
               else {
-                this._handleException(new WrappedHttpRequestException(request, ex));
+                this._handleException(new WrappedHttpRequestException._native(request, ex));
                 this._debugOutput("Unhandled Exception $ex");
               }
             });
@@ -66,7 +66,7 @@ class Server {
         // No match found
         this._debugOutput("No route Matched!");
         
-        this._handleException(new NotFoundException(request, request.uri.path, "Route for"));
+        this._handleException(new NotFoundException._native(request, request.uri.path, "Route for"));
         
         /*
         print("");

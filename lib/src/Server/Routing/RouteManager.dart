@@ -51,8 +51,7 @@ class RouteManager {
   // Executer
   ReqResContext createContext(HttpRequest request, ErrorHandler errorHandler) 
   {
-    var variables = this.routeDefenition.matcher.getMatches(request.uri.toString());
-    var context = new ReqResContext(request, this.routeDefenition, variables, errorHandler);
+    var context = new _ReqResContextImpl(request, this.routeDefenition, errorHandler);
     return context;
   }
 

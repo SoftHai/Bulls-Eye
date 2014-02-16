@@ -15,7 +15,7 @@ class LoadFile implements RouteLogic {
     if(filePath == null)
     {
       // Try to find a wildcard variable
-      filePath = context.variables.routeVariables["*"];
+      filePath = context.request.url.variables.path["*"].value;
     }
     
     if(filePath != null) {
@@ -23,11 +23,11 @@ class LoadFile implements RouteLogic {
       return file.exists().then((bool found) {
         if (found) 
         {
-          return file.openRead().pipe(context.request.response);
+          return file.openRead().toList().then((data) => context.response.body.SetBody(null, data)); //.pipe(context.request.response);
         } 
         else 
         {
-          context.HandleError(new FileNotFoundException(context.request, filePath, context.currentRoute));
+          context.HandleError(new FileNotFoundException(context, filePath));
         }
       });
     }

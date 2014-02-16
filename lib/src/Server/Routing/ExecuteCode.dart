@@ -6,9 +6,7 @@ class ExecuteCode implements RouteLogic {
   
   CodeCall _codeCall;
   
-  ExecuteCode(this._codeCall) {
-    
-  }
+  ExecuteCode(this._codeCall);
 
   Future execute(ReqResContext context) 
   {
