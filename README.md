@@ -34,43 +34,50 @@ Example
 =========
 ```dart
 
-// URL part definition
+// URL part definition incl. Validation rules
 var todo = new Static("todo");
 var listID = new Variable("ListID", extensions: { ValidationKey: isInt }); // Define the validation rule for the variable to be handled by the validation middleware
 var itemID = new Variable("ItemID", isOptional: true, extensions: { ValidationKey: isInt }); // Define the validation rule for the variable to be handled by the validation middleware
 
 // Route defenition
-var jsPath = new RouteDef("js/*"); // Add a wildcard '*' to match all routes they start with the defined route
-var cssPath = new RouteDef("css/*");
-var home = new RouteDef("");
-var toDoListItemRoute = new RouteDef.fromObj([todo, listID, itemID]); // use the URL Parts in several routes
-var searchRoute = new RouteDef("search?q&(ResultCount)"); // Define query variables 'q' and optional query variables 'ResultCount'
+var jsPath = new Url("js/*"); // Add a wildcard '*' to match all routes they start with the defined route
+var cssPath = new Url("css/*");
+var home = new Url("");
+var toDoListItemUrl = new Url.fromObj([todo, listID, itemID]); // use the URL Parts in several routes
+var searchUrl = new Url("search?q&(MaxResults)"); // Define query variables 'q' and optional query variables 'MaxResults'
 
 // Create Server
 var server = new Server();
 
 // Middleware
-// Add some middleware code which can be executed before, around and/or after the route logic.
-server.middleware("Example")..before((context) => print("do something before the route logic (e.g. validation, auth, ...)"))
-                         ..after((context) => print("do something after the route logic"))
-                         ..around((context, ctrl) {
-                             print("do something before ...");
-                             return ctrl.next()
-                                        .then((_) => print("and after the route logic (e.g. logging, performance tests, ...)"));
-                           });
+// Add complex middleware combinations which can be executed before, around and/or after the route logic.
+server.middleware("PublicArea")..add(new Validation())
+                                ..around((context) { /* e.g. loging */ })
+                                ..after((context) { /* e.g. post processing */ });
+
+server.middleware("SecureArea")..add(new Validation())
+								..before((context) { /* e.g. Auth */ })
+                                ..around((context) { /* e.g. loging */ })
+                                ..after((context) { /* e.g. post processing */ });
 // ... define more middleware combination if you need
 
 // Define Routes
-server..route("GET", cssPath, new LoadFile.fromUrl(), contentTypes: ["text/css"]) // Only CSS allowed
-      ..route("GET", jsPath, new LoadFile.fromUrl())
-      ..route("GET", jshome, new LoadFile.fromPath("client/jshome.html"))
-      ..route("GET", darthome, new LoadFile.fromPath("client/darthome.html"), middleware: "Example") // Use the middleware defenition where you need
-      ..route("GET", about, new ExecuteCode((context) {
+server..route("GET", cssPath, new LoadFile.fromUrl(basePath: "x:/project/css/"), contentTypes: ["text/css"]) // Only CSS allowed
+      ..route("GET", jsPath, new LoadFile.fromUrl(basePath: "x:/project/js/")) // defining an optional basePath (basepath + wildcard = filepath)
+
+      ..route("GET", home, new LoadFile.fromPath("client/home.html"), middleware: "PublicArea") // Use the middleware for public access
+
+      ..route("GET", toDoListItemUrl, new ExecuteCode((context) {
       	//Logic to execute here
-      }));
-      ..route("GET", searchRoute, new ExecuteCode((context) {
+      }), middleware: "SecureArea"); // Use the middleware for secure access
+
+      ..route("POST", toDoListItemUrl, new ExecuteCode((context) {
+      	//Logic to execute here
+      }), middleware: "SecureArea", extensions: { BodyValidatorKey: isJSON }); // Validate the body an check if it is a JSON body
+
+      ..route("GET", searchUrl, new ExecuteCode((context) {
       	// Search logic to execute here
-      }));
+      }), middleware: "SecureArea"); // Use the middleware for secure access
 
 // Start Server
 server.start();
@@ -78,6 +85,8 @@ server.start();
 
 Lib Doc
 =========
+[Feature Tour](/doc/feature_overview.md)
+
 The Lib is devided into 3 parts:
 * Common: Here are functions which are required on client and server side (e.g. url defenitions, ...)
  * [URLDefenition](/doc/URLDefenition.md)
@@ -101,11 +110,12 @@ See [here](/doc/Roadmap.md)
 
 Targets
 =========
-Building a Web Application Framework specialize for RESTful, Webservices and SinglePage WebApplications. 
+Building a Web Application Framework specialize for RESTful, Webservices and SinglePage WebApplications.
 
 It should be:
 * extendable
 * easy
+* secure
 * and fast
 
 FAQ
@@ -113,4 +123,3 @@ FAQ
 *Why not using an available implementation?*
 
 I know there are some projects out there which doing the same. But I want to build a server which fits more my needs and implements some features I missed on other implementations. <br/>
-Another reason is to learn and study DART. It's like an case study to prove if it fits my requirements better than other languages (PHP, JavaScript, Python, Ruby...).

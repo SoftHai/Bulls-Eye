@@ -20,15 +20,15 @@ class Validation implements BeforeHook {
       versionValue = version.value;
     }
     
-    this._validateUrlInputs(context.request.route.variables.path, context, versionValue);
-    
-    this._validateUrlInputs(context.request.route.variables.query, context, versionValue);
-    
     this._validateHeaders(context, versionValue);
     
     this._validateCookies(context, versionValue);
     
-    this._validateHeaders(context, versionValue);
+    this._validateUrlInputs(context.request.route.variables.path, context, versionValue);
+    
+    this._validateUrlInputs(context.request.route.variables.query, context, versionValue);
+    
+    this._validateBody(context, versionValue);
   }
   
   void _validateUrlInputs(ReadOnlyMap<UrlInputData> variables, ReqResContext context, String versionValue) {
