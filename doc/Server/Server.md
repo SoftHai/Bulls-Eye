@@ -34,11 +34,11 @@ The `ReqResContext` is an object which is created for each incoming call. It has
     * **extensions**: Cointains the registered extensions of the current route
     * **definition**: contains the `Url` definition of the current route
     * **request**: Contains the requested `Uri` of the current request
-    * **variables *(InputData)* **: Contains the extracted variables of the current URL.
+    * **variables (`InputData`)**: Contains the extracted variables of the current URL.
   * **header**: Contains the request header
-    * **fields *(InputData)* **: The header fields (e.g. content-type, ...)
-    * **cookies *(InputData)* **: The cookies
-  * **body *(InputData)* **: Contains the body data (if `parseBody` of the route was set to `true`).
+    * **fields (`InputData`)**: The header fields (e.g. content-type, ...)
+    * **cookies (`InputData`)**: The cookies
+  * **body (`InputData`)**: Contains the body data (if `parseBody` of the route was set to `true`).
 * **response**: Contains the informations about response.
   * **Header**: The header of the response
   * **Cookies**: The cookies of the response
@@ -50,7 +50,7 @@ The `ReqResContext` is an object which is created for each incoming call. It has
 `InputData` is a special class which has 3 fields (`key`, `value`, `isValidated`)
 * `key`: Contains the key of the input value (e.g. Variablename, Header-Key, Cookie-Name, ...)
 * `value`: contains the data of this input
-* `isValidated`: Defines if the value was validated (e.g. by the [validation middleware](/Middleware_Validation.md))
+* `isValidated`: Defines if the value was validated (e.g. by the [validation middleware](Middleware_Validation.md))
 * `isValid`: Defines if the values is valid or not (default = false)
 
 If the input is not yet validated, you can validate the value and set the `isValidated` and `isValid` by calling `validated([isValid])`. This way you have to validated the inputs only one time and you can store if you already validated this input or not. This protects you before multiple validation of the same input.
