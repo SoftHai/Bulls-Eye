@@ -1,11 +1,11 @@
 #Middleware - Validation
 
 You can use the Middleware `Validation` to validate you validation specification you can use on serveral position:
+* **Header**
+* **Cookies**
 * **[URL](../URLVariableValidation.md)**
  * Path Variables
  * Query Variables
-* **Header**
-* **Cookies**
 * **Body**
 
 The target of the Validation Middleware is to validate **ALL** inputs comming from the request into your web server.
@@ -63,12 +63,14 @@ Validator formData({ "formdata-Key": Validator,
                      });
 ```
 
-####isFile
+You can use as vaidator all validators from [here](../Validators.md) and:
 
-Validates if a formdata field is a file upload
-```dart
-Validator isFile([List<String> allowedExtensions]);
-```
+* **isFile**
+
+ Validates if a formdata field is a file upload
+ ```dart
+ Validator isFile([List<String> allowedExtensions]);
+ ```
 
 ####isBinary
 
@@ -84,7 +86,7 @@ Validates if the post data are JSON data
 Validator isJson;
 ```
 
-####isJson
+####isText
 
 Validates if the post data are plain text data
 ```dart
@@ -100,3 +102,23 @@ Use this Middleware as early as possible in the middleware channel to protect as
 ```dart
 server..middleware("Middleware").add(new Validation());
 ```
+
+##Handling Validation Errors
+
+You can handle validation exsception in the global exception handling. By default a `ValidationException` is handled as BAD REQUEST.
+
+```dart
+server.exception((HttpRequestException ex) {
+  if(ex is ValidationException) {
+  	// Handle the exception here
+    return true; // Handled
+  }
+
+  return false; // Unhandled, handle by default
+});
+```
+The `ValidationException` has the following members:
+* `request`: The native `HttpRequest` object
+* `reason`: The reason for the bad request / invalid
+* `section`: Defines during which validation section a invalidation was found (one of this constants: `ValidationSection_Header`, `ValidationSection_Cookie`, `ValidationSection_URLPathVar`, `ValidationSection_URLQueryVar`, `ValidationSection_Body`)
+* `inputData`: In invalid input data

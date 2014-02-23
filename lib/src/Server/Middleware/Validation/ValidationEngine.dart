@@ -152,7 +152,7 @@ class Validation implements BeforeHook {
       // Do nothing
     }
     else {
-      throw new ValidationException(context, "The variable '${inputData.key}' of '$validationSection' is not valid because of '$invalidReason'", inputData, validationSection, invalidReason);
+      throw new ValidationException(context, "The variable '${inputData.key}' of '$validationSection' is not valid because of '$invalidReason'", inputData, validationSection);
     }
   }
   
