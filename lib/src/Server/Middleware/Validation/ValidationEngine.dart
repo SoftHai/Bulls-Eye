@@ -84,11 +84,11 @@ class Validation implements BeforeHook {
     var validator = context.request.route.extensions[BodyValidatorKey] as common.Validator;
     if(validator != null)
     {
-      var httpBody = (context.request.body as HttpBody);
-      if(httpBody != null) {   
-        if(httpBody.type == 'form' && httpBody.body is Map && validator is ValidatorByKey) {
+      if(context.request.body != null && context.request.body.value != null) {
+          
+        if(context.request.body.value.type == 'form' && context.request.body.value.body is Map && validator is ValidatorByKey) {
           var tempInputDatas = new List<InputData>();
-          (httpBody.body as Map).forEach((k,v) => tempInputDatas.add(new _InputDataImpl(k, v)));
+          (context.request.body.value.body as Map).forEach((k,v) => tempInputDatas.add(new _InputDataImpl(k, v)));
 
           for (var bodyInputData in tempInputDatas) {
             this._validateInputData(ValidationSection_Body, context, bodyInputData, validator, versionValue, common.OnInvalidContinue);
@@ -109,7 +109,7 @@ class Validation implements BeforeHook {
         }
       }
       else {
-        this._validateInputData(ValidationSection_Body, context, context.request.body, validator, versionValue, onInvalid);
+        throw new ValidationException(context, "Validation rules for body but no body parsed. Can't validate body!", null, ValidationSection_Body, "Validation rules for body but no body parsed");
       }
     }
     

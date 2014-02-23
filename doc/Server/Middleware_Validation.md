@@ -51,12 +51,45 @@ To add body validation you have to use the `extensions` paramter of the route de
 server.route("GET", url, logic,
 			 extensions: { BodyValidationKey: Validator })
 ```
-There will come special validators for different body types:
- * FileUpload (single, Multi)
- * FormData
- * JSON-Data
- * Other
 
+###Body Validators
+
+####formData
+
+You can use this validator to validate the data of an transfered web form. Also the file Uploads can be validated here.
+```dart
+Validator formData({ "formdata-Key": Validator,
+                     /* more ... */
+                     });
+```
+
+####isFile
+
+Validates if a formdata field is a file upload
+```dart
+Validator isFile([List<String> allowedExtensions]);
+```
+
+####isBinary
+
+Validates if the post data are binary data
+```dart
+Validator isBinary;
+```
+
+####isJson
+
+Validates if the post data are JSON data
+```dart
+Validator isJson;
+```
+
+####isJson
+
+Validates if the post data are plain text data
+```dart
+Validator isText;
+```
 
 ##Adding the Validation Middleware
 
