@@ -109,7 +109,7 @@ class Validation implements BeforeHook {
         }
       }
       else {
-        throw new ValidationException(context, "Validation rules for body but no body parsed. Can't validate body!", null, ValidationSection_Body, "Validation rules for body but no body parsed");
+        throw new ValidationException(context, "Validation rules for body but no body parsed. Can't validate body!", null, ValidationSection_Body);
       }
     }
     

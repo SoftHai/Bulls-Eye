@@ -6,6 +6,8 @@ Bulls-Eye
 Bull's Eye is a Dart-IO Web Application Framework (like Express on Node.js). 
 It should bring the speed of Dart to the server-side. To have an single language to program server and client.
 
+[Feature Tour](/doc/feature_overview.md)
+
 ![Example Workflow](/doc/Server/img/Bulls-Eye-Server - Middleware.png)
 
 [Bulls-Eye on Dart Package Manager](http://pub.dartlang.org/packages/bulls_eye)
@@ -83,7 +85,7 @@ server..route("GET", cssPath, new LoadFile.fromUrl(basePath: "x:/project/css/"),
 server.start();
 ```
 
-Lib Doc
+Documentation
 =========
 [Feature Tour](/doc/feature_overview.md)
 

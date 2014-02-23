@@ -28,28 +28,27 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 - [/] Bugfixes / Improvements
 - Middleware
- - [/] (#7) Vaidation
-    - [X] Route Variables
+ - [X] (#7) Vaidation
+    - [X] Path Variables
     - [X] Query Variables
-    - [/] Post Data
-    - [/] Header Data
-    - [/] Cookies
-  - [ ] feature toogle
-    - [ ] GlobalContext
-    - [ ] UserContext
+    - [X] Body Data
+    - [X] Header Data
+    - [X] Cookies
 
 **Milestone 3** (0.3.0)
 
+- [ ] Bugfixes / Improvements
+  - [ ] Add more Validators (MinStrLen, MaxStrLen, numGreater, numSmaller, ...)
 - Middleware
+  - [ ] feature toogle
+    - [ ] GlobalContext
+    - [ ] UserContext
+ - [ ] Sanitizer
  - [ ] Auth (Custom, OAuth, OpenID, ...)
  - [ ] Statistic Collector
    - [ ] Collect (Caller, URL, Browser, SourceURL, ...)
    - [ ] Custom Statistic Handler (e.g. store to database, ...) 
-
-**Milestone 4** (0.4.0)
-
-- Middleware
- - [ ] Template Files pre processsing (using JS-Tamplate engines with Dart-JS-Bridge)
+ - [ ] Template Files post processsing (using JS-Tamplate engines with Dart-JS-Bridge)
 - Server
  - [ ] WebSocket support
    - [ ] WAMP-Protokoll
