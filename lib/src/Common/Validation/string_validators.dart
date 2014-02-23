@@ -9,6 +9,8 @@ class _StartWith extends IsTypeOf<String> {
   
   const _StartWith(this._pattern, this._index);
   
+  String get invalidReason => "String don't starts with ${this._pattern}' at index '${this._index}'";
+  
   bool isValid(Object data) {
     var isString = super.isValid(data);
     
@@ -29,6 +31,8 @@ class _EndWith extends IsTypeOf<String> {
   
   const _EndWith(this._pattern);
   
+  String get invalidReason => "String don't starts with ${this._pattern}'";
+  
   bool isValid(Object data) {
     var isString = super.isValid(data);
     
@@ -48,6 +52,8 @@ class _IsRegExImpl extends IsTypeOf<String> {
   final RegExp _regEx;
   
   const _IsRegExImpl(this._regEx);
+  
+  String get invalidReason => "String don't matchs the regular expression";
   
   bool isValid(Object data) {
     var isString = super.isValid(data);

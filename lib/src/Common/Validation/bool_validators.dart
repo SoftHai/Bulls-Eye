@@ -24,6 +24,8 @@ class _IsBoolImpl implements Validator {
   
   const _IsBoolImpl();
   
+  String get invalidReason => "Is not bool";
+  
   bool isValid(Object data) {
     var parsedBool = _convertToBool(data);
     return parsedBool != null;

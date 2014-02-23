@@ -8,6 +8,8 @@ class _InListImpl extends IsTypeOf<num> {
   
   const _InListImpl(this._list) : super();
   
+  String get invalidReason => "Is not in list of allowed values'";
+  
   bool isValid(Object data) {
     return this._list.contains(data);
   }
@@ -22,11 +24,13 @@ Validator composed(List<Validator> validators, [String composeType = AND]) => ne
  * A Validator which compose several single validator to one
  */
 class _ComposedImpl implements Validator {
-  
+    
   final List<Validator> _validators;
   final String _composeType;
   
-  const _ComposedImpl(List<Validator> validators, this._composeType) : this._validators = validators, super();
+  String invalidReason;
+  
+  _ComposedImpl(List<Validator> validators, this._composeType) : this._validators = validators, super();
   
   /**
    * Verifice if the input data are valid or not
@@ -39,6 +43,11 @@ class _ComposedImpl implements Validator {
     for(var validator in this._validators) {
       var isValid = validator.isValid(data); 
 
+      // take invalid reason
+      if(!isValid) {
+        this.invalidReason = validator.invalidReason;
+      }
+      
       if(_composeType == AND && !isValid) {
         // if AND and one is invalid than abort and return false
         return false;
@@ -56,6 +65,8 @@ class _ComposedImpl implements Validator {
     else if (_composeType == OR) {
       return false;
     }
+    
+    return false;
   }
 }
 
@@ -66,11 +77,15 @@ class _ValidatorByVersionImpl implements ValidatorByVersion {
   final Map<String, Validator> _versionValidator;
   final bool _invalidIfNoValidatorFound;
   
-  const _ValidatorByVersionImpl(this._versionValidator, this._invalidIfNoValidatorFound) : super();
+  String invalidReason;
+  
+  _ValidatorByVersionImpl(this._versionValidator, this._invalidIfNoValidatorFound) : super();
   
   bool isValid(Object data, [String verisonValue = DefaultVerisonValidator]) {
     if(this._versionValidator.containsKey(verisonValue)) {
-      return this._versionValidator[verisonValue].isValid(data);
+      var isValid = this._versionValidator[verisonValue].isValid(data);
+      this.invalidReason = "Version '$verisonValue' is invalid because of: ${this._versionValidator[verisonValue].invalidReason}";
+      return isValid;
     }
     else {
       return !this._invalidIfNoValidatorFound;

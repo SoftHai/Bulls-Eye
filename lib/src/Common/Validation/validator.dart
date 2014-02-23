@@ -16,6 +16,8 @@ abstract class Validator {
   
   const Validator();
   
+  String get invalidReason;
+  
   /**
    * Verifice if the input data are valid or not
    */

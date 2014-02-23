@@ -24,6 +24,8 @@ class _IsNumImpl implements Validator {
   
   const _IsNumImpl();
   
+  String get invalidReason => "Is not a numeric value'";
+  
   bool isValid(Object data) {
     var parsedNum = _convertToNum(data);
     return parsedNum != null;
@@ -35,6 +37,8 @@ const Validator isInt = const _IsIntImpl();
 class _IsIntImpl implements Validator {
   
   const _IsIntImpl();
+  
+  String get invalidReason => "Is not integer'";
   
   bool isValid(Object data) {
     var parsedInt = _convertToInt(data);
@@ -50,6 +54,8 @@ class _InRangeNumImpl extends IsTypeOf<num> {
   final num _to;
   
   const _InRangeNumImpl(this._from, this._to) : super();
+  
+  String get invalidReason => "Is a numeric value or not in range (${this._from} to ${this._from})";
   
   bool isValid(Object data) {
     var parsedNum = _convertToNum(data);
