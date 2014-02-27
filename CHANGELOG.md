@@ -5,7 +5,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 ```
 
 ##Version 0.3.0-Alpha
-**Release date: *Not Released* **
+**Release date: *27 Feb 2014* **
 
 --------------------------------------------------------------
 - **(!!!) Changed constructor optional parameter of `Variable` from positional to named**

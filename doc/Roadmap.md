@@ -26,7 +26,7 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
 
 **Milestone 2** (0.2.0 - 05 Feb 2014)
 
-- [/] Bugfixes / Improvements
+- [X] Bugfixes / Improvements
 - Middleware
  - [X] (#7) Vaidation
     - [X] Path Variables
@@ -35,15 +35,21 @@ Legend: [ ] Planned - [/] Progress - [X] Finished
     - [X] Header Data
     - [X] Cookies
 
-**Milestone 3** (0.3.0)
+**Milestone 3** (0.3.0 - 27 Feb 2013)
 
 - [ ] Bugfixes / Improvements
-  - [ ] Add more Validators (MinStrLen, MaxStrLen, numGreater, numSmaller, ...)
 - Middleware
+  - Validation
+    - [ ] Add more Validators (MinStrLen, MaxStrLen, numGreater, numSmaller, ...)
+  - [ ] Sanitizer
   - [ ] feature toogle
     - [ ] GlobalContext
     - [ ] UserContext
- - [ ] Sanitizer
+  
+**Milestone 4** (0.4.0)
+
+- [ ] Bugfixes / Improvements
+- Middleware
  - [ ] Auth (Custom, OAuth, OpenID, ...)
  - [ ] Statistic Collector
    - [ ] Collect (Caller, URL, Browser, SourceURL, ...)
